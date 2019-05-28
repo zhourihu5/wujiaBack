@@ -42,8 +42,6 @@ public class JwtFilter extends GenericFilterBean {
                 try {
                     //使用jwt paser来验证签名
                     Claims claims = Jwts.parser().setSigningKey(JwtUtil.base64Secret).parseClaimsJws(token).getBody();
-                    System.out.println(claims);
-                    request.setAttribute("claims", claims);
                 } catch (ExpiredJwtException e) {
                     throw new ServletException(new TokenException(-2, "token expired"));
                 } catch (SignatureException e) {

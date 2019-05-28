@@ -35,7 +35,6 @@ public class TestController {
     @RequestMapping(value = "ceshi", method = RequestMethod.GET)
     @ResponseBody
     public Object ceshi(String code) {
-//        List<Area> list = this.list(code);
         // 根据省市区查询出所有社区
         List<BaseCommuntity> bcList = baseCommuntityService.findByArea(code);
         System.out.println("bcList"+bcList.size());

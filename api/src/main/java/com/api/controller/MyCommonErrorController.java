@@ -32,9 +32,7 @@ public class MyCommonErrorController extends BasicErrorController {
     }
 
     @Override
-    @RequestMapping(
-            produces = {"application/json"}
-    )
+    @RequestMapping(produces = {"application/json"})
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
         //加入跨域相关内容
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();

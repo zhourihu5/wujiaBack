@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 返回结果
- *
  * @author thz
  */
 public class ResultUtil {
