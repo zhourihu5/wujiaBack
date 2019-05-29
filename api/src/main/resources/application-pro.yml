@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    username: wujia_dev
+    password: Wujia!@#
+    url: jdbc:mysql://rm-2ze9f44ol605d099mro.mysql.rds.aliyuncs.com:3306/wujia_dev?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.jdbc.Driver
+
+
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
+  type-aliases-package: com.api.entity
+
+#showSql
+logging:
+  level:
+    com:
+      example:
+        mapper: debug
+
+
+
+

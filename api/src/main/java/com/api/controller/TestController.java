@@ -72,7 +72,7 @@ public class TestController {
         return bc;
     }
 
-    private List<Area> list (String id) {
+    private List<Area> list (int id) {
         List<Area> list = areaService.findAreaByPid(id);
         return list;
     }

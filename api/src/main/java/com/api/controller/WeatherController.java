@@ -1,7 +1,9 @@
 package com.api.controller;
 
 import com.api.entity.Area;
+import com.api.entity.BaseCommuntity;
 import com.api.service.AreaService;
+import com.api.service.BaseCommuntityService;
 import com.api.service.HttpClientService;
 import com.api.utils.CommonUtils;
 import com.api.utils.JwtUtil;
@@ -24,13 +26,27 @@ public class WeatherController {
     @Autowired
     private HttpClientService httpClientService;
 
+    @Autowired
+    private AreaService areaService;
+
+    @Autowired
+    private BaseCommuntityService baseCommuntityService;
+
     @RequestMapping(value = "ali", method = RequestMethod.GET)
     public @ResponseBody Object ali() {
-        String token = JwtUtil.getJwtToken();
-        Claims claims = JwtUtil.parseJwt(token);
-        Object userName = claims.get("userName");
-        System.out.println(userName);
-        String cityname = "北京";
+        String cityname = null;
+        try {
+            String token = JwtUtil.getJwtToken();
+            Claims claims = JwtUtil.parseJwt(token);
+            Object communtityId = claims.get("communtityId");
+            System.out.println(communtityId);
+            BaseCommuntity baseCommuntity = baseCommuntityService.findById((int)communtityId);
+            Area area = areaService.findAreaById(baseCommuntity.getCity());
+            cityname = area.getAreaName();
+            System.out.println(cityname);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String url = "http://v.juhe.cn/weather/index?cityname=" + cityname + "&key=" + CommonUtils.ALIKEY;
         return httpClientService.getObjectClient(url);
     }

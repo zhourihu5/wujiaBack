@@ -11,7 +11,7 @@ public class BaseFloor {
     // 共有多少个单元
     private String unit;
     // 社区id
-    private String communtityId;
+    private int communtityId;
 
     public int getId() {
         return id;
@@ -45,11 +45,11 @@ public class BaseFloor {
         this.unit = unit;
     }
 
-    public String getCommuntityId() {
+    public int getCommuntityId() {
         return communtityId;
     }
 
-    public void setCommuntityId(String communtityId) {
+    public void setCommuntityId(int communtityId) {
         this.communtityId = communtityId;
     }
 }

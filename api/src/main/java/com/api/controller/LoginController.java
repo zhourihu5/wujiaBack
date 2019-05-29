@@ -81,7 +81,8 @@ public class LoginController {
             if (!String.valueOf(data).equals(smsCode)) {
                 return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "验证码不正确");
             }
-            jwtToken = JwtUtil.generateToken(userName);
+            UserInfo userInfo = userInfoService.findUserByName(userName);
+            jwtToken = JwtUtil.generateToken(userInfo);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,7 +99,8 @@ public class LoginController {
     @RequestMapping(value = "getToken", method = RequestMethod.POST)
     public String login(String userName) {
         // Create Jwt token
-        return JwtUtil.generateToken(userName);
+        UserInfo userInfo = userInfoService.findUserByName(userName);
+        return JwtUtil.generateToken(userInfo);
     }
 
 

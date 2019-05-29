@@ -22,7 +22,7 @@ public class BaseCommuntityService {
         return list;
     }
 
-    public BaseCommuntity findById(String pid) {
+    public BaseCommuntity findById(int pid) {
         return baseCommuntityMapper.findById(pid);
     }
 

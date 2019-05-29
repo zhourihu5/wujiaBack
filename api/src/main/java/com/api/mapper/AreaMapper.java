@@ -14,9 +14,9 @@ public interface AreaMapper {
 
     public List<Area> areaList();
 
-    public List<Area> findAreaByPid(String pid);
+    public List<Area> findAreaByPid(int pid);
 
-    public Area findProByPid(String pid);
+    public Area findAreaById(int id);
 
 
 }

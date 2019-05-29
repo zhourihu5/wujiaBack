@@ -14,7 +14,7 @@ public interface BaseCommuntityMapper {
 
     public List<BaseCommuntity> allList();
 
-    public BaseCommuntity findById(String id);
+    public BaseCommuntity findById(int id);
 
 
 

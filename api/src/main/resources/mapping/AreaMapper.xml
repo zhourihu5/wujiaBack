@@ -26,8 +26,8 @@
 		SELECT * FROM dt_area where area_parent_id=#{pid}
 	</select>
 
-	<select id="findProByPid" resultMap="result">
-		SELECT * FROM dt_area where area_parent_id=#{pid}
+	<select id="findAreaById" resultMap="result">
+		SELECT * FROM dt_area where id=#{id}
 	</select>
 
 </mapper>

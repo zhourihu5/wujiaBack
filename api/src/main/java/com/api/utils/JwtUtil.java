@@ -1,5 +1,6 @@
 package com.api.utils;
 
+import com.api.entity.UserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,9 +21,11 @@ import java.util.Map;
 public class JwtUtil {
     public static String base64Secret = "WJJWTBASE64";
 
-    public static String generateToken(String userName) {
+    public static String generateToken(UserInfo userInfo) {
         Map<String, Object> claims = new HashMap<>(16);
-        claims.put("userName", userName);
+        claims.put("userId", userInfo.getId());
+        claims.put("userName", userInfo.getUserName());
+        claims.put("communtityId", userInfo.getCommuntityId());
         claims.put("createDate", new Date());
         return createJwt(claims);
     }

@@ -14,25 +14,19 @@ public class AreaService {
 
     public List<Area> areaList() {
         List<Area> list = areaMapper.areaList();
-        System.out.println("userList--------");
         return list;
     }
 
     public List<Area> findAreaByName(String name) {
         List<Area> list = areaMapper.findAreaByName(name);
-        System.out.println("findAreaByName--------");
         return list;
     }
 
-    public List<Area> findAreaByPid(String pid) {
-        List<Area> list = areaMapper.findAreaByPid(pid);
-        System.out.println("findAreaByPid--------");
-        return list;
+    public List<Area> findAreaByPid(int pid) {
+        return areaMapper.findAreaByPid(pid);
     }
 
-    public Area findProByPid(String pid) {
-        Area area = areaMapper.findProByPid(pid);
-        System.out.println("findProByPid--------");
-        return area;
+    public Area findAreaById(int id) {
+        return areaMapper.findAreaById(id);
     }
 }
