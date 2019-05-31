@@ -1,4 +1,4 @@
-package com.api.Filter;
+package com.api.filter;
 
 import com.api.utils.JwtUtil;
 import io.jsonwebtoken.Claims;

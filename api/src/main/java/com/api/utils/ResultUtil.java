@@ -1,8 +1,6 @@
 package com.api.utils;
 
-import com.api.Filter.ResponseMessage;
-
-import javax.servlet.http.HttpServletResponse;
+import com.api.filter.ResponseMessage;
 
 /**
  * 返回结果

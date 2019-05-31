@@ -115,7 +115,6 @@ public class MapUtil {
 	 * 
 	 * 加载因子也是HashMap中减少Hash冲突的重要一环，如果读写频繁，总记录数不多的Map，可以比默认值0.75进一步降低，建议0.5
 	 * 
-	 * @see Maps#newHashMap(int)
 	 */
 	public static <K, V> HashMap<K, V> newHashMapWithCapacity(int expectedSize, float loadFactor) {
 		int finalSize = (int) ((double) expectedSize / loadFactor + 1.0F);

@@ -16,11 +16,11 @@ import java.util.List;
 public class BaseAreaController {
 
     @Autowired
-    private BaseAreaService baseAreaService;
+    private BaseAreaService areaService;
 
     @RequestMapping(value = "all", method = RequestMethod.GET)
     public @ResponseBody Object all() {
-        List<BaseArea> list = baseAreaService.areaList();
+        List<BaseArea> list = areaService.areaList();
         return list;
     }
 
@@ -33,7 +33,7 @@ public class BaseAreaController {
      */
     @RequestMapping(value = "findAreaByName", method = RequestMethod.GET)
     public @ResponseBody Object findAreaByName(String name) {
-        List<BaseArea> list = baseAreaService.findAreaByName(name);
+        List<BaseArea> list = areaService.findAreaByName(name);
         return list;
     }
 
@@ -46,7 +46,7 @@ public class BaseAreaController {
      */
     @RequestMapping(value = "findAreaByPid", method = RequestMethod.GET)
     public @ResponseBody Object findAreaByPid(int pid) {
-        List<BaseArea> list = baseAreaService.findAreaByPid(pid);
+        List<BaseArea> list = areaService.findAreaByPid(pid);
         return list;
     }
 
@@ -59,7 +59,7 @@ public class BaseAreaController {
      */
     @RequestMapping(value = "findAreaById", method = RequestMethod.GET)
     public @ResponseBody Object findAreaById(int id) {
-        BaseArea area = baseAreaService.findAreaById(id);
+        BaseArea area = areaService.findAreaById(id);
         return area;
     }
 
@@ -74,15 +74,15 @@ public class BaseAreaController {
     @RequestMapping(value = "findProByPid", method = RequestMethod.GET)
     public @ResponseBody Object findProByPid(int pid) {
         // 省
-        List<BaseArea> provinceList = baseAreaService.findAreaByPid(pid);
+        List<BaseArea> provinceList = areaService.findAreaByPid(pid);
         List<BaseArea> cityList = new ArrayList<BaseArea>();
         List<BaseArea> areaList = new ArrayList<BaseArea>();
         for (BaseArea a: provinceList) {
             // 市
-            cityList = baseAreaService.findAreaByPid(a.getId());
+            cityList = areaService.findAreaByPid(a.getId());
             for (BaseArea b: cityList) {
                 // 区
-                areaList = baseAreaService.findAreaByPid(b.getId());
+                areaList = areaService.findAreaByPid(b.getId());
 //                b.setAreaList(areaList);
             }
 //            a.setCityList(cityList);

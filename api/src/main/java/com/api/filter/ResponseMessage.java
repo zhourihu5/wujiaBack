@@ -1,10 +1,10 @@
-package com.api.Filter;
+package com.api.filter;
 
 import lombok.Data;
 
 @Data
 public class ResponseMessage<T>{
-//    自定义异常类型
+
     private int code;
     private String msg;
     private T data;
@@ -12,8 +12,26 @@ public class ResponseMessage<T>{
     public ResponseMessage() {
     }
 
+    /**
+     * 成功时候的调用
+     */
+    public static <T> ResponseMessage<T> ok(T data) {
+        return new ResponseMessage(200, "SUCCESS", data);
+    }
+
+    /**
+     * 成功时候的调用
+     */
+    public static <T> ResponseMessage<T> ok() {
+        return new ResponseMessage(200, "SUCCESS");
+    }
+
+    public ResponseMessage(int code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+
     public ResponseMessage(int code, String msg, T data) {
-//        super(msg);
         this.code = code;
         this.msg = msg;
         this.data = data;

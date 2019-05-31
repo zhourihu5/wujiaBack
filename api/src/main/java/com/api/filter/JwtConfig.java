@@ -1,4 +1,4 @@
-package com.api.Filter;
+package com.api.filter;
 
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
