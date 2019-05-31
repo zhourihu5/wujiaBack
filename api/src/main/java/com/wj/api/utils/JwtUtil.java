@@ -25,7 +25,6 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>(16);
         claims.put("userId", userInfo.getId());
         claims.put("userName", userInfo.getUserName());
-        claims.put("communtityId", userInfo.getCommuntityId());
         claims.put("createDate", new Date());
         return createJwt(claims);
     }

@@ -18,9 +18,9 @@ public class UserInfoService {
 //        return userInfoRepository.userList();
 //    }
 //
-//    public SysUserInfo findUserByName(String name) {
-//        return userInfoRepository.findUserByName(name);
-//    }
+    public SysUserInfo findByName(String name) {
+        return userInfoRepository.findByName(name);
+    }
 //
 //    public SysUserInfo findUserById(int id) {
 //        return userInfoRepository.findUserById(id);
