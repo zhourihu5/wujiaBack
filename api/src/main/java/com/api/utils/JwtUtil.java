@@ -1,6 +1,6 @@
 package com.api.utils;
 
-import com.api.entity.UserInfo;
+import com.wj.core.entity.user.UserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
