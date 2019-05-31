@@ -2,6 +2,8 @@ package com.wj.core.repository.user;
 
 import com.wj.core.entity.user.SysUserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -19,7 +21,8 @@ public interface UserInfoRepository extends JpaRepository<SysUserInfo, Integer> 
 //     * @param name
 //     * @return UserInfo
 //     */
-//    public SysUserInfo findUserByName(String name);
+    @Query(value = "select * from sys_user_info where userName = ?1", nativeQuery = true)
+    public SysUserInfo findByName(String name);
 //
 //    /**
 //     * 根据名字查询用户信息

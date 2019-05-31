@@ -40,18 +40,12 @@ public class SysUserInfo {
     // 标识 1、后台用户 2、ipad用户 3、app用户
     @ApiModelProperty(value = "标识 1、后台用户 2、ipad用户 3、app用户")
     private Integer flag;
-    // 社区标识
-    @ApiModelProperty(value = "社区标识")
-    private Integer communtityId;
+//    // 社区标识
+//    @ApiModelProperty(value = "社区标识")
+//    private Integer communtityId;
     // 创建时间
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
-    // 扩展1
-    @ApiModelProperty(value = "扩展1")
-    private String extend1;
-    // 扩展2
-    @ApiModelProperty(value = "扩展2")
-    private String extend2;
 
     public Integer getId() {
         return id;
@@ -109,29 +103,13 @@ public class SysUserInfo {
         this.flag = flag;
     }
 
-    public Integer getCommuntityId() {
-        return communtityId;
-    }
-
-    public void setCommuntityId(Integer communtityId) {
-        this.communtityId = communtityId;
-    }
-
-    public String getExtend1() {
-        return extend1;
-    }
-
-    public void setExtend1(String extend1) {
-        this.extend1 = extend1;
-    }
-
-    public String getExtend2() {
-        return extend2;
-    }
-
-    public void setExtend2(String extend2) {
-        this.extend2 = extend2;
-    }
+//    public Integer getCommuntityId() {
+//        return communtityId;
+//    }
+//
+//    public void setCommuntityId(Integer communtityId) {
+//        this.communtityId = communtityId;
+//    }
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getCreateDate() {
