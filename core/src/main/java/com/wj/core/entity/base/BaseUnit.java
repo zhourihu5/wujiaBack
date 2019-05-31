@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /*
  * 单元表
@@ -11,7 +13,8 @@ import javax.persistence.Entity;
 @ApiModel(description = "单元表")
 @Entity
 public class BaseUnit {
-
+    @Id
+    @GeneratedValue
     private Integer id;
     @ApiModelProperty(value = "单元号")
     private Integer num;

@@ -1,6 +1,6 @@
-package com.api.utils;
+package com.wj.api.utils;
 
-import com.api.filter.ResponseMessage;
+import com.wj.api.filter.ResponseMessage;
 
 /**
  * 返回结果

@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface BaseFloorRepository extends JpaRepository<BaseFloor, Integer> {
 
-    public BaseFloor findByName(String name);
-
-    public List<BaseFloor> allList();
-
-    public List<BaseFloor> findById(String id);
+//    public BaseFloor findByName(String name);
+//
+//    public List<BaseFloor> allList();
+//
+//    public List<BaseFloor> findById(String id);
 
 
 

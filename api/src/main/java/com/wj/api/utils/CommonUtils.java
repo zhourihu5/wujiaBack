@@ -1,4 +1,4 @@
-package com.api.utils;
+package com.wj.api.utils;
 
 /**
  * 工具类

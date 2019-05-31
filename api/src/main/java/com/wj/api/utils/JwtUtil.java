@@ -1,4 +1,4 @@
-package com.api.utils;
+package com.wj.api.utils;
 
 import com.wj.core.entity.user.SysUserInfo;
 import io.jsonwebtoken.Claims;

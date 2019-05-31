@@ -1,4 +1,4 @@
-package com.api.controller;
+package com.wj.api.controller;
 
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;

@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
@@ -14,7 +17,8 @@ import java.util.Date;
 @ApiModel(description = "版本信息表")
 @Entity
 public class SysVersion {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @ApiModelProperty(value = "版本号")
     private String sysVer;

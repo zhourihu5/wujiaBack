@@ -1,4 +1,4 @@
-package com.api.controller;
+package com.wj.api.controller;
 
 public class ErrorResult {
 

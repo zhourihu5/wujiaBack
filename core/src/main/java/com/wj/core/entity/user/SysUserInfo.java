@@ -5,6 +5,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
@@ -15,7 +18,8 @@ import java.util.Date;
 @ApiModel(description = "用户表")
 @Entity
 public class SysUserInfo {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @ApiModelProperty(value = "用户ID")
     private Integer id;
     // 用户名称

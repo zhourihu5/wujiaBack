@@ -12,19 +12,19 @@ public class BaseCommuntityService {
     @Autowired
     private BaseCommuntityRepository baseCommuntityRepository;
 
-    public List<BaseCommuntity> allList() {
-        List<BaseCommuntity> list = baseCommuntityRepository.allList();
-        return list;
-    }
-
-    public List<BaseCommuntity> findByArea(String code) {
-        List<BaseCommuntity> list = baseCommuntityRepository.findByArea(code);
-        return list;
-    }
-
-    public BaseCommuntity findById(int pid) {
-        return baseCommuntityRepository.findById(pid);
-    }
+//    public List<BaseCommuntity> allList() {
+//        List<BaseCommuntity> list = baseCommuntityRepository.allList();
+//        return list;
+//    }
+//
+//    public List<BaseCommuntity> findByArea(String code) {
+//        List<BaseCommuntity> list = baseCommuntityRepository.findByArea(code);
+//        return list;
+//    }
+//
+//    public BaseCommuntity findById(int pid) {
+//        return baseCommuntityRepository.findById(pid);
+//    }
 
 
 }

@@ -1,7 +1,7 @@
-package com.api.controller.card;
+package com.wj.api.controller.card;
 
 
-import com.api.filter.ResponseMessage;
+import com.wj.api.filter.ResponseMessage;
 import com.wj.core.service.card.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

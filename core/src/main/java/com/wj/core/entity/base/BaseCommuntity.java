@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /*
  * 社区表
@@ -11,7 +13,8 @@ import javax.persistence.Entity;
 @ApiModel(description = "社区表")
 @Entity
 public class BaseCommuntity {
-
+    @Id
+    @GeneratedValue
     private Integer id;
     @ApiModelProperty(value = "名称")
     private String name;

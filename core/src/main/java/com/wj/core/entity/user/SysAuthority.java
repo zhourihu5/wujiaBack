@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * 权限表
@@ -14,7 +17,8 @@ import javax.persistence.Entity;
 @ApiModel(description = "权限表")
 @Entity
 public class SysAuthority {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @ApiModelProperty(value = "权限ID")
     private Integer id;
     @ApiModelProperty(value = "路由名称")

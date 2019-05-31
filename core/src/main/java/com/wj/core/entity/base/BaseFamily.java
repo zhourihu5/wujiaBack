@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /*
  * 家庭表
@@ -11,7 +13,8 @@ import javax.persistence.Entity;
 @ApiModel(description = "家庭表")
 @Entity
 public class BaseFamily {
-
+    @Id
+    @GeneratedValue
     private Integer id;
     // 门牌号
     @ApiModelProperty(value = "门牌号")

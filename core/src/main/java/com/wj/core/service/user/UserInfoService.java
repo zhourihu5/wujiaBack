@@ -14,17 +14,17 @@ public class UserInfoService {
     private UserInfoRepository userInfoRepository;
 
 
-    public List<SysUserInfo> userList() {
-        return userInfoRepository.userList();
-    }
-
-    public SysUserInfo findUserByName(String name) {
-        return userInfoRepository.findUserByName(name);
-    }
-
-    public SysUserInfo findUserById(int id) {
-        return userInfoRepository.findUserById(id);
-    }
+//    public List<SysUserInfo> userList() {
+//        return userInfoRepository.userList();
+//    }
+//
+//    public SysUserInfo findUserByName(String name) {
+//        return userInfoRepository.findUserByName(name);
+//    }
+//
+//    public SysUserInfo findUserById(int id) {
+//        return userInfoRepository.findUserById(id);
+//    }
 
 
 

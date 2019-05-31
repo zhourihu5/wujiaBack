@@ -12,19 +12,19 @@ public class BaseUnitService {
     @Autowired
     private BaseUnitRepository baseUnitRepository;
 
-    public List<BaseUnit> allList() {
-        List<BaseUnit> list = baseUnitRepository.allList();
-        return list;
-    }
-
-    public BaseUnit findByName(String name) {
-        return baseUnitRepository.findByName(name);
-    }
-
-    public List<BaseUnit> findById(String pid) {
-        List<BaseUnit> list = baseUnitRepository.findById(pid);
-        return list;
-    }
+//    public List<BaseUnit> allList() {
+//        List<BaseUnit> list = baseUnitRepository.allList();
+//        return list;
+//    }
+//
+//    public BaseUnit findByName(String name) {
+//        return baseUnitRepository.findByName(name);
+//    }
+//
+//    public List<BaseUnit> findById(String pid) {
+//        List<BaseUnit> list = baseUnitRepository.findById(pid);
+//        return list;
+//    }
 
 
 }

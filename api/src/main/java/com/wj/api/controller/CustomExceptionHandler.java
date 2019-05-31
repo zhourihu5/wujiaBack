@@ -1,4 +1,4 @@
-package com.api.controller;
+package com.wj.api.controller;
 
 import com.google.common.collect.Maps;
 import com.wj.core.service.exception.ServiceException;

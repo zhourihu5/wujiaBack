@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface BaseFamilyRepository extends JpaRepository<BaseFamily, Integer> {
-
-    public BaseFamily findByName(String name);
-
-    public List<BaseFamily> allList();
-
-    public List<BaseFamily> findById(String id);
+//
+//    public BaseFamily findByName(String name);
+//
+//    public List<BaseFamily> allList();
+//
+//    public List<BaseFamily> findById(String id);
 
 
 

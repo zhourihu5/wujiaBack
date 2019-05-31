@@ -1,4 +1,4 @@
-package com.api.utils;
+package com.wj.api.utils;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 

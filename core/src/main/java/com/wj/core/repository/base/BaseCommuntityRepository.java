@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface BaseCommuntityRepository extends JpaRepository<BaseCommuntity, Integer> {
 
-    public List<BaseCommuntity> findByArea(String code);
-
-    public List<BaseCommuntity> allList();
-
-    public BaseCommuntity findById(int id);
+//    public List<BaseCommuntity> findByArea(String code);
+//
+//    public List<BaseCommuntity> allList();
+//
+//    public BaseCommuntity findById(int id);
 
 
 

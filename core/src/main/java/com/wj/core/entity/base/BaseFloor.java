@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /*
  * 楼号表
@@ -11,7 +13,8 @@ import javax.persistence.Entity;
 @ApiModel(description = "楼号表")
 @Entity
 public class BaseFloor {
-
+    @Id
+    @GeneratedValue
     private Integer id;
     @ApiModelProperty(value = "楼的名称")
     private String name;

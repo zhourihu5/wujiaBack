@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * 用户角色表
@@ -13,7 +16,8 @@ import javax.persistence.Entity;
 @ApiModel(description = "用户角色表")
 @Entity
 public class SysRole {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @ApiModelProperty(value = "名称")
     private String name;

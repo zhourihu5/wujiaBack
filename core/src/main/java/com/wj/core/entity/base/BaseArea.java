@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 
 /*
@@ -14,6 +16,8 @@ import java.util.Date;
 @Entity
 public class BaseArea {
 
+    @Id
+    @GeneratedValue
     private Integer id;
     @ApiModelProperty(value = "省市区名称")
     private String areaName;

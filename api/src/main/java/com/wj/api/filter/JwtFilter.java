@@ -1,6 +1,6 @@
-package com.api.filter;
+package com.wj.api.filter;
 
-import com.api.utils.JwtUtil;
+import com.wj.api.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

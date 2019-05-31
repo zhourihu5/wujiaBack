@@ -1,4 +1,4 @@
-package com.api.controller.base;
+package com.wj.api.controller.base;
 
 
 import com.wj.core.entity.base.BaseCommuntity;
@@ -17,10 +17,10 @@ public class BaseCommuntityController {
     @Autowired
     private BaseCommuntityService baseCommuntityService;
 
-    @RequestMapping(value = "all", method = RequestMethod.GET)
-    public @ResponseBody Object all() {
-        List<BaseCommuntity> list = baseCommuntityService.allList();
-        return list;
-    }
+//    @RequestMapping(value = "all", method = RequestMethod.GET)
+//    public @ResponseBody Object all() {
+//        List<BaseCommuntity> list = baseCommuntityService.allList();
+//        return list;
+//    }
 }
 

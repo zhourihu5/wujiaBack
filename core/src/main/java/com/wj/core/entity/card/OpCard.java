@@ -2,15 +2,17 @@ package com.wj.core.entity.card;
 
 import com.wj.core.entity.card.enums.CardType;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * Created by sun on 2019/5/30.
  */
+@Entity
 public class OpCard {
 
+    @Id
+    @GeneratedValue
     private Integer id;
     private String title;
     private String memo;

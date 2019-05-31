@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /*
  * 设备表
@@ -11,7 +13,7 @@ import javax.persistence.Entity;
 @ApiModel(description = "设备表")
 @Entity
 public class BaseDevice {
-
+    @Id
     private Integer id;
     @ApiModelProperty(value = "标识 1.底座 2.pad 3.门禁")
     private String flag;
