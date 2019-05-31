@@ -15,27 +15,23 @@
         <groupId>com.wj</groupId>
         <artifactId>wu-root</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-    </properties>
-
     <dependencies>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
         <!-- optional for BeanMapper -->
         <dependency>
             <groupId>net.sf.dozer</groupId>
             <artifactId>dozer</artifactId>
-            <version>${dozer.version}</version>
         </dependency>
         <!-- for JsonMapper -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -52,18 +48,12 @@
             <artifactId>fastjson</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
+            <groupId>org.apache.commons</groupId>
             <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -80,35 +70,16 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>${jjwt.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>${joda.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
-            <version>3.3.0</version>
-        </dependency>
     </dependencies>
 </project>
