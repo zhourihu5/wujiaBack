@@ -68,10 +68,11 @@ public class TestController {
     @ResponseBody
     public Object ceshi1(String familyId) {
         BaseFamily bfm = baseFamilyService.findByName(familyId);
-        BaseUnit bu = baseUnitService.findByName(bfm.getUnitId());
-        BaseFloor bf = baseFloorService.findByName(bu.getFloorId());
-        BaseCommuntity bc = baseCommuntityService.findById(bf.getCommuntityId());
-        return bc;
+//        BaseUnit bu = baseUnitService.findByName(bfm.getUnitId());
+//        BaseFloor bf = baseFloorService.findByName(bu.getFloorId());
+//        BaseCommuntity bc = baseCommuntityService.findById(bf.getCommuntityId());
+//        return bc;
+        return bfm;
     }
 
     private List<BaseArea> list (int id) {

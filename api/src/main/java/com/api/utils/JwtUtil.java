@@ -1,6 +1,6 @@
 package com.api.utils;
 
-import com.wj.core.entity.user.UserInfo;
+import com.wj.core.entity.user.SysUserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class JwtUtil {
     public static String base64Secret = "WJJWTBASE64";
 
-    public static String generateToken(UserInfo userInfo) {
+    public static String generateToken(SysUserInfo userInfo) {
         Map<String, Object> claims = new HashMap<>(16);
         claims.put("userId", userInfo.getId());
         claims.put("userName", userInfo.getUserName());

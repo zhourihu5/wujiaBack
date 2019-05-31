@@ -1,5 +1,6 @@
 package com.wj.core.service.user;
 
+import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.user.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,15 +14,15 @@ public class UserInfoService {
     private UserInfoRepository userInfoRepository;
 
 
-    public List<UserInfo> userList() {
+    public List<SysUserInfo> userList() {
         return userInfoRepository.userList();
     }
 
-    public UserInfo findUserByName(String name) {
+    public SysUserInfo findUserByName(String name) {
         return userInfoRepository.findUserByName(name);
     }
 
-    public UserInfo findUserById(int id) {
+    public SysUserInfo findUserById(int id) {
         return userInfoRepository.findUserById(id);
     }
 

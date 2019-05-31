@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/weather/")
+@RequestMapping("/v1/api/weather/")
 public class WeatherController {
 
     @Autowired

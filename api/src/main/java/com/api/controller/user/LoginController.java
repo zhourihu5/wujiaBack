@@ -3,7 +3,7 @@ package com.api.controller.user;
 import com.api.utils.CommonUtils;
 import com.api.utils.JwtUtil;
 import com.api.utils.ResultUtil;
-import com.wj.core.entity.user.UserInfo;
+import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.service.user.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +33,7 @@ public class LoginController {
     @RequestMapping(value = "sendMsg", method = RequestMethod.GET)
     public Object sendMsg(final HttpServletRequest request) {
         String userName = request.getParameter("userName");
-        UserInfo userInfo = userInfoService.findUserByName(userName);
+        SysUserInfo userInfo = userInfoService.findUserByName(userName);
         if (userInfo == null) {
             return ResultUtil.error(HttpServletResponse.SC_NO_CONTENT, "你不是平台用户");
         }
@@ -81,7 +81,7 @@ public class LoginController {
             if (!String.valueOf(data).equals(smsCode)) {
                 return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "验证码不正确");
             }
-            UserInfo userInfo = userInfoService.findUserByName(userName);
+            SysUserInfo userInfo = userInfoService.findUserByName(userName);
             jwtToken = JwtUtil.generateToken(userInfo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +99,7 @@ public class LoginController {
     @RequestMapping(value = "getToken", method = RequestMethod.POST)
     public String login(String userName) {
         // Create Jwt token
-        UserInfo userInfo = userInfoService.findUserByName(userName);
+        SysUserInfo userInfo = userInfoService.findUserByName(userName);
         return JwtUtil.generateToken(userInfo);
     }
 
