@@ -1,39 +1,39 @@
 package com.wj.core.repository.user;
 
-import com.wj.core.entity.user.UserInfo;
+import com.wj.core.entity.user.SysUserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
+public interface UserInfoRepository extends JpaRepository<SysUserInfo, Integer> {
 
     /**
      * 查询全部用户
      * @param
      * @return List<UserInfo>
      */
-    public List<UserInfo> userList();
+    public List<SysUserInfo> userList();
 
     /**
      * 根据名字查询用户信息
      * @param name
      * @return UserInfo
      */
-    public UserInfo findUserByName(String name);
+    public SysUserInfo findUserByName(String name);
 
     /**
      * 根据名字查询用户信息
      * @param id
      * @return UserInfo
      */
-    public UserInfo findUserById(int id);
+    public SysUserInfo findUserById(int id);
 
     /**
      * 添加用户
      * @param user
      * @return int
      */
-    public int insertUser(UserInfo user);
+    public int insertUser(SysUserInfo user);
 
     /**
      * 根据用户id删除用户信息
@@ -47,6 +47,6 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
      * @param user
      * @return int
      */
-    public int updateUser(UserInfo user);
+    public int updateUser(SysUserInfo user);
 
 }

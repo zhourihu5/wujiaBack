@@ -1,15 +1,24 @@
 package com.wj.core.entity.base;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Entity;
 
+/*
+ * 家庭表
+ */
+@ApiModel(description = "家庭表")
 @Entity
 public class BaseFamily {
 
     private Integer id;
     // 门牌号
-    private String num;
+    @ApiModelProperty(value = "门牌号")
+    private Integer num;
     // 所属单元id
-    private String unitId;
+    @ApiModelProperty(value = "所属单元id")
+    private Integer unitId;
 
     public Integer getId() {
         return id;
@@ -19,19 +28,20 @@ public class BaseFamily {
         this.id = id;
     }
 
-    public String getNum() {
+    public Integer getNum() {
         return num;
     }
 
-    public void setNum(String num) {
+    public void setNum(Integer num) {
         this.num = num;
     }
 
-    public String getUnitId() {
+    public Integer getUnitId() {
         return unitId;
     }
 
-    public void setUnitId(String unitId) {
+    public void setUnitId(Integer unitId) {
         this.unitId = unitId;
     }
+
 }

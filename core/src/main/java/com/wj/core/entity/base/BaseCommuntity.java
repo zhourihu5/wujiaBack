@@ -1,15 +1,27 @@
 package com.wj.core.entity.base;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Entity;
 
+/*
+ * 社区表
+ */
+@ApiModel(description = "社区表")
 @Entity
 public class BaseCommuntity {
 
     private Integer id;
+    @ApiModelProperty(value = "名称")
     private String name;
+    @ApiModelProperty(value = "地址")
     private String address;
+    @ApiModelProperty(value = "省编号")
     private Integer province;
+    @ApiModelProperty(value = "市编号")
     private Integer city;
+    @ApiModelProperty(value = "区编号")
     private Integer area;
 
     public Integer getId() {
@@ -59,4 +71,5 @@ public class BaseCommuntity {
     public void setArea(Integer area) {
         this.area = area;
     }
+
 }

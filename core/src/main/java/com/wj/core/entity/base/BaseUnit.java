@@ -1,10 +1,24 @@
 package com.wj.core.entity.base;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Entity;
 
+/*
+ * 单元表
+ */
+@ApiModel(description = "单元表")
 @Entity
 public class BaseUnit {
 
+    private Integer id;
+    @ApiModelProperty(value = "单元号")
+    private Integer num;
+    @ApiModelProperty(value = "每个单元共有多少楼层")
+    private Integer storey;
+    @ApiModelProperty(value = "楼ID")
+    private Integer floorId;
 
     public Integer getId() {
         return id;
@@ -14,36 +28,28 @@ public class BaseUnit {
         this.id = id;
     }
 
-    public String getNum() {
+    public Integer getNum() {
         return num;
     }
 
-    public void setNum(String num) {
+    public void setNum(Integer num) {
         this.num = num;
     }
 
-    public String getStorey() {
+    public Integer getStorey() {
         return storey;
     }
 
-    public void setStorey(String storey) {
+    public void setStorey(Integer storey) {
         this.storey = storey;
     }
 
-    public String getFloorId() {
+    public Integer getFloorId() {
         return floorId;
     }
 
-    public void setFloorId(String floorId) {
+    public void setFloorId(Integer floorId) {
         this.floorId = floorId;
     }
-
-    private Integer id;
-    // 单元号
-    private String num;
-    // 每个单元共有多少层
-    private String storey;
-    // 那栋楼的id
-    private String floorId;
 
 }
