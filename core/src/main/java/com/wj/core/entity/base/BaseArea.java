@@ -1,20 +1,35 @@
 package com.wj.core.entity.base;
 
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Entity;
 import java.util.Date;
 
+/*
+ * 省市区三级联动表
+ */
+@ApiModel(description = "省市区三级联动表")
 @Entity
 public class BaseArea {
 
     private Integer id;
+    @ApiModelProperty(value = "省市区名称")
     private String areaName;
+    @ApiModelProperty(value = "省市区编号")
     private String areaCode;
+    @ApiModelProperty(value = "区编号简称")
     private String areaShort;
+    @ApiModelProperty(value = "是否热门 0.否 1.是")
     private String areaIsHot;
+    @ApiModelProperty(value = "区域序列")
     private String areaSequence;
+    @ApiModelProperty(value = "上级主键")
     private String areaParentId;
+    @ApiModelProperty(value = "初始时间")
     private Date initDate;
+    @ApiModelProperty(value = "初始地址")
     private String initAddr;
 
     public Integer getId() {
@@ -88,4 +103,5 @@ public class BaseArea {
     public void setInitAddr(String initAddr) {
         this.initAddr = initAddr;
     }
+
 }

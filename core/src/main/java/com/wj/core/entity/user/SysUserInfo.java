@@ -1,6 +1,7 @@
 package com.wj.core.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
@@ -8,12 +9,12 @@ import java.util.Date;
 
 /**
  * 用户表
- *
  * @author thz
  * @version 1.0
  */
+@ApiModel(description = "用户表")
 @Entity
-public class UserInfo {
+public class SysUserInfo {
 
     @ApiModelProperty(value = "用户ID")
     private Integer id;
@@ -31,7 +32,7 @@ public class UserInfo {
     private String icon;
     // 用户状态
     @ApiModelProperty(value = "用户状态")
-    private String status;
+    private Integer status;
     // 标识 1、后台用户 2、ipad用户 3、app用户
     @ApiModelProperty(value = "标识 1、后台用户 2、ipad用户 3、app用户")
     private Integer flag;
@@ -88,11 +89,11 @@ public class UserInfo {
         this.icon = icon;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
