@@ -1,5 +1,6 @@
 package com.wj.core.entity.card;
 
+import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.card.enums.CardType;
 
 import javax.persistence.*;
@@ -23,6 +24,16 @@ public class OpCard {
     private Short location;
     private Date createDate;
     private Integer userId;
+    @Enumerated(EnumType.ORDINAL)
+    private CardStatus isShow;
+
+    public CardStatus getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(CardStatus isShow) {
+        this.isShow = isShow;
+    }
 
     public Integer getId() {
         return id;
