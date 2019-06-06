@@ -14,11 +14,12 @@ import javax.persistence.Id;
 @Entity
 public class BaseDevice {
     @Id
+    @GeneratedValue
     private Integer id;
     @ApiModelProperty(value = "标识 1.底座 2.pad 3.门禁")
     private String flag;
     @ApiModelProperty(value = "机器唯一标识/编号")
-    private String key;
+    private String deviceKey;
     @ApiModelProperty(value = "家庭ID")
     private Integer familyId;
     @ApiModelProperty(value = "类型 1.主机 2.分机")
@@ -40,12 +41,12 @@ public class BaseDevice {
         this.flag = flag;
     }
 
-    public String getKey() {
-        return key;
+    public String getDeviceKey() {
+        return deviceKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setDeviceKey(String deviceKey) {
+        this.deviceKey = deviceKey;
     }
 
     public Integer getFamilyId() {

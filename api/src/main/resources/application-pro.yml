@@ -7,9 +7,11 @@ spring:
     password: Wujia!@#
     url: jdbc:mysql://rm-2ze9f44ol605d099mro.mysql.rds.aliyuncs.com:3306/wujia_dev?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.jdbc.Driver
-  data:
-    mongodb:
-      uri: mongodb://39.97.186.122:27017/wj
+  jpa:
+    show-sql: true
+#  data:
+#    mongodb:
+#      uri: mongodb://39.97.186.122:27017/wj
   redis:
     database: 0
     timeout: 1000
@@ -29,12 +31,6 @@ spring:
     # 连接池中的最小空闲连接
     min-idle: 10
 
-management:
-  security:
-    enabled:
-      false
-security:
-  ignored=/**
 #showSql
 logging:
   level:

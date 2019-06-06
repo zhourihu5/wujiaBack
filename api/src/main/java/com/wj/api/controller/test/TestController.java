@@ -1,7 +1,9 @@
 package com.wj.api.controller.test;
 
 import com.wj.core.entity.base.*;
+import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.service.base.*;
+import com.wj.core.service.user.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +16,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/test/")
 public class TestController {
+
+    private static UserInfoService userInfoService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
@@ -31,6 +35,8 @@ public class TestController {
     private BaseFamilyService baseFamilyService;
     @Autowired
     private BaseAreaService baseAreaService;
+//    @Autowired
+//    private UserInfoService userInfoService;
 
 //    @RequestMapping(value = "ceshi", method = RequestMethod.GET)
 //    @ResponseBody

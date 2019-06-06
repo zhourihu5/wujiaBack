@@ -36,7 +36,7 @@ public class JwtUtil {
      */
     public static String createJwt(Map<String, Object> claims) {
         return Jwts.builder().setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 1000L))  //过期时间
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 120 * 1000L))  //过期时间
                 .signWith(SignatureAlgorithm.HS512, base64Secret).compact();  //加密方式
     }
 

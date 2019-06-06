@@ -28,11 +28,11 @@ public class BaseArea {
     @ApiModelProperty(value = "是否热门 0.否 1.是")
     private String areaIsHot;
     @ApiModelProperty(value = "区域序列")
-    private String areaSequence;
+    private Integer areaSequence;
     @ApiModelProperty(value = "上级主键")
-    private String areaParentId;
+    private Integer areaParentId;
     @ApiModelProperty(value = "初始时间")
-    private Date initDate;
+    private Date createDate;
     @ApiModelProperty(value = "初始地址")
     private String initAddr;
 
@@ -76,28 +76,28 @@ public class BaseArea {
         this.areaIsHot = areaIsHot;
     }
 
-    public String getAreaSequence() {
+    public Integer getAreaSequence() {
         return areaSequence;
     }
 
-    public void setAreaSequence(String areaSequence) {
+    public void setAreaSequence(Integer areaSequence) {
         this.areaSequence = areaSequence;
     }
 
-    public String getAreaParentId() {
+    public Integer getAreaParentId() {
         return areaParentId;
     }
 
-    public void setAreaParentId(String areaParentId) {
+    public void setAreaParentId(Integer areaParentId) {
         this.areaParentId = areaParentId;
     }
 
-    public Date getInitDate() {
-        return initDate;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setInitDate(Date initDate) {
-        this.initDate = initDate;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public String getInitAddr() {

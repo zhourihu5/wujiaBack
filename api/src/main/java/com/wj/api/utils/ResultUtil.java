@@ -15,14 +15,6 @@ public class ResultUtil {
         return responseMessage;
     }
 
-//    /**
-//     * 操作成功不返回消息
-//     * @return
-//     */
-//    public static ResponseMessage success() {
-//        return success(null);
-//    }
-
     /**
      * 操作失败返回的消息
      *
@@ -37,15 +29,4 @@ public class ResultUtil {
         return responseMessage;
     }
 
-//    /**
-//     * 操作失败返回消息，对error的重载
-//     * @param resultEnum
-//     * @return
-//     */
-//    public static ResponseMessage error(ResultEnum resultEnum){
-//        ResponseMessage responseMessage = new ResponseMessage();
-//        responseMessage.setCode(resultEnum.getCode());
-//        responseMessage.setMsg(resultEnum.getMsg());
-//        return responseMessage;
-//    }
 }

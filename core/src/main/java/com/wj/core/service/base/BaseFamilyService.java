@@ -17,14 +17,17 @@ public class BaseFamilyService {
 //        return list;
 //    }
 //
-//    public BaseFamily findByName(String name) {
-//        return baseFamilyRepository.findByName(name);
+//    public BaseFamily findById(int id) {
+//        return baseFamilyRepository.findById(id);
 //    }
 //
 //    public List<BaseFamily> findById(String pid) {
 //        List<BaseFamily> list = baseFamilyRepository.findById(pid);
 //        return list;
 //    }
+    public BaseFamily findByFamilyId(Integer fid) {
+        return baseFamilyRepository.findByFamilyId(fid);
+    }
 
 
 }
