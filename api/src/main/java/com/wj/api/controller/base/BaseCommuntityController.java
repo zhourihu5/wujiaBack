@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/api/communtity/")
+@RequestMapping("/v1/communtity/")
 public class BaseCommuntityController {
     @Autowired
     private BaseCommuntityService baseCommuntityService;

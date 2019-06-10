@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Api(value = "/v1/api/service", tags = "服务接口模块")
+@Api(value = "/v1/service", tags = "服务接口模块")
 @RestController
-@RequestMapping("/v1/api/service/")
+@RequestMapping("/v1/service/")
 public class ServeController {
 
     @Autowired

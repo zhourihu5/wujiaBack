@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Api(value = "/v1/api/userFamily", tags = "屏保接口模块")
+@Api(value = "/v1/userFamily", tags = "屏保接口模块")
 @RestController
-@RequestMapping("/userFamily/")
+@RequestMapping("/v1/userFamily/")
 public class UserFamilyController {
 
     @Autowired
@@ -64,11 +64,11 @@ public class UserFamilyController {
     @ApiOperation(value = "首页添加家庭成员", notes = "首页添加家庭成员")
     @GetMapping("addFamily")
     public Object addFamily(String userName, int familyId) {
-        Integer a = userInfoService.saveUserAndFamily(userName, familyId);
-        if (a.equals(1)) {
+        Integer code = userInfoService.saveUserAndFamily(userName, familyId);
+        if (code.equals(1)) {
             return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "手机号已存在");
         }
-        return ResultUtil.success(HttpServletResponse.SC_OK, "SUCCESS", a);
+        return ResultUtil.success(HttpServletResponse.SC_OK, "SUCCESS", code);
     }
 
 }

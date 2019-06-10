@@ -32,9 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Api(value = "/v1/api/user", tags = "用户接口模块")
+@Api(value = "/v1/user", tags = "用户接口模块")
 @RestController
-@RequestMapping("/v1/api/user/")
+@RequestMapping("/v1/user/")
 public class UserInfoController {
 
     @Autowired

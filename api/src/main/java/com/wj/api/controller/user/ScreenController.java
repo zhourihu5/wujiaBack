@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@Api(value = "/v1/api/screen", tags = "屏保接口模块")
+@Api(value = "/v1/screen", tags = "屏保接口模块")
 @RestController
-@RequestMapping("/v1/api/screen/")
+@RequestMapping("/v1/screen/")
 public class ScreenController {
 
     @Autowired
