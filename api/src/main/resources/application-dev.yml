@@ -34,12 +34,9 @@ spring:
 
 
 
-#showSql
+#在application.yml引入log4j2.yml
 logging:
-  level:
-    com:
-      example:
-        mapper: debug
+  config: classpath:log4j2.yml
 
 
 

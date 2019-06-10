@@ -1,5 +1,6 @@
 package com.wj.api.controller.user;
 
+import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.ResultUtil;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
@@ -37,7 +38,7 @@ public class UserFamilyController {
     @GetMapping("findByUserId")
     public Object findByUserId(int userId) {
         List<SysUserFamily> list = userFamilyService.findByUserId(userId);
-        return ResultUtil.success(HttpServletResponse.SC_OK, "SUCCESS", list);
+        return ResponseMessage.ok(list);
     }
 
     /**
@@ -51,7 +52,7 @@ public class UserFamilyController {
     public Object findFamilyUserList(Integer familyId) {
         // 家庭列表 根据机器key查询家庭ID 根据家庭ID查询家庭成员
         List<SysUserInfo> sysUserInfoList = userFamilyService.findFamilyToUser(familyId);
-        return ResultUtil.success(HttpServletResponse.SC_OK, "SUCCESS", sysUserInfoList);
+        return ResponseMessage.ok(sysUserInfoList);
     }
 
     /**
@@ -68,7 +69,7 @@ public class UserFamilyController {
         if (code.equals(1)) {
             return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "手机号已存在");
         }
-        return ResultUtil.success(HttpServletResponse.SC_OK, "SUCCESS", code);
+        return ResponseMessage.ok();
     }
 
 }

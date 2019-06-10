@@ -1,5 +1,6 @@
 package com.wj.api.controller.user;
 
+import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.api.utils.ResultUtil;
 import com.wj.core.entity.user.SysScreen;
@@ -34,7 +35,7 @@ public class ScreenController {
     @GetMapping("findAll")
     public Object findAll() {
         SysScreen screen = screenService.find();
-        return ResultUtil.success(HttpServletResponse.SC_OK, "SUCCESS", screen);
+        return ResponseMessage.ok(screen);
     }
 
 

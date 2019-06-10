@@ -1,5 +1,6 @@
 package com.wj.api.controller.user;
 
+import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.CommonUtils;
 import com.wj.api.utils.HttpUtils;
 import com.wj.api.utils.JwtUtil;
@@ -100,7 +101,7 @@ public class UserInfoController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResultUtil.success(HttpServletResponse.SC_OK, "SUCCESS", userInfo);
+        return ResponseMessage.ok(userInfo);
     }
 
 }
