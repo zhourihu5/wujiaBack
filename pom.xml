@@ -21,6 +21,7 @@
     <modules>
         <module>core</module>
         <module>api</module>
+        <module>admin</module>
     </modules>
 
     <properties>
@@ -61,6 +62,11 @@
             <dependency>
                 <groupId>com.wj</groupId>
                 <artifactId>api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wj</groupId>
+                <artifactId>admin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
