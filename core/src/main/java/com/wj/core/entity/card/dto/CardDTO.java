@@ -1,41 +1,39 @@
-package com.wj.core.entity.card;
+package com.wj.core.entity.card.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.wj.core.entity.card.enums.CardStatus;
-import com.wj.core.entity.card.enums.CardType;
 
-import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by sun on 2019/5/30.
- */
-@Entity
-public class OpCard {
+public class CardDTO {
 
-    @Id
-    @GeneratedValue
     private Integer id;
     private String title;
     private String memo;
-    @Enumerated(EnumType.ORDINAL)
-    private CardType type;
+    private String type;
     private String url;
     private String icon;
     private Short location;
     private Date createDate;
     private Integer userId;
-    @Enumerated(EnumType.ORDINAL)
-    private CardStatus isShow;
 
-    public CardStatus getIsShow() {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getIsShow() {
         return isShow;
     }
 
-    public void setIsShow(CardStatus isShow) {
+    public void setIsShow(String isShow) {
         this.isShow = isShow;
     }
+
+    private String isShow;
+
 
     public Integer getId() {
         return id;
@@ -59,14 +57,6 @@ public class OpCard {
 
     public void setMemo(String memo) {
         this.memo = memo;
-    }
-
-    public CardType getType() {
-        return type;
-    }
-
-    public void setType(CardType type) {
-        this.type = type;
     }
 
     public String getUrl() {
@@ -109,4 +99,5 @@ public class OpCard {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+
 }

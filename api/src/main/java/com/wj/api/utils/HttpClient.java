@@ -1,12 +1,13 @@
-package com.wj.core.service;
+package com.wj.api.utils;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-@Service
-public class HttpClientService {
+@Component
+public class HttpClient {
+
     public String getStringClient(String url) {
         RestTemplate template = new RestTemplate();
         ResponseEntity<String> response = template.getForEntity(url, String.class);
@@ -24,4 +25,5 @@ public class HttpClientService {
         ResponseEntity<String> response = template.getForEntity(url, String.class);
         return response.getBody();
     }
+
 }

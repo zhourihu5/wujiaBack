@@ -238,9 +238,9 @@ public class RandomUtil {
         return RandomStringUtils.random(length, 0, 0, false, true, null, threadLocalRandom());
     }
 
-    public static void main(String[] args) {
-        System.out.println( nextInt(40));
-    }
+//    public static void main(String[] args) {
+//        System.out.println( nextInt(40));
+//    }
 
 	/**
 	 * 随机字母或数字，固定长度

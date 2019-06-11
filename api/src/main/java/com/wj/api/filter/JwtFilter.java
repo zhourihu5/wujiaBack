@@ -18,7 +18,6 @@ import java.io.IOException;
 
 public class JwtFilter extends GenericFilterBean {
 //    Jwtconfig中配置的filter 用于Jwt token的验证工作 配置时可以指定对应的路径
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         final HttpServletResponse response = (HttpServletResponse) servletResponse;

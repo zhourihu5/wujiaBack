@@ -1,22 +1,22 @@
 package com.wj.api.controller.user;
 
 import com.wj.api.utils.CommonUtils;
-import com.wj.api.utils.ResultUtil;
-import io.swagger.annotations.ApiOperation;
+import com.wj.api.utils.HttpClient;
 import com.wj.api.utils.HttpUtils;
-import com.wj.api.utils.JwtUtil;
+import com.wj.api.utils.ResultUtil;
 import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.BaseCommuntity;
-import com.wj.core.service.HttpClientService;
 import com.wj.core.service.base.BaseAreaService;
 import com.wj.core.service.base.BaseCommuntityService;
-import io.jsonwebtoken.Claims;
+import io.swagger.annotations.ApiOperation;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class WeatherController {
 
     @Autowired
-    private HttpClientService httpClientService;
+    private HttpClient httpClientService;
 
     @Autowired
     private BaseAreaService baseAreaService;
