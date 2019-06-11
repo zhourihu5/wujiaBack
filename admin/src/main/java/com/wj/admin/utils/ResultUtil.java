@@ -11,7 +11,7 @@ public class ResultUtil {
     public static ResponseMessage success(int code, String msg, Object object) {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setCode(code);
-        responseMessage.setMsg(msg);
+        responseMessage.setMessage(msg);
         responseMessage.setData(object);
         return responseMessage;
     }
@@ -26,7 +26,7 @@ public class ResultUtil {
     public static ResponseMessage error(int code, String msg) {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setCode(code);
-        responseMessage.setMsg(msg);
+        responseMessage.setMessage(msg);
         return responseMessage;
     }
 

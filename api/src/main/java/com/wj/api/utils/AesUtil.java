@@ -52,7 +52,7 @@ public class AesUtil {
     public static void main(String[] args) {
         try {
             String password = createPassWord();
-            String encryptStr = encrypt("guang涛", password);
+            String encryptStr = encrypt("wj", password);
             System.out.println(encryptStr);
             System.out.println(decrypt(encryptStr, password));
         } catch (Exception e) {

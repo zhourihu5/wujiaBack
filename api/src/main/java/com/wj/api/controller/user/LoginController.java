@@ -147,7 +147,8 @@ public class LoginController {
     public Object login(String userName) {
         // Create Jwt token
         SysUserInfo userInfo = userInfoService.findByName(userName);
-        return ResponseMessage.ok(userInfo);
+        String jwtToken = JwtUtil.generateToken(userInfo);
+        return ResponseMessage.ok(jwtToken);
     }
 
 }

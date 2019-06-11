@@ -25,4 +25,7 @@ public class CommonUtils {
     // 阿里云appcode
     public static String APPCODE = "0ccda9e342a84ffe94da122cf081b1bd";
 
+    // AES key
+    public static String AESKEY = "WJ";
+
 }

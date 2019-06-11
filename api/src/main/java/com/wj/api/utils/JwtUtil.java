@@ -31,17 +31,19 @@ public class JwtUtil {
 
     /**
      * 定义泛型方法，方便传入任何类型入参对象
+     *
      * @param claims
      * @return String
      */
     public static String createJwt(Map<String, Object> claims) {
-        return Jwts.builder().setClaims(claims)
+        return "Bearer " + Jwts.builder().setClaims(claims)
                 .setExpiration(new Date(System.currentTimeMillis() + 60 * 120 * 1000L))  //过期时间
                 .signWith(SignatureAlgorithm.HS512, base64Secret).compact();  //加密方式
     }
 
     /**
      * 解析jwt
+     *
      * @param jwtToken
      * @return Claims
      */

@@ -41,6 +41,16 @@ public class UserInfoService {
     }
 
     /**
+     * 根据用户名和密码查询用户是否存在
+     * @param name
+     * @param pwd
+     * @return Integer
+     */
+    public SysUserInfo findByNameAndPwd(String name, String pwd) {
+        return userInfoRepository.findByNameAndPwd(name, pwd);
+    }
+
+    /**
      * 选择用户并将用户添加到家庭中
      *
      * @param uid
