@@ -4,6 +4,8 @@ import com.wj.admin.filter.ResponseMessage;
 import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.dto.BaseAreaDTO;
 import com.wj.core.service.base.BaseAreaService;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class BaseAreaController {
     @ApiOperation(value = "根据pid查询省市区信息", notes = "根据pid查询省市区信息")
     @GetMapping("findArea")
     public @ResponseBody Object findArea(Integer pid) {
+        if (pid == null) {
+            pid = 0;
+        }
         List<BaseArea> list = baseAreaService.findByPid(pid);
         return ResponseMessage.ok(list);
     }
@@ -34,6 +39,9 @@ public class BaseAreaController {
     @GetMapping("findProByPid")
     public @ResponseBody
     Object findProByPid(Integer pid) {
+        if (pid == null) {
+            pid = 0;
+        }
         // 省
         List<BaseArea> provinceList = baseAreaService.findByPid(pid);
         List<BaseAreaDTO> list = new ArrayList<>();

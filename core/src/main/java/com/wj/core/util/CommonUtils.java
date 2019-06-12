@@ -1,4 +1,4 @@
-package com.wj.admin.utils;
+package com.wj.core.util;
 
 /**
  * 工具类

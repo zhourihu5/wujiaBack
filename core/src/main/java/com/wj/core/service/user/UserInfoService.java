@@ -9,11 +9,20 @@ import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.util.CommonUtils;
 import com.wj.core.util.mapper.BeanMapper;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +51,7 @@ public class UserInfoService {
 
     /**
      * 根据用户名和密码查询用户是否存在
+     *
      * @param name
      * @param pwd
      * @return Integer
@@ -108,5 +118,44 @@ public class UserInfoService {
         return 0;
     }
 
+    /**
+     * 获取用户详细信息
+     *
+     * @param userName
+     * @param nickName
+     * @return void
+     */
+    public Page<SysUserInfo> findAll(String userName, String nickName, Pageable pageable) {
+        if (!CommonUtils.isNull(userName) && !CommonUtils.isNull(nickName)) {
+            return userInfoRepository.findByUserNameAndNickName(userName, nickName, pageable);
+        } else if (!CommonUtils.isNull(userName) && CommonUtils.isNull(nickName)) {
+            return userInfoRepository.findByUserName(userName, pageable);
+        } else if (CommonUtils.isNull(userName) && !CommonUtils.isNull(nickName)) {
+            return userInfoRepository.findByUserName(nickName, pageable);
+        } else {
+            return userInfoRepository.findAll(pageable);
+        }
+    }
+
+    /**
+     * 新增/修改用户
+     * @param sysUserInfo
+     * @return void
+     */
+    @Transactional
+    public void saveUser(SysUserInfo sysUserInfo) {
+        userInfoRepository.save(sysUserInfo);
+    }
+
+    /**
+     * 删除用户
+     * @param sysUserInfo
+     * @return void
+     */
+    @Transactional
+    public void delUser(SysUserInfo sysUserInfo) {
+        userInfoRepository.delete(sysUserInfo);
+    }
 
 }
+

@@ -115,7 +115,7 @@ public class LoginController {
     public Object checking(@RequestBody SysUserInfo sysUserInfo) {
         String userName = sysUserInfo.getUserName();
         String password = sysUserInfo.getPassword();
-        if (userName == null || password == null) {
+        if (userName.isEmpty() || password.isEmpty()) {
             throw new ServiceException("请输入正确的参数", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         AesUtils au = new AesUtils();
@@ -146,6 +146,7 @@ public class LoginController {
         Map<String, Object> maps = new HashMap<>();
         maps.put("authList", authorityDTOList);
         maps.put("token", jwtToken);
+        maps.put("userInfo", userInfo);
         return ResponseMessage.ok(maps);
     }
 

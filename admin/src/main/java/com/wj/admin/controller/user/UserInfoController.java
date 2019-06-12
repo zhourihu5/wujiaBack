@@ -21,19 +21,25 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.checkerframework.checker.units.qual.min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Api(value = "/v1/user", tags = "用户接口模块")
 @RestController
-@RequestMapping("/v1/user/")
+@RequestMapping("/user/")
 public class UserInfoController {
 
     @Autowired
@@ -53,8 +59,10 @@ public class UserInfoController {
 
     @Autowired
     private BaseFamilyService baseFamilyService;
+
     /**
      * 获取用户信息(PAD端首页接口)
+     *
      * @param
      * @return
      * @author
@@ -66,7 +74,7 @@ public class UserInfoController {
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
         Claims claims = JwtUtil.parseJwt(token);
-        Integer userId = (Integer)claims.get("userId");
+        Integer userId = (Integer) claims.get("userId");
         // 个人信息
         SysUserInfo userInfo = userInfoService.findUserInfo(userId);
         // 获取家庭ID
@@ -100,6 +108,30 @@ public class UserInfoController {
             e.printStackTrace();
         }
         return ResponseMessage.ok(userInfo);
+    }
+
+
+    @ApiOperation(value = "获取用户分页信息", notes = "获取用户分页信息")
+    @GetMapping("findUserInfoByName")
+    public Object findUserInfoByName(String userName, String nickName, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        pageNum = pageNum - 1;
+        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Page<SysUserInfo> page = userInfoService.findAll(userName, nickName, pageable);
+        return ResponseMessage.ok(page);
+    }
+
+    @ApiOperation(value = "新增/修改用户", notes = "新增/修改用户")
+    @PostMapping("addUser")
+    public Object addUser(@RequestBody SysUserInfo user) {
+        userInfoService.saveUser(user);
+        return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value = "新增/修改用户", notes = "新增/修改用户")
+    @PostMapping("delUser")
+    public Object delUser(@RequestBody SysUserInfo user) {
+        userInfoService.delUser(user);
+        return ResponseMessage.ok();
     }
 
 }

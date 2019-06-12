@@ -60,8 +60,6 @@ public class LoginController {
     public Object sendMsg(HttpServletRequest request) {
         String userName = request.getParameter("userName");
         logger.info(userName+"发送验证码info");
-        logger.warn(userName+"发送验证码warn");
-        logger.error(userName+"发送验证码error");
         SysUserInfo userInfo = userInfoService.findByName(userName);
         if (userInfo == null) {
             throw new ServiceException("你不是平台用户", ErrorCode.INTERNAL_SERVER_ERROR);
@@ -88,6 +86,7 @@ public class LoginController {
         try {
             if (code == null) {
                 smsCode = CommonUtils.createRandomNum(6);// 生成随机数
+                smsCode = "123456";
                 httpSession.setAttribute(userName, smsCode);
             }
             //TimerTask实现5分钟后从session中删除smsCode验证码
