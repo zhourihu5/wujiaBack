@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(value="/auth", tags="权限接口模块")
+@Api(value="/v1/card", tags="卡片接口模块")
 @RestController
 @RequestMapping("/v1")
 public class CardController {

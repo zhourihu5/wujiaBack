@@ -36,13 +36,14 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("接口文档")
-                .description("接口文档")
+                .title("吾家PAD接口文档")
+                .description("此接口只为pad端提供")
                 //服务条款网址
                 //.termsOfServiceUrl("http://www.baidu.com")
                 .version("1.0")
                 //.contact(new Contact("帅呆了", "url", "email"))
                 .build();
     }
+
 
 }
