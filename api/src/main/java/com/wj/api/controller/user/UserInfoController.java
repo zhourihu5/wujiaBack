@@ -1,5 +1,6 @@
 package com.wj.api.controller.user;
 
+import com.alibaba.fastjson.JSONArray;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.CommonUtils;
 import com.wj.api.utils.HttpUtils;
@@ -11,18 +12,18 @@ import com.wj.core.entity.base.BaseDevice;
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.entity.user.dto.IndexDTO;
 import com.wj.core.entity.user.dto.UserInfoDTO;
-import com.wj.core.service.base.BaseAreaService;
-import com.wj.core.service.base.BaseCommuntityService;
-import com.wj.core.service.base.BaseDeviceService;
-import com.wj.core.service.base.BaseFamilyService;
+import com.wj.core.service.base.*;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +56,10 @@ public class UserInfoController {
 
     @Autowired
     private BaseFamilyService baseFamilyService;
+
+    @Autowired
+    private FamilyCommuntityService familyCommuntityService;
+
     /**
      * 获取用户信息(PAD端首页接口)
      * @param
@@ -63,7 +68,7 @@ public class UserInfoController {
      */
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
     @GetMapping("findUserInfo")
-    public Object findUserInfo(String key) {
+    public ResponseMessage<IndexDTO> findUserInfo(String key) {
         // 获取token
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
@@ -73,24 +78,23 @@ public class UserInfoController {
         SysUserInfo userInfo = userInfoService.findUserInfo(userId);
         // 获取家庭ID
         BaseDevice baseDevice = baseDeviceService.findByKey(key);
-        // 家庭列表 根据机器key查询家庭ID 根据家庭ID查询家庭成员
+        // 家庭成员列表 根据机器key查询家庭ID 根据家庭ID查询家庭成员
         List<SysUserInfo> sysUserInfoList = userFamilyService.findFamilyToUser(baseDevice.getFamilyId());
-        // 社区信息
-        BaseFamily baseFamily = baseFamilyService.findByFamilyId(baseDevice.getFamilyId());
-        BaseCommuntity communtity = baseFamily.getCommuntityId();
-        // 社区ID
-        Integer communtityId = communtity.getId();
+        // 根据家庭id查看社区信息-社区ID
+        Integer communtityId = familyCommuntityService.findByFamilyId(baseDevice.getFamilyId());
+        // 查询当前社区信息
+        BaseCommuntity baseCommuntity = baseCommuntityService.findById(communtityId);
+        if (null == baseCommuntity) {
+            return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
+        }
+        BaseArea baseArea = baseAreaService.findById(baseCommuntity.getCity());
+        if (null == baseArea) {
+            return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
+        }
+        List<BaseDevice> baseDeviceList = baseDeviceService.findByFamilyId(baseDevice.getFamilyId());
         // 天气
         String json = null;
         try {
-            BaseCommuntity baseCommuntity = baseCommuntityService.findById(communtityId);
-            if (null == baseCommuntity) {
-                return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
-            }
-            BaseArea baseArea = baseAreaService.findById(baseCommuntity.getCity());
-            if (null == baseArea) {
-                return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
-            }
             Map<String, String> headers = new HashMap<String, String>();
             //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
             headers.put("Authorization", "APPCODE " + CommonUtils.APPCODE);
@@ -101,7 +105,13 @@ public class UserInfoController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseMessage.ok(userInfo);
+        IndexDTO indexDTO = new IndexDTO();
+        indexDTO.setSysUserInfo(userInfo);
+        indexDTO.setSysUserInfoList(sysUserInfoList);
+        indexDTO.setWeather(JSONArray.parse(json));
+        indexDTO.setCommuntity(baseCommuntity);
+        indexDTO.setBaseDeviceList(baseDeviceList);
+        return ResponseMessage.ok(indexDTO);
     }
 
 }

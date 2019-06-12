@@ -2,6 +2,7 @@ package com.wj.api.controller.user;
 
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.ResultUtil;
+import com.wj.core.entity.card.OpCard;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.UserFamilyDTO;
@@ -36,7 +37,7 @@ public class UserFamilyController {
      */
     @ApiOperation(value = "根据用户id查看用户家庭信息", notes = "根据用户id查看用户家庭信息")
     @GetMapping("findByUserId")
-    public Object findByUserId(int userId) {
+    public ResponseMessage<List<SysUserFamily>> findByUserId(int userId) {
         List<SysUserFamily> list = userFamilyService.findByUserId(userId);
         return ResponseMessage.ok(list);
     }
@@ -49,7 +50,7 @@ public class UserFamilyController {
      */
     @ApiOperation(value = "家庭成员列表", notes = "家庭成员列表")
     @GetMapping("findFamilyUserList")
-    public Object findFamilyUserList(Integer familyId) {
+    public ResponseMessage<List<SysUserInfo>> findFamilyUserList(Integer familyId) {
         // 家庭列表 根据机器key查询家庭ID 根据家庭ID查询家庭成员
         List<SysUserInfo> sysUserInfoList = userFamilyService.findFamilyToUser(familyId);
         return ResponseMessage.ok(sysUserInfoList);
@@ -64,7 +65,7 @@ public class UserFamilyController {
      */
     @ApiOperation(value = "首页添加家庭成员", notes = "首页添加家庭成员")
     @GetMapping("addFamily")
-    public Object addFamily(String userName, int familyId) {
+    public ResponseMessage addFamily(String userName, int familyId) {
         Integer code = userInfoService.saveUserAndFamily(userName, familyId);
         if (code.equals(1)) {
             return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "手机号已存在");

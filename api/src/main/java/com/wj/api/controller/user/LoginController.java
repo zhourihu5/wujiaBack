@@ -57,7 +57,7 @@ public class LoginController {
      */
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
     @GetMapping("sendMsg")
-    public Object sendMsg(HttpServletRequest request) {
+    public ResponseMessage<String> sendMsg(HttpServletRequest request) {
         String userName = request.getParameter("userName");
         logger.info(userName+"发送验证码info");
         SysUserInfo userInfo = userInfoService.findByName(userName);
@@ -117,7 +117,7 @@ public class LoginController {
      * @author thz
      */
     @RequestMapping(value = "checking", method = RequestMethod.GET)
-    public Object checking(HttpServletRequest request) {
+    public ResponseMessage<String> checking(HttpServletRequest request) {
         String userName = request.getParameter("userName");
         String smsCode = request.getParameter("smsCode");
         HttpSession httpSession = request.getSession();
@@ -143,7 +143,7 @@ public class LoginController {
      * @author thz
      */
     @RequestMapping(value = "getToken", method = RequestMethod.POST)
-    public Object login(String userName) {
+    public ResponseMessage<String> login(String userName) {
         // Create Jwt token
         SysUserInfo userInfo = userInfoService.findByName(userName);
         String jwtToken = JwtUtil.generateToken(userInfo);

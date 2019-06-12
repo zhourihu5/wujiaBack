@@ -33,7 +33,7 @@ public class ScreenController {
      */
     @ApiOperation(value = "查看屏保信息", notes = "查看屏保信息")
     @GetMapping("findAll")
-    public Object findAll() {
+    public ResponseMessage<SysScreen> findAll() {
         SysScreen screen = screenService.find();
         return ResponseMessage.ok(screen);
     }

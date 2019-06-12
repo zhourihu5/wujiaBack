@@ -131,7 +131,7 @@ public class UserInfoService {
         } else if (!CommonUtils.isNull(userName) && CommonUtils.isNull(nickName)) {
             return userInfoRepository.findByUserName(userName, pageable);
         } else if (CommonUtils.isNull(userName) && !CommonUtils.isNull(nickName)) {
-            return userInfoRepository.findByUserName(nickName, pageable);
+            return userInfoRepository.findByNickName(nickName, pageable);
         } else {
             return userInfoRepository.findAll(pageable);
         }

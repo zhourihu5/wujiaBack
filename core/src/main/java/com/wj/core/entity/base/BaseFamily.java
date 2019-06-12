@@ -79,18 +79,18 @@ public class BaseFamily {
         this.serviceId = serviceId;
     }
 
-//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinTable(name = "sys_family_communtity", joinColumns = {@JoinColumn(name = "familyId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "communtityId", referencedColumnName = "id")})
-    @JsonIgnore
-    @OneToOne(cascade=CascadeType.ALL)//family是关系的维护端
-    @JoinTable(name="sys_family_communtity",joinColumns=@JoinColumn(name="familyId"),inverseJoinColumns=@JoinColumn(name="communtityId"))
-    private BaseCommuntity communtityId;
-
-    public BaseCommuntity getCommuntityId() {
-        return communtityId;
-    }
-
-    public void setCommuntityId(BaseCommuntity communtityId) {
-        this.communtityId = communtityId;
-    }
+//    //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+////    @JoinTable(name = "sys_family_communtity", joinColumns = {@JoinColumn(name = "familyId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "communtityId", referencedColumnName = "id")})
+//    @JsonIgnore
+//    @OneToOne(cascade = CascadeType.ALL)//family是关系的维护端
+//    @JoinTable(name = "sys_family_communtity", joinColumns = @JoinColumn(name = "familyId"), inverseJoinColumns = @JoinColumn(name = "communtityId"))
+//    private BaseCommuntity communtityId;
+//
+//    public BaseCommuntity getCommuntityId() {
+//        return communtityId;
+//    }
+//
+//    public void setCommuntityId(BaseCommuntity communtityId) {
+//        this.communtityId = communtityId;
+//    }
 }

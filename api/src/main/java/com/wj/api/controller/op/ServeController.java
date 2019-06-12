@@ -34,7 +34,7 @@ public class ServeController {
      */
     @ApiOperation(value = "根据id查询服务详情", notes = "根据id查询服务详情")
     @GetMapping("findByFamilyId")
-    public Object findByFamilyId(Integer familyId) {
+    public ResponseMessage<List<OpService>> findByFamilyId(Integer familyId) {
         List<OpService> list = serviceService.findByFamilyId(familyId);
         return ResponseMessage.ok(list);
     }
@@ -47,7 +47,7 @@ public class ServeController {
      */
     @ApiOperation(value = "根据id查询服务详情", notes = "根据id查询服务详情")
     @GetMapping("findById")
-    public Object findById(Integer id) {
+    public ResponseMessage<OpService> findById(Integer id) {
         OpService opService = serviceService.findById(id);
         return ResponseMessage.ok(opService);
     }
@@ -60,7 +60,7 @@ public class ServeController {
      */
     @ApiOperation(value = "全部服务接口", notes = "全部服务接口")
     @GetMapping("all")
-    public Object all(Integer type) {
+    public ResponseMessage<List<ServiceDTO>> all(Integer type) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
@@ -77,7 +77,7 @@ public class ServeController {
      */
     @ApiOperation(value = "订阅接口", notes = "订阅接口")
     @GetMapping("subscribe")
-    public Object subscribe(Integer serviceId, Integer isSubscribe) {
+    public ResponseMessage subscribe(Integer serviceId, Integer isSubscribe) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");

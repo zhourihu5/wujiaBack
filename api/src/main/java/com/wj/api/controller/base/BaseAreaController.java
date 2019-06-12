@@ -42,7 +42,7 @@ public class BaseAreaController {
 
     @ApiOperation(value = "根据pid查询省市区信息", notes = "根据pid查询省市区信息")
     @GetMapping("findArea")
-    public @ResponseBody Object findArea(Integer pid) {
+    public @ResponseBody ResponseMessage<List<BaseArea>> findArea(Integer pid) {
         List<BaseArea> list = baseAreaService.findByPid(pid);
         return ResponseMessage.ok(list);
     }
@@ -50,7 +50,7 @@ public class BaseAreaController {
     @ApiOperation(value = "省市区三级联动", notes = "省市区三级联动")
     @GetMapping("findProByPid")
     public @ResponseBody
-    Object findProByPid(Integer pid) {
+    ResponseMessage<List<BaseAreaDTO>> findProByPid(Integer pid) {
         // 省
         List<BaseArea> provinceList = baseAreaService.findByPid(pid);
         List<BaseAreaDTO> list = new ArrayList<>();

@@ -5,6 +5,8 @@ import com.wj.core.entity.base.BaseDevice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface BaseDeviceRepository extends JpaRepository<BaseDevice, Integer> {
 
     /**
@@ -14,5 +16,13 @@ public interface BaseDeviceRepository extends JpaRepository<BaseDevice, Integer>
      */
     @Query(value = "select * from base_device where device_key = ?1", nativeQuery = true)
     public BaseDevice findByKey(String key);
+
+    /**
+     * 根据家庭ID查询所属设备
+     * @param fid
+     * @returne List<BaseDevice>
+     */
+    @Query(value = "select * from base_device where family_id = ?1", nativeQuery = true)
+    public List<BaseDevice> findByFamilyId(Integer fid);
 
 }
