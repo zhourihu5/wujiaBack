@@ -65,5 +65,9 @@
             <groupId>cn.jpush.api</groupId>
             <artifactId>jpush-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -1,14 +1,12 @@
 package com.wj.core.service.message;
 
 import com.google.common.collect.Lists;
-import com.wj.core.entity.card.dto.CardDTO;
-import com.wj.core.entity.message.dto.MessageDTO;
+import com.wj.core.entity.message.Message;
 import com.wj.core.entity.message.enums.MessageStatus;
+import com.wj.core.entity.message.enums.MessageType;
 import com.wj.core.repository.message.MessageRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
-import com.wj.core.util.mapper.BeanMapper;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +16,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Service
@@ -27,15 +27,30 @@ public class MessageService {
     private MessageRepository messageRepository;
 
 
-    public Page<MessageDTO> getList(String token, Integer pageNo, String type, String status)  {
+    public Page<Message> getList(String token, Integer pageNo, Integer type, Integer status)  {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
+
             List<Predicate> predicates = Lists.newArrayList();
-            if (StringUtils.isNotBlank(type)) {
-                predicates.add(criteriaBuilder.equal(root.get("type"), type));
+            if (type != null) {
+                if (type == MessageType.SQ.ordinal()) {
+                    predicates.add(criteriaBuilder.equal(root.get("type"), MessageType.SQ));
+                }
+                if (type == MessageType.SY.ordinal()) {
+                    predicates.add(criteriaBuilder.equal(root.get("type"), MessageType.SY));
+                }
+                if (type == MessageType.WY.ordinal()) {
+                    predicates.add(criteriaBuilder.equal(root.get("type"), MessageType.WY));
+                }
             }
-            if (StringUtils.isNotBlank(status)) {
-                predicates.add(criteriaBuilder.equal(root.get("status"), type));
+            if (status != null) {
+                if (type == MessageStatus.NO.ordinal()) {
+                    predicates.add(criteriaBuilder.equal(root.get("status"), MessageStatus.NO));
+                }
+                if (type == MessageStatus.YES.ordinal()) {
+                    predicates.add(criteriaBuilder.equal(root.get("status"), MessageStatus.YES));
+                }
             }
+            predicates.add(criteriaBuilder.equal(root.get("userId"), 1));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
         if (pageNo == null) {
@@ -45,11 +60,13 @@ public class MessageService {
         return messageRepository.findAll(specification, page);
     }
 
-    public void updateStatus(Integer id) {
+    @Transactional
+    public void modifyRead(String token, @NotBlank(message = "消息ID为空") Integer id) {
+
         if (id == null) {
             throw new ServiceException("消息ID未空", ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        messageRepository.modityStatus(MessageStatus.YES, id);
+        messageRepository.modityStatus(String.valueOf(MessageStatus.YES.ordinal()), id, 1);
     }
 
 }

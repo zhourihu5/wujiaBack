@@ -20,7 +20,9 @@ public class Message {
     private Integer userId;
     @Enumerated(EnumType.ORDINAL)
     private MessageStatus status;
+    private Date createDate;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getCreateDate() {
         return createDate;
     }
@@ -28,8 +30,6 @@ public class Message {
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
-
-    private Date createDate;
 
     public Integer getId() {
         return id;
