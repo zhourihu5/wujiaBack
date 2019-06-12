@@ -55,9 +55,6 @@ public class UserInfoController {
     private BaseDeviceService baseDeviceService;
 
     @Autowired
-    private BaseFamilyService baseFamilyService;
-
-    @Autowired
     private FamilyCommuntityService familyCommuntityService;
 
     /**

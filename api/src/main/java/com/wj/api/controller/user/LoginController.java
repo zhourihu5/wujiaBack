@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -116,7 +117,8 @@ public class LoginController {
      * @return List<UserInfo>
      * @author thz
      */
-    @RequestMapping(value = "checking", method = RequestMethod.GET)
+    @ApiOperation(value = "登录", notes = "登录")
+    @GetMapping("checking")
     public ResponseMessage<String> checking(HttpServletRequest request) {
         String userName = request.getParameter("userName");
         String smsCode = request.getParameter("smsCode");
@@ -135,19 +137,5 @@ public class LoginController {
         return ResponseMessage.ok(jwtToken);
     }
 
-    /**
-     * 获取token
-     *
-     * @param userName
-     * @return String
-     * @author thz
-     */
-    @RequestMapping(value = "getToken", method = RequestMethod.POST)
-    public ResponseMessage<String> login(String userName) {
-        // Create Jwt token
-        SysUserInfo userInfo = userInfoService.findByName(userName);
-        String jwtToken = JwtUtil.generateToken(userInfo);
-        return ResponseMessage.ok(jwtToken);
-    }
 
 }

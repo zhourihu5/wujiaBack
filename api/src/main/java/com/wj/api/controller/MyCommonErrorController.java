@@ -1,5 +1,9 @@
 package com.wj.api.controller;
 
+import com.wj.api.utils.JwtUtil;
+import com.wj.core.entity.user.SysUserInfo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
@@ -46,7 +51,17 @@ public class MyCommonErrorController extends BasicErrorController {
         Map<String, Object> body = new LinkedHashMap<>(16);
         body.put("code", getCode(message));
         body.put("message", message);
-        body.put("data", null);
+//        if (getCode(message) == -2) {
+//            String authHeader = request.getHeader("Authorization");
+//            String bearerString = "Bearer ";
+//            String token = authHeader.substring(bearerString.length());
+//            //使用jwt paser来验证签名
+//            Claims claims = JwtUtil.parseJwt(token);
+//            SysUserInfo userInfo = new SysUserInfo();
+//            userInfo.setId((Integer) claims.get("userId"));
+//            userInfo.setUserName((String) claims.get("userName"));
+//            response.setHeader("Authorization", JwtUtil.generateToken(userInfo));
+//        }
         return new ResponseEntity(body, status);
     }
 
