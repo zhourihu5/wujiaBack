@@ -11,28 +11,28 @@ import java.util.List;
 @ApiModel(description = "登录DTO")
 public class LoginDTO {
 
-    private SysUserInfo sysUserInfo;
+    private SysUserInfo userInfo;
 
-    private List<AuthorityDTO> authorityDTOList;
+    private List<AuthorityDTO> authorityList;
 
     private String token;
 
     private DeviceDTO device;
 
-    public SysUserInfo getSysUserInfo() {
-        return sysUserInfo;
+    public SysUserInfo getUserInfo() {
+        return userInfo;
     }
 
-    public void setSysUserInfo(SysUserInfo sysUserInfo) {
-        this.sysUserInfo = sysUserInfo;
+    public void setUserInfo(SysUserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
-    public List<AuthorityDTO> getAuthorityDTOList() {
-        return authorityDTOList;
+    public List<AuthorityDTO> getAuthorityList() {
+        return authorityList;
     }
 
-    public void setAuthorityDTOList(List<AuthorityDTO> authorityDTOList) {
-        this.authorityDTOList = authorityDTOList;
+    public void setAuthorityList(List<AuthorityDTO> authorityList) {
+        this.authorityList = authorityList;
     }
 
     public String getToken() {

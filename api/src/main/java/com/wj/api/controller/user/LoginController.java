@@ -154,7 +154,7 @@ public class LoginController {
         SysUserInfo userInfo = userInfoService.findByName(userName);
         String jwtToken = JwtUtil.generateToken(userInfo);
         loginDTO.setToken(jwtToken);
-        loginDTO.setSysUserInfo(userInfo);
+        loginDTO.setUserInfo(userInfo);
         loginDTO.setDevice(deviceDTO);
         return ResponseMessage.ok(loginDTO);
     }

@@ -89,9 +89,9 @@ public class LoginController {
         }
 //        List<AuthorityDTO> a = BeanMapper.mapList(authList, AuthorityDTO.class);
         LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setAuthorityDTOList(authorityDTOList);
+        loginDTO.setAuthorityList(authorityDTOList);
         loginDTO.setToken(jwtToken);
-        loginDTO.setSysUserInfo(userInfo);
+        loginDTO.setUserInfo(userInfo);
 //        Map<String, Object> maps = new HashMap<>();
 //        maps.put("authList", authorityDTOList);
 //        maps.put("token", jwtToken);
