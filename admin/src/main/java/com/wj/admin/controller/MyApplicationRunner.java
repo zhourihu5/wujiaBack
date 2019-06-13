@@ -24,8 +24,6 @@ import java.util.List;
  * @see @Order注解的执行优先级是按value值从小到大顺序。
  * @author pangps
  * @version v1.0
- * @date 2017年7月24日
- *
  */
 @Component
 @Order(value=1)
