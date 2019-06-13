@@ -2,11 +2,9 @@ package com.wj.core.entity.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * 权限表
@@ -16,9 +14,10 @@ import javax.persistence.Id;
  */
 @ApiModel(description = "权限表")
 @Entity
+@Table(name = "sys_authority")
 public class SysAuthority {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "权限ID")
     private Integer id;
     @ApiModelProperty(value = "路由名称")

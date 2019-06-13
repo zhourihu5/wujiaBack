@@ -6,17 +6,17 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 /**
- * 用户家庭关联表
+ * 用户角色关联表
  *
  * @author thz
  * @version 1.0
  */
-@ApiModel(description = "用户家庭关联表")
+@ApiModel(description = "用户角色关联表")
 @Embeddable
-public class UserFamily implements Serializable {
+public class UserRole implements Serializable {
 
     private Integer userId;
-    private Integer familyId;
+    private Integer roleId;
 
     public Integer getUserId() {
         return userId;
@@ -26,11 +26,11 @@ public class UserFamily implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getFamilyId() {
-        return familyId;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setFamilyId(Integer familyId) {
-        this.familyId = familyId;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 }

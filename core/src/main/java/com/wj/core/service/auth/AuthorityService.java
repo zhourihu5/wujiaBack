@@ -33,5 +33,37 @@ public class AuthorityService {
         return authorityRepository.findAll();
     }
 
+    /**
+     * 根据id查询路由信息
+     *
+     * @param id
+     * @return SysAuthority
+     */
+    public Object findById(Integer id) {
+        return authorityRepository.findById(id);
+    }
+
+
+    /**
+     * 新增/修改角色
+     *
+     * @param sysAuthority
+     * @return void
+     */
+    @Transactional
+    public void saveAuthority(SysAuthority sysAuthority) {
+        authorityRepository.save(sysAuthority);
+    }
+
+    /**
+     * 删除角色
+     *
+     * @param sysAuthority
+     * @return void
+     */
+    @Transactional
+    public void delAuthority(SysAuthority sysAuthority) {
+        authorityRepository.delete(sysAuthority);
+    }
 
 }

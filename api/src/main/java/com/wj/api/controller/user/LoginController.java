@@ -7,6 +7,7 @@ import com.wj.api.utils.ResultUtil;
 import com.wj.core.entity.base.BaseDevice;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.entity.user.dto.LoginDTO;
 import com.wj.core.entity.user.dto.UserInfoDTO;
 import com.wj.core.service.base.BaseDeviceService;
 import com.wj.core.service.exception.ErrorCode;
@@ -119,22 +120,24 @@ public class LoginController {
      */
     @ApiOperation(value = "登录", notes = "登录")
     @GetMapping("checking")
-    public ResponseMessage<String> checking(HttpServletRequest request) {
+    public ResponseMessage<LoginDTO> checking(HttpServletRequest request) {
         String userName = request.getParameter("userName");
         String smsCode = request.getParameter("smsCode");
         HttpSession httpSession = request.getSession();
-        String jwtToken = "";
+        LoginDTO loginDTO = new LoginDTO();
         try {
             Object data = httpSession.getAttribute(userName);
             if (!String.valueOf(data).equals(smsCode)) {
                 throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
             }
             SysUserInfo userInfo = userInfoService.findByName(userName);
-            jwtToken = JwtUtil.generateToken(userInfo);
+            String jwtToken = JwtUtil.generateToken(userInfo);
+            loginDTO.setToken(jwtToken);
+            loginDTO.setSysUserInfo(userInfo);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseMessage.ok(jwtToken);
+        return ResponseMessage.ok(loginDTO);
     }
 
 

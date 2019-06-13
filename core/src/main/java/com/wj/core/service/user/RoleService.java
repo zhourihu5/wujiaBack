@@ -63,8 +63,10 @@ public class RoleService {
     public List<SysRole> findAll() {
         return roleRepository.findAll();
     }
+
     /**
      * 新增/修改角色
+     *
      * @param sysRole
      * @return void
      */
@@ -75,6 +77,7 @@ public class RoleService {
 
     /**
      * 删除角色
+     *
      * @param sysRole
      * @return void
      */

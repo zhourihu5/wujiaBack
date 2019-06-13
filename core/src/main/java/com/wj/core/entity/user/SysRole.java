@@ -17,7 +17,7 @@ import javax.persistence.Id;
 @Entity
 public class SysRole {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "名称")
     private String name;
