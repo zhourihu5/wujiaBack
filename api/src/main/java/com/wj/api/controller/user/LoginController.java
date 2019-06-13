@@ -5,6 +5,7 @@ import com.wj.api.utils.CommonUtils;
 import com.wj.api.utils.JwtUtil;
 import com.wj.api.utils.ResultUtil;
 import com.wj.core.entity.base.BaseDevice;
+import com.wj.core.entity.base.dto.DeviceDTO;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.LoginDTO;
@@ -30,6 +31,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -73,11 +75,11 @@ public class LoginController {
         // 获取家庭ID
         BaseDevice baseDevice = baseDeviceService.findByKey(key);
         if (baseDevice == null) {
-            throw new ServiceException("数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new ServiceException("此设备没有绑定家庭", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         SysUserFamily sysUserFamily = userFamilyService.findByUidAndFid(userInfo.getId(), baseDevice.getFamilyId());
         if (sysUserFamily == null) {
-            throw new ServiceException("数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new ServiceException("家庭成员数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         if (sysUserFamily.getIdentity() != 1 || sysUserFamily.getStatus() != 1) {
             throw new ServiceException("账户限制", ErrorCode.INTERNAL_SERVER_ERROR);
@@ -125,18 +127,35 @@ public class LoginController {
         String smsCode = request.getParameter("smsCode");
         HttpSession httpSession = request.getSession();
         LoginDTO loginDTO = new LoginDTO();
-        try {
-            Object data = httpSession.getAttribute(userName);
-            if (!String.valueOf(data).equals(smsCode)) {
-                throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
-            }
-            SysUserInfo userInfo = userInfoService.findByName(userName);
-            String jwtToken = JwtUtil.generateToken(userInfo);
-            loginDTO.setToken(jwtToken);
-            loginDTO.setSysUserInfo(userInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
+        Object data = httpSession.getAttribute(userName);
+        if (!String.valueOf(data).equals(smsCode)) {
+            throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
         }
+        String key = request.getParameter("key");
+        if (key == null) {
+            throw new ServiceException("设备编号异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        // 获取家庭ID
+        BaseDevice baseDevice = baseDeviceService.findByKey(key);
+        if (baseDevice == null) {
+            throw new ServiceException("此设备没有绑定家庭", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        List<BaseDevice> baseDeviceList = baseDeviceService.findByFamilyId(baseDevice.getFamilyId());
+        DeviceDTO deviceDTO = new DeviceDTO();
+        baseDeviceList.forEach(BaseDevice -> {
+            if (BaseDevice.getFlag() == 1) {
+                // 1是底座 key
+                deviceDTO.setDeviceKey(BaseDevice.getDeviceKey());
+            }
+            if (BaseDevice.getDeviceKey().equals(key)) {
+                deviceDTO.setButtonKey(BaseDevice.getButtonKey());
+            }
+        });
+        SysUserInfo userInfo = userInfoService.findByName(userName);
+        String jwtToken = JwtUtil.generateToken(userInfo);
+        loginDTO.setToken(jwtToken);
+        loginDTO.setSysUserInfo(userInfo);
+        loginDTO.setDevice(deviceDTO);
         return ResponseMessage.ok(loginDTO);
     }
 

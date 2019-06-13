@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Api(value = "/v1/area", tags = "省市区接口模块")
 @RestController
@@ -38,24 +42,33 @@ public class BaseAreaController {
     @ApiOperation(value = "省市区三级联动", notes = "省市区三级联动")
     @GetMapping("findProByPid")
     public @ResponseBody
-    Object findProByPid(Integer pid) {
-        if (pid == null) {
-            pid = 0;
+    Object findProByPid(Integer pid, HttpServletRequest request) {
+        final HttpSession httpSession = request.getSession();
+        Object data = httpSession.getAttribute("area");
+        Map<String, Object> map = new HashMap<>();
+        if (data == null) {
+            if (pid == null) {
+                pid = 0;
+            }
+            // 省
+            List<BaseArea> provinceList = baseAreaService.findByPid(pid);
+            List<BaseAreaDTO> list = new ArrayList<>();
+            for (BaseArea province : provinceList) {
+                BaseAreaDTO baseAreaDTO = new BaseAreaDTO();
+                baseAreaDTO.setId(province.getId());
+                baseAreaDTO.setAreaName(province.getAreaName());
+                baseAreaDTO.setAreaCode(province.getAreaCode());
+                baseAreaDTO.setAreaParentId(province.getAreaParentId());
+                List<BaseAreaDTO> pList = getChilds(province);
+                baseAreaDTO.setList(pList);
+                list.add(baseAreaDTO);
+            }
+            map.put("area", list);
+            httpSession.setAttribute("area", list);
+        } else {
+            map.put("area", data);
         }
-        // 省
-        List<BaseArea> provinceList = baseAreaService.findByPid(pid);
-        List<BaseAreaDTO> list = new ArrayList<>();
-        for (BaseArea province : provinceList) {
-            BaseAreaDTO baseAreaDTO = new BaseAreaDTO();
-            baseAreaDTO.setId(province.getId());
-            baseAreaDTO.setAreaName(province.getAreaName());
-            baseAreaDTO.setAreaCode(province.getAreaCode());
-            baseAreaDTO.setAreaParentId(province.getAreaParentId());
-            List<BaseAreaDTO> pList = getChilds(province);
-            baseAreaDTO.setList(pList);
-            list.add(baseAreaDTO);
-        }
-        return ResponseMessage.ok(list);
+        return ResponseMessage.ok(data);
     }
 
     private List<BaseAreaDTO> getChilds(BaseArea baseArea) {

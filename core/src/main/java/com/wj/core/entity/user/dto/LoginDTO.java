@@ -2,12 +2,13 @@ package com.wj.core.entity.user.dto;
 
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDevice;
+import com.wj.core.entity.base.dto.DeviceDTO;
 import com.wj.core.entity.user.SysUserInfo;
 import io.swagger.annotations.ApiModel;
 
 import java.util.List;
 
-@ApiModel(description = "后台登录DTO")
+@ApiModel(description = "登录DTO")
 public class LoginDTO {
 
     private SysUserInfo sysUserInfo;
@@ -15,6 +16,8 @@ public class LoginDTO {
     private List<AuthorityDTO> authorityDTOList;
 
     private String token;
+
+    private DeviceDTO device;
 
     public SysUserInfo getSysUserInfo() {
         return sysUserInfo;
@@ -38,5 +41,13 @@ public class LoginDTO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public DeviceDTO getDevice() {
+        return device;
+    }
+
+    public void setDevice(DeviceDTO device) {
+        this.device = device;
     }
 }

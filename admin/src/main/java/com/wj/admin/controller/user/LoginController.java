@@ -10,6 +10,7 @@ import com.wj.core.entity.user.SysAuthority;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.AuthorityDTO;
+import com.wj.core.entity.user.dto.LoginDTO;
 import com.wj.core.service.auth.AuthorityService;
 import com.wj.core.service.base.BaseDeviceService;
 import com.wj.core.service.exception.ErrorCode;
@@ -48,62 +49,6 @@ public class LoginController {
     private AuthorityService authorityService;
 
     /**
-     * 获取验证码
-     *
-     * @param request
-     * @return List<UserInfo>
-     * @author thz
-     */
-    @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
-    @GetMapping("sendMsg")
-    public Object sendMsg(HttpServletRequest request) {
-        String userName = request.getParameter("userName");
-        SysUserInfo userInfo = userInfoService.findByName(userName);
-        if (userInfo == null) {
-            throw new ServiceException("你不是平台用户", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-        if (userInfo.getFlag() != 2) {
-            throw new ServiceException("你不是pad端用户", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-        String key = request.getParameter("key");
-        // 获取家庭ID
-        BaseDevice baseDevice = baseDeviceService.findByKey(key);
-        if (baseDevice == null) {
-            throw new ServiceException("数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-        SysUserFamily sysUserFamily = userFamilyService.findByUidAndFid(userInfo.getId(), baseDevice.getFamilyId());
-        if (sysUserFamily == null) {
-            throw new ServiceException("数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-        if (sysUserFamily.getIdentity() != 1 || sysUserFamily.getStatus() != 1) {
-            throw new ServiceException("账户限制", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-        final HttpSession httpSession = request.getSession();
-        Object code = httpSession.getAttribute(userName);
-        String smsCode = String.valueOf(code);
-        try {
-            if (code == null) {
-                smsCode = CommonUtils.createRandomNum(6);// 生成随机数
-                httpSession.setAttribute(userName, smsCode);
-            }
-            //TimerTask实现5分钟后从session中删除smsCode验证码
-            final Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    httpSession.removeAttribute(userName);
-                    timer.cancel();
-                    logger.info(userName + "的验证码已失效");
-                }
-            }, 5 * 60 * 1000);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseMessage.ok(smsCode);
-    }
-
-    /**
      * 登录
      *
      * @param sysUserInfo
@@ -112,7 +57,7 @@ public class LoginController {
      */
     @ApiOperation(value = "登录", notes = "登录")
     @PostMapping("checking")
-    public Object checking(@RequestBody SysUserInfo sysUserInfo) {
+    public ResponseMessage checking(@RequestBody SysUserInfo sysUserInfo) {
         String userName = sysUserInfo.getUserName();
         String password = sysUserInfo.getPassword();
         if (userName.isEmpty() || password.isEmpty()) {
@@ -143,27 +88,17 @@ public class LoginController {
             authorityDTOList.add(authorityDTO);
         }
 //        List<AuthorityDTO> a = BeanMapper.mapList(authList, AuthorityDTO.class);
-        Map<String, Object> maps = new HashMap<>();
-        maps.put("authList", authorityDTOList);
-        maps.put("token", jwtToken);
-        maps.put("userInfo", userInfo);
-        return ResponseMessage.ok(maps);
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setAuthorityDTOList(authorityDTOList);
+        loginDTO.setToken(jwtToken);
+        loginDTO.setSysUserInfo(userInfo);
+//        Map<String, Object> maps = new HashMap<>();
+//        maps.put("authList", authorityDTOList);
+//        maps.put("token", jwtToken);
+//        maps.put("userInfo", userInfo);
+        return ResponseMessage.ok(loginDTO);
     }
 
-    /**
-     * 获取token
-     *
-     * @param userName
-     * @return String
-     * @author thz
-     */
-    @ApiOperation(value = "获取token", notes = "获取token")
-    @GetMapping("getToken")
-    public Object getToken(String userName) {
-        // Create Jwt token
-        SysUserInfo userInfo = userInfoService.findByName(userName);
-        String jwtToken = JwtUtil.generateToken(userInfo);
-        return ResponseMessage.ok(jwtToken);
-    }
+
 
 }

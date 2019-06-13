@@ -30,6 +30,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -60,57 +61,6 @@ public class UserInfoController {
     @Autowired
     private BaseFamilyService baseFamilyService;
 
-    /**
-     * 获取用户信息(PAD端首页接口)
-     *
-     * @param
-     * @return
-     * @author
-     */
-    @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
-    @GetMapping("findUserInfo")
-    public Object findUserInfo(String key) {
-        // 获取token
-        String token = JwtUtil.getJwtToken();
-        // 通过token获取用户信息
-        Claims claims = JwtUtil.parseJwt(token);
-        Integer userId = (Integer) claims.get("userId");
-        // 个人信息
-        SysUserInfo userInfo = userInfoService.findUserInfo(userId);
-        // 获取家庭ID
-        BaseDevice baseDevice = baseDeviceService.findByKey(key);
-        // 家庭列表 根据机器key查询家庭ID 根据家庭ID查询家庭成员
-        List<SysUserInfo> sysUserInfoList = userFamilyService.findFamilyToUser(baseDevice.getFamilyId());
-        // 社区信息
-        BaseFamily baseFamily = baseFamilyService.findByFamilyId(baseDevice.getFamilyId());
-        BaseCommuntity communtity = baseFamily.getCommuntityId();
-        // 社区ID
-        Integer communtityId = communtity.getId();
-        // 天气
-        String json = null;
-        try {
-            BaseCommuntity baseCommuntity = baseCommuntityService.findById(communtityId);
-            if (null == baseCommuntity) {
-                return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
-            }
-            BaseArea baseArea = baseAreaService.findById(baseCommuntity.getCity());
-            if (null == baseArea) {
-                return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
-            }
-            Map<String, String> headers = new HashMap<String, String>();
-            //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
-            headers.put("Authorization", "APPCODE " + CommonUtils.APPCODE);
-            Map<String, String> querys = new HashMap<String, String>();
-            querys.put("area", baseArea.getAreaName());
-            HttpResponse response = HttpUtils.doGet(CommonUtils.HOST, CommonUtils.PATH, CommonUtils.METHOD, headers, querys);
-            json = EntityUtils.toString(response.getEntity());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseMessage.ok(userInfo);
-    }
-
-
     @ApiOperation(value = "获取用户分页信息", notes = "获取用户分页信息")
     @GetMapping("findUserInfoByName")
     public Object findUserInfoByName(String userName, String nickName, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -127,7 +77,7 @@ public class UserInfoController {
         return ResponseMessage.ok();
     }
 
-    @ApiOperation(value = "新增/修改用户", notes = "新增/修改用户")
+    @ApiOperation(value = "删除用户", notes = "删除用户")
     @PostMapping("delUser")
     public Object delUser(@RequestBody SysUserInfo user) {
         userInfoService.delUser(user);

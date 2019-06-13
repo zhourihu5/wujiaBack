@@ -2,6 +2,7 @@ package com.wj.core.entity.base;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,13 +18,15 @@ public class BaseDevice {
     @GeneratedValue
     private Integer id;
     @ApiModelProperty(value = "标识 1.底座 2.pad 3.门禁")
-    private String flag;
+    private Integer flag;
     @ApiModelProperty(value = "机器唯一标识/编号")
     private String deviceKey;
     @ApiModelProperty(value = "家庭ID")
     private Integer familyId;
     @ApiModelProperty(value = "类型 1.主机 2.分机")
     private Integer type;
+    @ApiModelProperty(value = "pad标号(01 02 03 04...)")
+    private String buttonKey;
 
     public Integer getId() {
         return id;
@@ -33,11 +36,11 @@ public class BaseDevice {
         this.id = id;
     }
 
-    public String getFlag() {
+    public Integer getFlag() {
         return flag;
     }
 
-    public void setFlag(String flag) {
+    public void setFlag(Integer flag) {
         this.flag = flag;
     }
 
@@ -65,4 +68,11 @@ public class BaseDevice {
         this.type = type;
     }
 
+    public String getButtonKey() {
+        return buttonKey;
+    }
+
+    public void setButtonKey(String buttonKey) {
+        this.buttonKey = buttonKey;
+    }
 }
