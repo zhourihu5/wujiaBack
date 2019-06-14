@@ -37,29 +37,6 @@ public class RoleService {
     }
 
 
-//    @Transactional
-//    public Integer saveUserAndFamily(String userName, Integer fid) {
-//        SysUserInfo userInfo = userInfoRepository.findByName(userName);
-//        if (null != userInfo) {
-//            return 1;
-//        }
-//        SysUserInfo sysUserInfo = new SysUserInfo();
-//        sysUserInfo.setUserName(userName);
-//        sysUserInfo.setCreateDate(new Date());
-//        sysUserInfo = userInfoRepository.save(sysUserInfo);
-//        System.out.println(sysUserInfo.getId());
-//        // 关联家庭
-//        UserFamily userFamily = new UserFamily();
-//        userFamily.setFamilyId(fid);
-//        userFamily.setUserId(sysUserInfo.getId());
-//        SysUserFamily sysUserFamily = new SysUserFamily();
-//        sysUserFamily.setUserFamily(userFamily);
-//        sysUserFamily.setStatus(2);
-//        sysUserFamily.setIdentity(1);
-//        userFamilyRepository.save(sysUserFamily);
-//        return 0;
-//    }
-
     public List<SysRole> findAll() {
         return roleRepository.findAll();
     }

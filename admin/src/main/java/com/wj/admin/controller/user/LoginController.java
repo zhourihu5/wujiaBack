@@ -7,16 +7,19 @@ import com.wj.admin.utils.CommonUtils;
 import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.base.BaseDevice;
 import com.wj.core.entity.user.SysAuthority;
+import com.wj.core.entity.user.SysRoleAuthority;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.AuthorityDTO;
 import com.wj.core.entity.user.dto.LoginDTO;
 import com.wj.core.service.auth.AuthorityService;
+import com.wj.core.service.auth.RoleAuthorityService;
 import com.wj.core.service.base.BaseDeviceService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
+import com.wj.core.service.user.UserRoleService;
 import com.wj.core.util.mapper.BeanMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,12 +41,6 @@ public class LoginController {
 
     @Autowired
     private UserInfoService userInfoService;
-
-    @Autowired
-    private BaseDeviceService baseDeviceService;
-
-    @Autowired
-    private UserFamilyService userFamilyService;
 
     @Autowired
     private AuthorityService authorityService;
@@ -72,7 +69,10 @@ public class LoginController {
         if (userInfo.getFlag() != 1) {
             throw new ServiceException("你不是后台用户", ErrorCode.INTERNAL_SERVER_ERROR);
         }
+        // 测试代码
         List<SysAuthority> authList = authorityService.findAll();
+        // 正式代码
+//        List<SysAuthority> authList = authorityService.getAuthByUserId(userInfo.getId());
         String jwtToken = JwtUtil.generateToken(userInfo);
         List<AuthorityDTO> authorityDTOList = new ArrayList<>();
         for (SysAuthority sysAuthority : authList) {
@@ -87,18 +87,11 @@ public class LoginController {
             authorityDTO.setPid(sysAuthority.getPid());
             authorityDTOList.add(authorityDTO);
         }
-//        List<AuthorityDTO> a = BeanMapper.mapList(authList, AuthorityDTO.class);
         LoginDTO loginDTO = new LoginDTO();
         loginDTO.setAuthorityList(authorityDTOList);
         loginDTO.setToken(jwtToken);
         loginDTO.setUserInfo(userInfo);
-//        Map<String, Object> maps = new HashMap<>();
-//        maps.put("authList", authorityDTOList);
-//        maps.put("token", jwtToken);
-//        maps.put("userInfo", userInfo);
         return ResponseMessage.ok(loginDTO);
     }
-
-
 
 }

@@ -2,17 +2,22 @@ package com.wj.core.service.auth;
 
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.user.SysAuthority;
+import com.wj.core.entity.user.SysRoleAuthority;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.repository.auth.AuthorityRepository;
+import com.wj.core.repository.auth.RoleAuthorityRepository;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.repository.user.UserRoleRepository;
+import com.wj.core.service.user.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +27,11 @@ public class AuthorityService {
     @Autowired
     private AuthorityRepository authorityRepository;
 
+    @Autowired
+    private RoleAuthorityRepository roleAuthorityRepository;
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     /**
      * 根据名字查询用户信息
@@ -39,8 +49,8 @@ public class AuthorityService {
      * @param id
      * @return SysAuthority
      */
-    public Object findById(Integer id) {
-        return authorityRepository.findById(id);
+    public SysAuthority findById(Integer id) {
+        return authorityRepository.findByAid(id);
     }
 
 
@@ -64,6 +74,25 @@ public class AuthorityService {
     @Transactional
     public void delAuthority(SysAuthority sysAuthority) {
         authorityRepository.delete(sysAuthority);
+    }
+
+    /**
+     * 根据用户ID查询账号所属权限
+     *
+     * @param userId
+     * @return SysAuthority
+     */
+    public List<SysAuthority> getAuthByUserId(Integer userId) {
+        List<SysAuthority> sysAuthorityList = new ArrayList<>();
+        // 根据uid查询用户role
+        Integer roleId = userRoleRepository.findByUserId(userId);
+        // 根据role查询authority
+        List<SysRoleAuthority> roleAuthorityList = roleAuthorityRepository.findByRoleId(roleId);
+        roleAuthorityList.forEach(SysRoleAuthority -> {
+            SysAuthority sysAuthority = authorityRepository.findByAid(SysRoleAuthority.getRoleAuthority().getAuthorityId());
+            sysAuthorityList.add(sysAuthority);
+        });
+        return sysAuthorityList;
     }
 
 }

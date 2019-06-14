@@ -3,6 +3,7 @@ package com.wj.admin.controller.auth;
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.core.entity.user.SysAuthority;
 import com.wj.core.service.auth.AuthorityService;
+import com.wj.core.service.auth.RoleAuthorityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -21,6 +22,9 @@ public class AuthorityController {
 
     @Autowired
     private AuthorityService authorityService;
+
+    @Autowired
+    private RoleAuthorityService roleAuthorityService;
 
     @ApiOperation(value = "获取路由列表", notes = "获取路由列表")
     @GetMapping("findAll")
