@@ -31,54 +31,11 @@ public class ServeController {
      */
     @ApiOperation(value = "根据id查询服务详情", notes = "根据id查询服务详情")
     @GetMapping("findByFamilyId")
-    public Object findByFamilyId(Integer familyId) {
+    public ResponseMessage<List<OpService>> findByFamilyId(Integer familyId) {
         List<OpService> list = serviceService.findByFamilyId(familyId);
         return ResponseMessage.ok(list);
     }
 
-    /**
-     * 根据id查询服务详情
-     * @param id
-     * @return OpService
-     * @author thz
-     */
-    @ApiOperation(value = "根据id查询服务详情", notes = "根据id查询服务详情")
-    @GetMapping("findById")
-    public Object findById(Integer id) {
-        OpService opService = serviceService.findById(id);
-        return ResponseMessage.ok(opService);
-    }
 
-    /**
-     * 全部服务接口
-     * @param type
-     * @return List<ServiceDTO>
-     * @author thz
-     */
-    @ApiOperation(value = "全部服务接口", notes = "全部服务接口")
-    @GetMapping("all")
-    public Object all(Integer type) {
-        String token = JwtUtil.getJwtToken();
-        Claims claims = JwtUtil.parseJwt(token);
-        Integer userId = (Integer) claims.get("userId");
-        List<ServiceDTO> list = serviceService.allList(type, userId);
-        return ResponseMessage.ok(list);
-    }
 
-    /**
-     * 订阅接口
-     * @param serviceId
-     * @param isSubscribe
-     * @return Object
-     * @author thz
-     */
-    @ApiOperation(value = "订阅接口", notes = "订阅接口")
-    @GetMapping("subscribe")
-    public Object subscribe(Integer serviceId, Integer isSubscribe) {
-        String token = JwtUtil.getJwtToken();
-        Claims claims = JwtUtil.parseJwt(token);
-        Integer userId = (Integer) claims.get("userId");
-        Object o = serviceService.saveFamilyService(serviceId, userId, isSubscribe);
-        return ResponseMessage.ok();
-    }
 }

@@ -4,6 +4,7 @@ import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.api.utils.ResultUtil;
 import com.wj.core.entity.op.OpService;
+import com.wj.core.entity.user.dto.ServiceAllDTO;
 import com.wj.core.entity.user.dto.ServiceDTO;
 import com.wj.core.service.op.ServeService;
 import io.jsonwebtoken.Claims;
@@ -63,12 +64,12 @@ public class ServeController {
      */
     @ApiOperation(value = "全部服务接口", notes = "全部服务接口")
     @GetMapping("all")
-    public ResponseMessage<List<ServiceDTO>> all(Integer type) {
+    public ResponseMessage<ServiceAllDTO> all(Integer type) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
-        List<ServiceDTO> list = serviceService.allList(type, userId);
-        return ResponseMessage.ok(list);
+        ServiceAllDTO serviceAllDTO = serviceService.allList(type, userId);
+        return ResponseMessage.ok(serviceAllDTO);
     }
 
     /**

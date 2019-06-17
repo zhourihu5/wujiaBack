@@ -2,12 +2,15 @@ package com.wj.core.service.op;
 
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.enums.*;
+import com.wj.core.entity.op.OpBanner;
 import com.wj.core.entity.op.embeddable.FamilyService;
 import com.wj.core.entity.op.OpFamilyService;
 import com.wj.core.entity.op.OpService;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.entity.user.dto.ServiceAllDTO;
 import com.wj.core.entity.user.dto.ServiceDTO;
 import com.wj.core.repository.base.BaseFamilyRepository;
+import com.wj.core.repository.op.BannerRepository;
 import com.wj.core.repository.op.FamilyServeRepository;
 import com.wj.core.repository.op.ServeRepository;
 import com.wj.core.repository.user.UserInfoRepository;
@@ -33,6 +36,9 @@ public class ServeService {
     @Autowired
     private FamilyServeRepository familyServeRepository;
 
+    @Autowired
+    private BannerRepository bannerRepository;
+
     /**
      * 根据家庭id查询我的服务列表
      * @param fid
@@ -56,9 +62,11 @@ public class ServeService {
     /**
      * 全部服务
      * @param type
-     * @return GovernmentServiceDTO
+     * @param uid
+     * @return ServiceAllDTO
      */
-    public List<ServiceDTO> allList(Integer type, Integer uid) {
+    public ServiceAllDTO allList(Integer type, Integer uid) {
+        ServiceAllDTO serviceAllDTO = new ServiceAllDTO();
         List<ServiceDTO> list = new ArrayList<>();
         List<OpService> serviceList = new ArrayList<>();
         if (type == ServiceType.ONE.toInt()) {
@@ -70,6 +78,7 @@ public class ServeService {
             serviceDTO.setList(serviceList);
             list.add(serviceDTO);
         } else if (type == ServiceType.TWO.toInt()) {
+            List<OpBanner> bannerList = bannerRepository.findByModuleIdList(1);
             for (int i = 1; i <= FindType.values().length; i++) {
                 serviceList = serviceRepository.findByTypeAndCategory(type, i);
                 ServiceDTO serviceDTO = new ServiceDTO();
@@ -78,6 +87,7 @@ public class ServeService {
                 serviceDTO.setList(serviceList);
                 list.add(serviceDTO);
             }
+            serviceAllDTO.setBannerList(bannerList);
         } else if (type == ServiceType.THREE.toInt()) {
             for (int i = 1; i <= GovernmentType.values().length; i++) {
                 serviceList = serviceRepository.findByTypeAndCategory(type, i);
@@ -97,7 +107,8 @@ public class ServeService {
                 list.add(serviceDTO);
             }
         }
-        return list;
+        serviceAllDTO.setServiceList(list);
+        return serviceAllDTO;
     }
 
     /**

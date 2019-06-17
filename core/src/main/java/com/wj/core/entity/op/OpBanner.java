@@ -10,18 +10,18 @@ import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * 广告表
+ * 轮播图
  * @author thz
  * @version 1.0
  */
-@ApiModel(description = "广告表")
+@ApiModel(description = "轮播图")
 @Entity
-public class OpAdv {
+public class OpBanner {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @ApiModelProperty(value = "社区ID")
-    private Integer communtityId;
+    @ApiModelProperty(value = "模块ID")
+    private Integer moduleId;
     @ApiModelProperty(value = "封面")
     private String cover;
     @ApiModelProperty(value = "地址")
@@ -39,12 +39,12 @@ public class OpAdv {
         this.id = id;
     }
 
-    public Integer getCommuntityId() {
-        return communtityId;
+    public Integer getModuleId() {
+        return moduleId;
     }
 
-    public void setCommuntityId(Integer communtityId) {
-        this.communtityId = communtityId;
+    public void setModuleId(Integer moduleId) {
+        this.moduleId = moduleId;
     }
 
     public String getCover() {
