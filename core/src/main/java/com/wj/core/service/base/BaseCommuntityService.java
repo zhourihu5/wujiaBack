@@ -1,5 +1,6 @@
 package com.wj.core.service.base;
 
+import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.dto.BaseCommuntityDTO;
 import com.wj.core.repository.base.BaseAreaRepository;
@@ -50,21 +51,26 @@ public class BaseCommuntityService {
      * @return void
      */
     public Page<BaseCommuntity> findAll(Integer areaCode, String name, Pageable pageable) {
+        Page<BaseCommuntity> page = null;
         if (areaCode != null && !CommonUtils.isNull(name)) {
-            return baseCommuntityRepository.findByAreaCodeAndName(areaCode, name, pageable);
+            page = baseCommuntityRepository.findByAreaCodeAndName(areaCode, name, pageable);
         } else if (areaCode != null && CommonUtils.isNull(name)) {
-            return baseCommuntityRepository.findByAreaCode(areaCode, pageable);
+            page = baseCommuntityRepository.findByAreaCode(areaCode, pageable);
         } else if (areaCode == null && !CommonUtils.isNull(name)) {
-            return baseCommuntityRepository.findByName(name, pageable);
+            page = baseCommuntityRepository.findByName(name, pageable);
         } else {
-            Page<BaseCommuntity> page = baseCommuntityRepository.findAll(pageable);
-            for (BaseCommuntity baseCommuntity: page) {
-                BaseCommuntityDTO baseCommuntityDTO = new BaseCommuntityDTO();
-//            baseAreaRepository.findByCityId(baseCommuntity.getId()).getAreaName();
-                baseCommuntityDTO.setAreaName("aaa");
-            }
-            return baseCommuntityRepository.findAll(pageable);
+            page = baseCommuntityRepository.findAll(pageable);
         }
+        for (BaseCommuntity baseCommuntity: page) {
+            BaseArea area = baseAreaRepository.findByCityId(baseCommuntity.getArea());
+            BaseArea city = baseAreaRepository.findByCityId(baseCommuntity.getCity());
+            BaseArea provice = baseAreaRepository.findByCityId(baseCommuntity.getProvince());
+            if (area != null) baseCommuntity.setAreaName(area.getAreaName());
+            if (city != null) baseCommuntity.setAreaName(city.getAreaName());
+            if (provice != null) baseCommuntity.setAreaName(provice.getAreaName());
+
+        }
+        return page;
     }
 
 }

@@ -32,6 +32,12 @@ public class BaseCommuntity {
     private Integer area;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
+    @Transient
+    private String areaName;
+    @Transient
+    private String cityName;
+    @Transient
+    private String provinceName;
 
 
     public Integer getId() {
@@ -90,20 +96,27 @@ public class BaseCommuntity {
         this.createDate = createDate;
     }
 
-    //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinTable(name = "sys_family_communtity", joinColumns = {@JoinColumn(name = "communtityId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "familyId", referencedColumnName = "id")})
-    // 所在社区
-//    @OneToOne(mappedBy = "communtityId", cascade = {CascadeType.MERGE, CascadeType.REFRESH}, optional = false)
-//    @JsonIgnore
-//    @OneToOne(cascade=CascadeType.ALL)//family是关系的维护端
-//    @JoinTable(name="sys_family_communtity",joinColumns=@JoinColumn(name="communtityId"),inverseJoinColumns=@JoinColumn(name="familyId"))
-//    private BaseFamily familyId;
-//
-//    public BaseFamily getFamilyId() {
-//        return familyId;
-//    }
-//
-//    public void setFamilyId(BaseFamily familyId) {
-//        this.familyId = familyId;
-//    }
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
 }
