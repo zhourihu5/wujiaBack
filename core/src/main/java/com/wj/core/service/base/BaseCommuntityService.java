@@ -66,8 +66,8 @@ public class BaseCommuntityService {
             BaseArea city = baseAreaRepository.findByCityId(baseCommuntity.getCity());
             BaseArea provice = baseAreaRepository.findByCityId(baseCommuntity.getProvince());
             if (area != null) baseCommuntity.setAreaName(area.getAreaName());
-            if (city != null) baseCommuntity.setAreaName(city.getAreaName());
-            if (provice != null) baseCommuntity.setAreaName(provice.getAreaName());
+            if (city != null) baseCommuntity.setCityName(city.getAreaName());
+            if (provice != null) baseCommuntity.setProvinceName(provice.getAreaName());
 
         }
         return page;
