@@ -19,9 +19,6 @@ import java.util.List;
 @Service
 public class CardService {
 
-    @Value("${wj.image.url}")
-    private String wjAccessUrl;
-
     @Autowired
     private CardRepository cardRepository;
 

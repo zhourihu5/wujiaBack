@@ -6,7 +6,7 @@
 
     <groupId>com.wj</groupId>
     <artifactId>core</artifactId>
-    <version>${project.parent.version}</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>core</name>
     <description>Wujia Core</description>
@@ -68,6 +68,10 @@
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 </project>
