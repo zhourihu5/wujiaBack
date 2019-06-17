@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 public class OpService {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "标题")
     private String title;

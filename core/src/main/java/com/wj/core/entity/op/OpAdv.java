@@ -18,7 +18,7 @@ import java.util.Date;
 @Entity
 public class OpAdv {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "社区ID")
     private Integer communtityId;

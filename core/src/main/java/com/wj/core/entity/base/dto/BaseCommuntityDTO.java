@@ -1,24 +1,16 @@
-package com.wj.core.entity.base;
+package com.wj.core.entity.base.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 /*
  * 社区表
  */
 @ApiModel(description = "社区表")
-@Entity
-@Table(name = "base_communtity")
-public class BaseCommuntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class BaseCommuntityDTO {
     private Integer id;
     @ApiModelProperty(value = "名称")
     private String name;
@@ -30,6 +22,12 @@ public class BaseCommuntity {
     private Integer city;
     @ApiModelProperty(value = "区编号")
     private Integer area;
+    @ApiModelProperty(value = "省名称")
+    private String provinceName;
+    @ApiModelProperty(value = "市名称")
+    private String cityName;
+    @ApiModelProperty(value = "区名称")
+    private String areaName;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
 
@@ -90,20 +88,27 @@ public class BaseCommuntity {
         this.createDate = createDate;
     }
 
-    //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinTable(name = "sys_family_communtity", joinColumns = {@JoinColumn(name = "communtityId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "familyId", referencedColumnName = "id")})
-    // 所在社区
-//    @OneToOne(mappedBy = "communtityId", cascade = {CascadeType.MERGE, CascadeType.REFRESH}, optional = false)
-//    @JsonIgnore
-//    @OneToOne(cascade=CascadeType.ALL)//family是关系的维护端
-//    @JoinTable(name="sys_family_communtity",joinColumns=@JoinColumn(name="communtityId"),inverseJoinColumns=@JoinColumn(name="familyId"))
-//    private BaseFamily familyId;
-//
-//    public BaseFamily getFamilyId() {
-//        return familyId;
-//    }
-//
-//    public void setFamilyId(BaseFamily familyId) {
-//        this.familyId = familyId;
-//    }
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
 }

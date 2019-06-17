@@ -5,6 +5,7 @@ import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.repository.base.BaseUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class BaseUnitService {
      * @param unit
      * @return void
      */
+    @Transactional
     public void saveUnit(BaseUnit unit) {
         baseUnitRepository.save(unit);
     }

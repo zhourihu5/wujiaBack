@@ -18,7 +18,7 @@ import java.util.Date;
 @Entity
 public class SysUserMessage {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "用户ID-外键")
     private Integer userId;

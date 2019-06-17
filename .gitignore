@@ -9,3 +9,7 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 .idea/
+.DS_Store
+HELP.md
+log/
+core/core.iml

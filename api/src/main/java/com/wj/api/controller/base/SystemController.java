@@ -1,7 +1,6 @@
 package com.wj.api.controller.base;
 
 import com.wj.api.filter.ResponseMessage;
-import com.wj.core.entity.base.SysVersion;
 import com.wj.core.service.user.SystemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

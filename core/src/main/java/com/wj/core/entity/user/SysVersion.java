@@ -10,22 +10,22 @@ import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * 屏幕保护表
+ * 版本信息表
  * @author thz
  * @version 1.0
  */
-@ApiModel(description = "屏幕保护表")
+@ApiModel(description = "版本信息表")
 @Entity
-public class SysScreen {
+public class SysVersion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ApiModelProperty(value = "封面")
-    private String cover;
-    @ApiModelProperty(value = "路径")
-    private String url;
-    @ApiModelProperty(value = "社区ID")
-    private Integer communtityId;
+    @ApiModelProperty(value = "版本号")
+    private String sysVer;
+    @ApiModelProperty(value = "")
+    private String showVer;
+    @ApiModelProperty(value = "包名")
+    private String pName;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
 
@@ -37,28 +37,28 @@ public class SysScreen {
         this.id = id;
     }
 
-    public String getCover() {
-        return cover;
+    public String getSysVer() {
+        return sysVer;
     }
 
-    public void setCover(String cover) {
-        this.cover = cover;
+    public void setSysVer(String sysVer) {
+        this.sysVer = sysVer;
     }
 
-    public String getUrl() {
-        return url;
+    public String getShowVer() {
+        return showVer;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setShowVer(String showVer) {
+        this.showVer = showVer;
     }
 
-    public Integer getCommuntityId() {
-        return communtityId;
+    public String getpName() {
+        return pName;
     }
 
-    public void setCommuntityId(Integer communtityId) {
-        this.communtityId = communtityId;
+    public void setpName(String pName) {
+        this.pName = pName;
     }
 
     public Date getCreateDate() {

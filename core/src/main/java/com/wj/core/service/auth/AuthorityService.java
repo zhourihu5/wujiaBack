@@ -1,24 +1,15 @@
 package com.wj.core.service.auth;
 
-import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.user.SysAuthority;
 import com.wj.core.entity.user.SysRoleAuthority;
-import com.wj.core.entity.user.SysUserFamily;
-import com.wj.core.entity.user.SysUserInfo;
-import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.repository.auth.AuthorityRepository;
 import com.wj.core.repository.auth.RoleAuthorityRepository;
-import com.wj.core.repository.base.BaseFamilyRepository;
-import com.wj.core.repository.user.UserFamilyRepository;
-import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.repository.user.UserRoleRepository;
-import com.wj.core.service.user.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service

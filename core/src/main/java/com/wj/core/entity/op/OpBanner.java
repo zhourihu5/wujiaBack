@@ -18,7 +18,7 @@ import java.util.Date;
 @Entity
 public class OpBanner {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "模块ID")
     private Integer moduleId;

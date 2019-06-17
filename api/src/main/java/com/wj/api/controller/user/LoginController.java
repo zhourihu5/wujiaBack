@@ -10,6 +10,7 @@ import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.LoginDTO;
 import com.wj.core.entity.user.dto.UserInfoDTO;
+import com.wj.core.helper.impl.RedisHelperImpl;
 import com.wj.core.service.base.BaseDeviceService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
@@ -51,7 +52,8 @@ public class LoginController {
     @Autowired
     private UserFamilyService userFamilyService;
 
-
+    @Autowired
+    private RedisHelperImpl redisHelper;
     /**
      * 获取验证码
      *
@@ -91,14 +93,14 @@ public class LoginController {
             if (code == null) {
                 smsCode = CommonUtils.createRandomNum(6);// 生成随机数
                 smsCode = "123456";
-                httpSession.setAttribute(userName, smsCode);
+                redisHelper.valuePut(userName, smsCode);
             }
             //TimerTask实现5分钟后从session中删除smsCode验证码
             final Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    httpSession.removeAttribute(userName);
+                    redisHelper.remove(userName);
                     timer.cancel();
                     logger.info(userName + "的验证码已失效");
                 }
@@ -127,7 +129,7 @@ public class LoginController {
         String smsCode = request.getParameter("smsCode");
         HttpSession httpSession = request.getSession();
         LoginDTO loginDTO = new LoginDTO();
-        Object data = httpSession.getAttribute(userName);
+        Object data = redisHelper.getValue(userName);
         if (!String.valueOf(data).equals(smsCode)) {
             throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
         }

@@ -18,12 +18,10 @@ import java.util.Set;
 @Entity
 public class BaseFamily {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    // 门牌号
     @ApiModelProperty(value = "门牌号")
     private Integer num;
-    // 所属单元id
     @ApiModelProperty(value = "所属单元id")
     private Integer unitId;
 

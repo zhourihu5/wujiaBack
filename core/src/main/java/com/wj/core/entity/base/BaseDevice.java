@@ -6,6 +6,7 @@ import io.swagger.models.auth.In;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /*
@@ -15,7 +16,7 @@ import javax.persistence.Id;
 @Entity
 public class BaseDevice {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "标识 1.底座 2.pad 3.门禁")
     private Integer flag;
