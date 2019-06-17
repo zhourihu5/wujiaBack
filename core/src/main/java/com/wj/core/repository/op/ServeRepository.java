@@ -20,8 +20,17 @@ public interface ServeRepository extends JpaRepository<OpService, Integer> {
 //    @Query(value = "select * from sys_user_info where user_name = ?1", nativeQuery = true)
 //    public SysUserInfo findByName(String name);
 //
+
     /**
-     * 发现列表
+     * 发现/政务列表
+     * @param
+     * @return int
+     */
+    @Query(value = "select * from op_service where type = ?1", nativeQuery = true)
+    public List<OpService> findByType(Integer type);
+
+    /**
+     * 全部服务分类列表
      * @param
      * @return int
      */

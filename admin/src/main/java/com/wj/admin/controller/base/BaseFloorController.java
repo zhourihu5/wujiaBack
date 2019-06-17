@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(value = "/v1/floor", tags = "楼接口模块")
 @RestController
-@RequestMapping("/floor/")
+@RequestMapping("/v1/floor/")
 public class BaseFloorController {
     @Autowired
     private BaseFloorService baseFloorService;

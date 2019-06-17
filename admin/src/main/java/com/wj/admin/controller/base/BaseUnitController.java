@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(value = "/v1/unit", tags = "单元接口模块")
 @RestController
-@RequestMapping("/unit/")
+@RequestMapping("/v1/unit/")
 public class BaseUnitController {
     @Autowired
     private BaseUnitService baseUnitService;

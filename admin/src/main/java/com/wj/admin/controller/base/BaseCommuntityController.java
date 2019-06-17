@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(value = "/v1/communtity", tags = "社区接口模块")
 @RestController
-@RequestMapping("/communtity/")
+@RequestMapping("/v1/communtity/")
 public class BaseCommuntityController {
     @Autowired
     private BaseCommuntityService baseCommuntityService;

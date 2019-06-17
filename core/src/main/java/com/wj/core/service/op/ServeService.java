@@ -80,20 +80,20 @@ public class ServeService {
         } else if (type == ServiceType.TWO.toInt()) {
             List<OpBanner> bannerList = bannerRepository.findByModuleIdList(1);
             for (int i = 1; i <= FindType.values().length; i++) {
-                serviceList = serviceRepository.findByTypeAndCategory(type, i);
+                serviceList = serviceRepository.findByType(type);
                 ServiceDTO serviceDTO = new ServiceDTO();
-                serviceDTO.setTypeId(i);
-                serviceDTO.setTypeName(FindType.getName(i));
+//                serviceDTO.setTypeId(i);
+//                serviceDTO.setTypeName(FindType.getName(i));
                 serviceDTO.setList(serviceList);
                 list.add(serviceDTO);
             }
             serviceAllDTO.setBannerList(bannerList);
         } else if (type == ServiceType.THREE.toInt()) {
             for (int i = 1; i <= GovernmentType.values().length; i++) {
-                serviceList = serviceRepository.findByTypeAndCategory(type, i);
+                serviceList = serviceRepository.findByType(type);
                 ServiceDTO serviceDTO = new ServiceDTO();
-                serviceDTO.setTypeId(i);
-                serviceDTO.setTypeName(GovernmentType.getName(i));
+//                serviceDTO.setTypeId(i);
+//                serviceDTO.setTypeName(GovernmentType.getName(i));
                 serviceDTO.setList(serviceList);
                 list.add(serviceDTO);
             }

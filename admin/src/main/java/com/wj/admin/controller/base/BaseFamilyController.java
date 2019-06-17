@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(value = "/v1/family", tags = "家庭接口模块")
 @RestController
-@RequestMapping("/family/")
+@RequestMapping("/v1/family/")
 public class BaseFamilyController {
     @Autowired
     private BaseFamilyService baseFamilyService;
