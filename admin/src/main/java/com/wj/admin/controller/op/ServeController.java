@@ -9,9 +9,7 @@ import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,6 +34,11 @@ public class ServeController {
         return ResponseMessage.ok(list);
     }
 
-
+    @ApiOperation(value = "添加/更新服务", notes = "添加/更新服务")
+    @PostMapping("addService")
+    public ResponseMessage addService(@RequestBody OpService service) {
+        serviceService.saveService(service);
+        return ResponseMessage.ok();
+    }
 
 }

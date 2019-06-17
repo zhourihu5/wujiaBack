@@ -127,4 +127,14 @@ public class ServeService {
         return familyServeRepository.saveAndFlush(familyService);
     }
 
+    /**
+     * 添加/更新服务
+     * @param service
+     * @return void
+     */
+    @Transactional
+    public void saveService(OpService service) {
+        serviceRepository.save(service);
+    }
+
 }

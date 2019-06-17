@@ -29,9 +29,9 @@ public class OpService {
     private String cover;
     @ApiModelProperty(value = "地址")
     private String url;
-    @ApiModelProperty(value = "服务类型 1.热门 2.政务")
+    @ApiModelProperty(value = "服务类型 1.发现 2.政务")
     private Integer type;
-    @ApiModelProperty(value = "类别 1.本周 2.人气 3.美食")
+    @ApiModelProperty(value = "类别 1.本周 2.人气 等")
     private Integer category;
     @ApiModelProperty(value = "标识 1.app 2.链接")
     private Integer flag;

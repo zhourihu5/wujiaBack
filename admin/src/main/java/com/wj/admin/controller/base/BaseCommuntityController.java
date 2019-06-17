@@ -24,8 +24,8 @@ public class BaseCommuntityController {
     }
 
     @ApiOperation(value = "保存社区内容", notes = "保存社区内容")
-    @GetMapping("addCommuntity")
-    public ResponseMessage addCommuntity(BaseCommuntity communtity) {
+    @PostMapping("addCommuntity")
+    public ResponseMessage addCommuntity(@RequestBody BaseCommuntity communtity) {
         baseCommuntityService.saveCommuntity(communtity);
         return ResponseMessage.ok();
     }

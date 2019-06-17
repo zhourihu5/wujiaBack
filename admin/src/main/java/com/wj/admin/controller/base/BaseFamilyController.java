@@ -10,9 +10,7 @@ import com.wj.core.service.base.BaseFamilyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api(value = "/v1/family", tags = "家庭接口模块")
 @RestController
@@ -22,8 +20,8 @@ public class BaseFamilyController {
     private BaseFamilyService baseFamilyService;
 
     @ApiOperation(value = "保存家庭内容", notes = "保存家庭内容")
-    @GetMapping("addUnit")
-    public ResponseMessage addUnit(BaseFamily family) {
+    @PostMapping("addUnit")
+    public ResponseMessage addUnit(@RequestBody BaseFamily family) {
         baseFamilyService.saveFamily(family);
         return ResponseMessage.ok();
     }
