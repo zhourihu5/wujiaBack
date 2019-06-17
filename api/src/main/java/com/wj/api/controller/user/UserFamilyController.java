@@ -9,9 +9,12 @@ import com.wj.core.entity.user.dto.UserFamilyDTO;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,8 +67,11 @@ public class UserFamilyController {
      * @author thz
      */
     @ApiOperation(value = "首页添加家庭成员", notes = "首页添加家庭成员")
-    @GetMapping("addFamily")
-    public ResponseMessage addFamily(String userName, int familyId) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userName", dataType = "String", value = "用户名称", required = true),
+            @ApiImplicitParam(name = "familyId", dataType = "Integer", value = "家庭ID", required = true)})
+    @PostMapping("addFamily")
+    public ResponseMessage addFamily(String userName, Integer familyId) {
         Integer code = userInfoService.saveUserAndFamily(userName, familyId);
         if (code.equals(1)) {
             return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "手机号已存在");

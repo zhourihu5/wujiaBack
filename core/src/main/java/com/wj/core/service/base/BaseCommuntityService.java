@@ -22,5 +22,13 @@ public class BaseCommuntityService {
         return baseCommuntityRepository.findByCommuntityId(id);
     }
 
+    /**
+     * 保存社区信息
+     * @param communtity
+     * @return void
+     */
+    public void saveCommuntity(BaseCommuntity communtity) {
+        baseCommuntityRepository.save(communtity);
+    }
 
 }

@@ -8,9 +8,12 @@ import com.wj.core.entity.user.dto.ServiceDTO;
 import com.wj.core.service.op.ServeService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -76,7 +79,10 @@ public class ServeController {
      * @author thz
      */
     @ApiOperation(value = "订阅接口", notes = "订阅接口")
-    @GetMapping("subscribe")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "serviceId", dataType = "Integer", value = "服务ID", required = true),
+            @ApiImplicitParam(name = "isSubscribe", dataType = "Integer", value = "0.否 1.是", required = true)})
+    @PostMapping("subscribe")
     public ResponseMessage subscribe(Integer serviceId, Integer isSubscribe) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
