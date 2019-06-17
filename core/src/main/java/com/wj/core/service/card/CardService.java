@@ -10,6 +10,7 @@ import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.mapper.BeanMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,6 +18,9 @@ import java.util.List;
 
 @Service
 public class CardService {
+
+    @Value("${wj.image.url}")
+    private String wjAccessUrl;
 
     @Autowired
     private CardRepository cardRepository;
