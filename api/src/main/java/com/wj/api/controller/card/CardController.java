@@ -3,6 +3,7 @@ package com.wj.api.controller.card;
 
 import com.wj.api.filter.ResponseMessage;
 import com.wj.core.entity.card.OpCard;
+import com.wj.core.entity.card.dto.CardDetailDTO;
 import com.wj.core.service.card.CardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -56,6 +57,13 @@ public class CardController {
     public ResponseMessage removeCard(Integer id) {
         cardService.removeUserCard("", id);
         return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value="卡片详情")
+    @GetMapping("/card/detail")
+    @ApiImplicitParam(name = "id", dataType = "Integer", value = "卡片ID", required = true)
+    public ResponseMessage<CardDetailDTO> getDetail(Integer id) {
+        return ResponseMessage.ok(cardService.getCardDetail(id));
     }
 
 }

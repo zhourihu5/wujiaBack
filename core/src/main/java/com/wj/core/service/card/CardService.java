@@ -3,8 +3,12 @@ package com.wj.core.service.card;
 import com.google.common.collect.Lists;
 import com.wj.core.entity.card.OpCard;
 import com.wj.core.entity.card.dto.CardDTO;
+import com.wj.core.entity.card.dto.CardDetailDTO;
+import com.wj.core.entity.card.dto.CardServicesDTO;
 import com.wj.core.entity.card.enums.CardStatus;
+import com.wj.core.entity.op.OpService;
 import com.wj.core.repository.card.CardRepository;
+import com.wj.core.repository.op.ServeRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.mapper.BeanMapper;
@@ -21,6 +25,8 @@ public class CardService {
 
     @Autowired
     private CardRepository cardRepository;
+    @Autowired
+    private ServeRepository serveRepository;
 
     // 获取用户卡片
     public List<OpCard> getUserCard(String token) {
@@ -35,10 +41,6 @@ public class CardService {
     // 保存用户卡片
     @Transactional
     public void saveUserCard(String token, Integer id) {
-        List<CardDTO> list = Lists.newArrayList();
-        if (StringUtils.isBlank(token)) {
-            throw new ServiceException("token为空", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
         cardRepository.modityCardStatus(CardStatus.YES, 1, id);
     }
 
@@ -46,6 +48,25 @@ public class CardService {
     @Transactional
     public void removeUserCard(String token, Integer cardId) {
         cardRepository.modityCardStatus(CardStatus.NO, 1, cardId);
+    }
+
+    public CardDetailDTO getCardDetail(Integer id) {
+        OpCard card = cardRepository.getOne(id);
+        CardDetailDTO cardDetailDTO = new CardDetailDTO();
+        cardDetailDTO.setId(card.getId());
+        cardDetailDTO.setContent(card.getContent());
+        String services = card.getServices();
+        if (StringUtils.isNotBlank(services)) {
+            String[] sidAry = services.split(",");
+            List<CardServicesDTO> servicesDTOList = Lists.newArrayList();
+            for (String sid : sidAry) {
+                OpService service = serveRepository.getOne(Integer.valueOf(sid));
+                CardServicesDTO csDTO = BeanMapper.map(service, CardServicesDTO.class);
+                servicesDTOList.add(csDTO);
+            }
+            cardDetailDTO.setServices(servicesDTOList);
+        }
+        return cardDetailDTO;
     }
 
 }

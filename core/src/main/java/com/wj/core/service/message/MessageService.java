@@ -27,11 +27,12 @@ public class MessageService {
     private MessageRepository messageRepository;
 
 
-    public Page<Message> getList(String token, Integer pageNo, Integer type, Integer status)  {
+    public Page<Message> getList(String token, Integer pageNo, Integer type, Integer status) {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
 
             List<Predicate> predicates = Lists.newArrayList();
-            if (type != null) {
+            // 99 代表所有
+            if (type != null && type < 99) {
                 if (type == MessageType.SQ.ordinal()) {
                     predicates.add(criteriaBuilder.equal(root.get("type"), MessageType.SQ));
                 }
@@ -42,11 +43,11 @@ public class MessageService {
                     predicates.add(criteriaBuilder.equal(root.get("type"), MessageType.WY));
                 }
             }
-            if (status != null) {
-                if (type == MessageStatus.NO.ordinal()) {
+            if (status != null && type < 99) {
+                if (status == MessageStatus.NO.ordinal()) {
                     predicates.add(criteriaBuilder.equal(root.get("status"), MessageStatus.NO));
                 }
-                if (type == MessageStatus.YES.ordinal()) {
+                if (status == MessageStatus.YES.ordinal()) {
                     predicates.add(criteriaBuilder.equal(root.get("status"), MessageStatus.YES));
                 }
             }
@@ -67,6 +68,18 @@ public class MessageService {
             throw new ServiceException("消息ID未空", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         messageRepository.modityStatus(String.valueOf(MessageStatus.YES.ordinal()), id, 1);
+    }
+
+    public List<Message> getTop3UnReadMessage(String token) {
+        return messageRepository.findTop3ByUserIdAndStatusOrderByCreateDateDesc(1, MessageStatus.NO);
+    }
+
+    public boolean isUnReadMessage(String token) {
+        int count = messageRepository.countByUserIdAndStatus(1, MessageStatus.NO);
+        if (count > 0) {
+            return true;
+        }
+        return false;
     }
 
 }
