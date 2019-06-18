@@ -6,6 +6,7 @@ import com.wj.core.service.user.SystemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,7 @@ public class SystemController {
     private SystemService systemService;
 
     @ApiOperation(value="获取系统版本接口")
-    @RequestMapping("/system/version")
+    @GetMapping("/system/version")
     private ResponseMessage<SysVersion> getVer() {
         return ResponseMessage.ok(systemService.getVer());
     }
