@@ -37,7 +37,7 @@ import java.util.*;
 @RequestMapping("/login/")
 public class LoginController {
 
-    public final static Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private UserInfoService userInfoService;
@@ -57,6 +57,7 @@ public class LoginController {
     public ResponseMessage checking(@RequestBody SysUserInfo sysUserInfo) {
         String userName = sysUserInfo.getUserName();
         String password = sysUserInfo.getPassword();
+        logger.info("登录接口:/login/checking userName=", userName);
         if (userName.isEmpty() || password.isEmpty()) {
             throw new ServiceException("请输入正确的参数", ErrorCode.INTERNAL_SERVER_ERROR);
         }
