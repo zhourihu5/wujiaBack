@@ -32,33 +32,6 @@ public interface ScreenRepository extends JpaRepository<SysScreen, Integer> {
      */
     @Query(value = "select * from sys_screen", nativeQuery = true)
     public SysScreen find();
-//
-//    /**
-//     * 根据名字查询用户信息
-//     * @param id
-//     * @return UserInfo
-//     */
-//    public SysUserInfo findUserById(int id);
-//
-//    /**
-//     * 添加用户
-//     * @param user
-//     * @return int
-//     */
-//    public int insertUser(SysUserInfo user);
-//
-//    /**
-//     * 根据用户id删除用户信息
-//     * @param id
-//     * @return int
-//     */
-//    public int deleteUser(int id);
-//
-//    /**
-//     * 更新用户信息
-//     * @param user
-//     * @return int
-//     */
-//    public int updateUser(SysUserInfo user);
+
 
 }

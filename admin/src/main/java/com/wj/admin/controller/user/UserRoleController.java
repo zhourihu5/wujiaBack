@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(value = "/v1/userRole", tags = "用户角色接口模块")
 @RestController
-@RequestMapping("/userRole/")
+@RequestMapping("/v1/userRole/")
 public class UserRoleController {
 
     @Autowired

@@ -4,6 +4,7 @@ import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.CommonUtils;
 import com.wj.api.utils.JwtUtil;
 import com.wj.api.utils.ResultUtil;
+import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDevice;
 import com.wj.core.entity.base.dto.DeviceDTO;
 import com.wj.core.entity.user.SysUserFamily;
@@ -12,6 +13,7 @@ import com.wj.core.entity.user.dto.LoginDTO;
 import com.wj.core.entity.user.dto.UserInfoDTO;
 import com.wj.core.helper.impl.RedisHelperImpl;
 import com.wj.core.service.base.BaseDeviceService;
+import com.wj.core.service.base.BaseFamilyService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.user.UserFamilyService;
@@ -54,6 +56,10 @@ public class LoginController {
 
     @Autowired
     private RedisHelperImpl redisHelper;
+
+    @Autowired
+    private BaseFamilyService baseFamilyService;
+
     /**
      * 获取验证码
      *
@@ -127,7 +133,6 @@ public class LoginController {
     public ResponseMessage<LoginDTO> checking(HttpServletRequest request) {
         String userName = request.getParameter("userName");
         String smsCode = request.getParameter("smsCode");
-        HttpSession httpSession = request.getSession();
         LoginDTO loginDTO = new LoginDTO();
         Object data = redisHelper.getValue(userName);
         if (!String.valueOf(data).equals(smsCode)) {
@@ -154,6 +159,9 @@ public class LoginController {
             }
         });
         SysUserInfo userInfo = userInfoService.findByName(userName);
+        // 根据家庭id查看社区信息
+        BaseCommuntity communtity = baseFamilyService.findCommuntityByFamilyId(baseDevice.getFamilyId());
+        userInfo.setCommuntityId(communtity.getId());
         String jwtToken = JwtUtil.generateToken(userInfo);
         loginDTO.setToken(jwtToken);
         loginDTO.setUserInfo(userInfo);

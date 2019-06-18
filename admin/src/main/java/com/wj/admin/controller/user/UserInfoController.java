@@ -40,7 +40,7 @@ import java.util.Map;
 
 @Api(value = "/v1/user", tags = "用户接口模块")
 @RestController
-@RequestMapping("/user/")
+@RequestMapping("/v1/user/")
 public class UserInfoController {
 
     @Autowired

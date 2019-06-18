@@ -2,10 +2,8 @@ package com.wj.api.controller.user;
 
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.ResultUtil;
-import com.wj.core.entity.card.OpCard;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
-import com.wj.core.entity.user.dto.UserFamilyDTO;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
 import io.swagger.annotations.Api;
@@ -35,7 +33,7 @@ public class UserFamilyController {
     /**
      * 根据用户id查看用户家庭信息
      * @param userId
-     * @return UserFamilyDTO
+     * @return ResponseMessage<List<SysUserFamily>>
      * @author thz
      */
     @ApiOperation(value = "根据用户id查看用户家庭信息", notes = "根据用户id查看用户家庭信息")
@@ -48,7 +46,7 @@ public class UserFamilyController {
     /**
      * 家庭成员列表
      * @param familyId
-     * @return UserFamilyDTO
+     * @return ResponseMessage<List<SysUserInfo>>
      * @author thz
      */
     @ApiOperation(value = "家庭成员列表", notes = "家庭成员列表")
@@ -63,7 +61,7 @@ public class UserFamilyController {
      * 首页添加家庭成员
      * @param userName
      * @param familyId
-     * @return UserFamilyDTO
+     * @return ResponseMessage
      * @author thz
      */
     @ApiOperation(value = "首页添加家庭成员", notes = "首页添加家庭成员")

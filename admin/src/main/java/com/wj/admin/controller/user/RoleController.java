@@ -38,7 +38,7 @@ import java.util.Map;
 
 @Api(value = "/v1/role", tags = "用户接口模块")
 @RestController
-@RequestMapping("/role/")
+@RequestMapping("/v1/role/")
 public class RoleController {
 
     @Autowired

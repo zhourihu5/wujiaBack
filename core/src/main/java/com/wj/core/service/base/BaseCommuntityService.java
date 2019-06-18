@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
 public class BaseCommuntityService {
 
@@ -40,6 +42,7 @@ public class BaseCommuntityService {
      */
     @Transactional
     public void saveCommuntity(BaseCommuntity communtity) {
+        communtity.setCreateDate(new Date());
         baseCommuntityRepository.save(communtity);
     }
 

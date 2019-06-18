@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Api(value = "/v1/area", tags = "省市区接口模块")
 @RestController
-@RequestMapping("/area/")
+@RequestMapping("/v1/area/")
 public class BaseAreaController {
 
     @Autowired

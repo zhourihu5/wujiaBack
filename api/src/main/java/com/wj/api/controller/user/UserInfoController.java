@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
@@ -40,22 +41,14 @@ import java.util.Map;
 public class UserInfoController {
 
     @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private BaseAreaService baseAreaService;
-
-    @Autowired
-    private BaseCommuntityService baseCommuntityService;
-
-    @Autowired
     private UserFamilyService userFamilyService;
 
     @Autowired
     private BaseDeviceService baseDeviceService;
 
     @Autowired
-    private FamilyCommuntityService familyCommuntityService;
+    private BaseFamilyService baseFamilyService;
+
 
     /**
      * 获取用户信息(PAD端首页接口)
@@ -65,49 +58,23 @@ public class UserInfoController {
      */
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
     @GetMapping("findUserInfo")
-    public ResponseMessage<IndexDTO> findUserInfo(String key) {
+    public ResponseMessage<IndexDTO> findUserInfo(HttpServletRequest request) {
         // 获取token
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer)claims.get("userId");
-        // 个人信息
-        SysUserInfo userInfo = userInfoService.findUserInfo(userId);
-        // 获取家庭ID
+        // 根据机器key获取家庭ID
+        String key = request.getParameter("deviceKey");
+        // 设备信息-对应家庭
         BaseDevice baseDevice = baseDeviceService.findByKey(key);
         // 家庭成员列表 根据机器key查询家庭ID 根据家庭ID查询家庭成员
         List<SysUserInfo> sysUserInfoList = userFamilyService.findFamilyToUser(baseDevice.getFamilyId());
-        // 根据家庭id查看社区信息-社区ID
-        Integer communtityId = familyCommuntityService.findByFamilyId(baseDevice.getFamilyId());
-        // 查询当前社区信息
-        BaseCommuntity baseCommuntity = baseCommuntityService.findById(communtityId);
-        if (null == baseCommuntity) {
-            return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
-        }
-        BaseArea baseArea = baseAreaService.findById(baseCommuntity.getCity());
-        if (null == baseArea) {
-            return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
-        }
-        List<BaseDevice> baseDeviceList = baseDeviceService.findByFamilyId(baseDevice.getFamilyId());
-        // 天气
-        String json = null;
-        try {
-            Map<String, String> headers = new HashMap<String, String>();
-            //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
-            headers.put("Authorization", "APPCODE " + CommonUtils.APPCODE);
-            Map<String, String> querys = new HashMap<String, String>();
-            querys.put("area", baseArea.getAreaName());
-            HttpResponse response = HttpUtils.doGet(CommonUtils.HOST, CommonUtils.PATH, CommonUtils.METHOD, headers, querys);
-            json = EntityUtils.toString(response.getEntity());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // 根据家庭id查看社区信息
+        BaseCommuntity communtity = baseFamilyService.findCommuntityByFamilyId(baseDevice.getFamilyId());
         IndexDTO indexDTO = new IndexDTO();
-        indexDTO.setSysUserInfo(userInfo);
-        indexDTO.setSysUserInfoList(sysUserInfoList);
-        indexDTO.setWeather(JSONArray.parse(json));
-        indexDTO.setCommuntity(baseCommuntity);
-        indexDTO.setBaseDeviceList(baseDeviceList);
+        indexDTO.setUserInfoList(sysUserInfoList);
+        indexDTO.setCommuntity(communtity);
         return ResponseMessage.ok(indexDTO);
     }
 

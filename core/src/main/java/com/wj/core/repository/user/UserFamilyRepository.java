@@ -1,8 +1,6 @@
 package com.wj.core.repository.user;
 
 import com.wj.core.entity.user.SysUserFamily;
-import com.wj.core.entity.user.SysUserInfo;
-import com.wj.core.entity.user.dto.UserFamilyDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

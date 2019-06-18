@@ -12,38 +12,26 @@ import java.util.List;
 @ApiModel(description = "用户DTO")
 public class IndexDTO {
 
-    private SysUserInfo sysUserInfo;
+    private SysUserInfo userInfo;
 
-    private List<SysUserInfo> sysUserInfoList;
-
-    private Object weather;
+    private List<SysUserInfo> userInfoList;
 
     private BaseCommuntity communtity;
 
-    private List<BaseDevice> baseDeviceList;
-
-    public SysUserInfo getSysUserInfo() {
-        return sysUserInfo;
+    public SysUserInfo getUserInfo() {
+        return userInfo;
     }
 
-    public void setSysUserInfo(SysUserInfo sysUserInfo) {
-        this.sysUserInfo = sysUserInfo;
+    public void setUserInfo(SysUserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
-    public List<SysUserInfo> getSysUserInfoList() {
-        return sysUserInfoList;
+    public List<SysUserInfo> getUserInfoList() {
+        return userInfoList;
     }
 
-    public void setSysUserInfoList(List<SysUserInfo> sysUserInfoList) {
-        this.sysUserInfoList = sysUserInfoList;
-    }
-
-    public Object getWeather() {
-        return weather;
-    }
-
-    public void setWeather(Object weather) {
-        this.weather = weather;
+    public void setUserInfoList(List<SysUserInfo> userInfoList) {
+        this.userInfoList = userInfoList;
     }
 
     public BaseCommuntity getCommuntity() {
@@ -54,11 +42,4 @@ public class IndexDTO {
         this.communtity = communtity;
     }
 
-    public List<BaseDevice> getBaseDeviceList() {
-        return baseDeviceList;
-    }
-
-    public void setBaseDeviceList(List<BaseDevice> baseDeviceList) {
-        this.baseDeviceList = baseDeviceList;
-    }
 }

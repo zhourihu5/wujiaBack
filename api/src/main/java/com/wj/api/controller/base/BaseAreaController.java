@@ -20,26 +20,6 @@ public class BaseAreaController {
     @Autowired
     private BaseAreaService baseAreaService;
 
-//    @RequestMapping(value = "all", method = RequestMethod.GET)
-//    public @ResponseBody Object all() {
-//        List<BaseArea> list = baseAreaService.areaList();
-//        return list;
-//    }
-
-//    /**
-//     * 根据name查询省市区信息
-//     *
-//     * @param name
-//     * @return Object
-//     * @author thz
-//     */
-//    @RequestMapping(value = "findAreaByName", method = RequestMethod.GET)
-//    public @ResponseBody Object findAreaByName(String name) {
-//        List<BaseArea> list = areaService.findAreaByName(name);
-//        return list;
-//    }
-//
-
     @ApiOperation(value = "根据pid查询省市区信息", notes = "根据pid查询省市区信息")
     @GetMapping("findArea")
     public @ResponseBody ResponseMessage<List<BaseArea>> findArea(Integer pid) {

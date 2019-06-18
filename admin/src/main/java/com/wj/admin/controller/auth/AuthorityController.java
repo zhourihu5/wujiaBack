@@ -15,7 +15,7 @@ import java.util.List;
 
 @Api(value = "/v1/authority", tags = "权限接口模块")
 @RestController
-@RequestMapping("/authority/")
+@RequestMapping("/v1/authority/")
 public class AuthorityController {
 
     public final static Logger logger = LoggerFactory.getLogger(AuthorityController.class);

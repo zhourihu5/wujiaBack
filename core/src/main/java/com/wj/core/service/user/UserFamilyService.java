@@ -1,16 +1,10 @@
 package com.wj.core.service.user;
 
-import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
-import com.wj.core.entity.user.dto.UserFamilyDTO;
-import com.wj.core.entity.user.dto.UserInfoDTO;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
-import com.wj.core.service.base.BaseFamilyService;
-import io.swagger.models.auth.In;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +26,7 @@ public class UserFamilyService {
     /**
      * 根据用户ID查询所属家庭
      * @param userId
-     * @return UserFamilyDTO
+     * @return List<SysUserFamily>
      */
     public List<SysUserFamily> findByUserId(int userId) {
         return userFamilyRepository.findByUserId(userId);
@@ -42,7 +36,7 @@ public class UserFamilyService {
      * 根据家庭ID查询家庭成员列表
      *
      * @param familyId
-     * @return UserFamilyDTO
+     * @return List<SysUserFamily>
      */
     public List<SysUserFamily> findByFamilyId(int familyId) {
         return userFamilyRepository.findByFamilyId(familyId);
@@ -53,7 +47,7 @@ public class UserFamilyService {
      * 根据家庭ID获取家庭成员列表详情
      *
      * @param familyId
-     * @return UserFamilyDTO
+     * @return List<SysUserInfo>
      */
     public List<SysUserInfo> findFamilyToUser(Integer familyId) {
         List<SysUserFamily> userFamilyList = userFamilyRepository.findByFamilyId(familyId);

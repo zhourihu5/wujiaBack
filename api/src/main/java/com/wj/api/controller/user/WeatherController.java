@@ -1,13 +1,18 @@
 package com.wj.api.controller.user;
 
-import com.wj.api.utils.CommonUtils;
-import com.wj.api.utils.HttpClient;
-import com.wj.api.utils.HttpUtils;
-import com.wj.api.utils.ResultUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.wj.api.filter.ResponseMessage;
+import com.wj.api.utils.*;
 import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.BaseCommuntity;
+import com.wj.core.entity.user.SysRestrict;
+import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.entity.user.dto.WeatherDTO;
 import com.wj.core.service.base.BaseAreaService;
 import com.wj.core.service.base.BaseCommuntityService;
+import com.wj.core.service.user.RestrictService;
+import io.jsonwebtoken.Claims;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -21,15 +26,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+@Api(value = "/v1/weather", tags = "天气接口模块")
 @RestController
-@RequestMapping("/weather/")
+@RequestMapping("/v1/weather/")
 public class WeatherController {
 
     @Autowired
-    private HttpClient httpClientService;
+    private BaseAreaService baseAreaService;
 
     @Autowired
-    private BaseAreaService baseAreaService;
+    private RestrictService restrictService;
 
     @Autowired
     private BaseCommuntityService baseCommuntityService;
@@ -37,8 +43,13 @@ public class WeatherController {
 
     @ApiOperation(value = "阿里24小时天气查询", notes = "阿里24小时天气查询")
     @GetMapping("query")
-    public @ResponseBody Object query(Integer communtityId) {
-        String json = null;
+    public ResponseMessage<WeatherDTO> query() {
+        // 获取token
+        String token = JwtUtil.getJwtToken();
+        // 通过token获取用户信息
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer communtityId = (Integer)claims.get("communtityId");
+        WeatherDTO weatherDTO = new WeatherDTO();
         try {
             BaseCommuntity baseCommuntity = baseCommuntityService.findById(communtityId);
             if (null == baseCommuntity) {
@@ -54,11 +65,20 @@ public class WeatherController {
             Map<String, String> querys = new HashMap<String, String>();
             querys.put("area", baseArea.getAreaName());
             HttpResponse response = HttpUtils.doGet(CommonUtils.HOST, CommonUtils.PATH, CommonUtils.METHOD, headers, querys);
-            json = EntityUtils.toString(response.getEntity());
+            String json = EntityUtils.toString(response.getEntity());
+            weatherDTO.setWeather(JSONArray.parse(json));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return json;
+        SysRestrict restrict = restrictService.findByDate();
+        weatherDTO.setRestrict(restrict);
+        SysUserInfo userInfo = new SysUserInfo();
+        userInfo.setId((Integer) claims.get("userId"));
+        userInfo.setUserName((String) claims.get("userName"));
+        userInfo.setCommuntityId(communtityId);
+        String jwtToken = JwtUtil.generateToken(userInfo);
+        weatherDTO.setToken(jwtToken);
+        return ResponseMessage.ok(weatherDTO);
     }
 
     public static void main(String[] args) {
