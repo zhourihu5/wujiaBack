@@ -72,7 +72,7 @@ public class UserInfoController {
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("获取用户分页信息接口:/v1/user/findUserInfoByName userId=", claims.get("userId"));
+        logger.info("获取用户分页信息接口:/v1/user/findUserInfoByName userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<SysUserInfo> page = userInfoService.findAll(userName, nickName, pageable);
@@ -86,7 +86,7 @@ public class UserInfoController {
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("新增/修改用户接口:/v1/user/addUser userId=", claims.get("userId"));
+        logger.info("新增/修改用户接口:/v1/user/addUser userId=" + claims.get("userId"));
         userInfoService.saveUser(user);
         return ResponseMessage.ok();
     }
@@ -98,7 +98,7 @@ public class UserInfoController {
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("删除用户接口:/v1/user/delUser userId=", claims.get("userId"));
+        logger.info("删除用户接口:/v1/user/delUser userId=" + claims.get("userId"));
         userInfoService.delUser(user);
         return ResponseMessage.ok();
     }

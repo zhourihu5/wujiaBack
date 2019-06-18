@@ -36,7 +36,7 @@ public class ScreenController {
     public ResponseMessage<SysScreen> findAll() {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("查看屏保信息接口:/v1/screen/findAll userId=", claims.get("userId"));
+        logger.info("查看屏保信息接口:/v1/screen/findAll userId=" + claims.get("userId"));
         SysScreen screen = screenService.find();
         return ResponseMessage.ok(screen);
     }

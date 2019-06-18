@@ -42,7 +42,7 @@ public class RoleAuthorityController {
     public ResponseMessage addRoleAuthority(@RequestBody RoleAuthorityDTO roleAuthorityDTO) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("新增/修改角色路由接口:/v1/roleAuthority/addRoleAuthority userId=", claims.get("userId"));
+        logger.info("新增/修改角色路由接口:/v1/roleAuthority/addRoleAuthority userId=" + claims.get("userId"));
         roleAuthorityService.saveRoleAuthority(roleAuthorityDTO);
         return ResponseMessage.ok();
     }

@@ -53,7 +53,7 @@ public class RoleController {
     public ResponseMessage<List<SysRole>> findAll() {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("获取角色列表接口:/v1/role/findAll userId=", claims.get("userId"));
+        logger.info("获取角色列表接口:/v1/role/findAll userId=" + claims.get("userId"));
         List<SysRole> list = roleService.findAll();
         return ResponseMessage.ok(list);
     }
@@ -63,7 +63,7 @@ public class RoleController {
     public ResponseMessage addRole(@RequestBody SysRole sysRole) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("新增/修改角色接口:/v1/role/addRole userId=", claims.get("userId"));
+        logger.info("新增/修改角色接口:/v1/role/addRole userId=" + claims.get("userId"));
         roleService.saveRole(sysRole);
         return ResponseMessage.ok();
     }
@@ -73,7 +73,7 @@ public class RoleController {
     public ResponseMessage delRole(@RequestBody SysRole sysRole) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("删除角色接口:/v1/role/delRole userId=", claims.get("userId"));
+        logger.info("删除角色接口:/v1/role/delRole userId=" + claims.get("userId"));
         roleService.delRole(sysRole);
         return ResponseMessage.ok();
     }

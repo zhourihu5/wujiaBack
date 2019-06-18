@@ -1,5 +1,6 @@
 package com.wj.core.entity.base;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wj.core.entity.op.OpService;
@@ -8,6 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +26,8 @@ public class BaseFamily {
     private Integer num;
     @ApiModelProperty(value = "所属单元id")
     private Integer unitId;
+    @ApiModelProperty(value = "创建时间")
+    private Date createDate;
 
     public Integer getId() {
         return id;
@@ -47,6 +51,15 @@ public class BaseFamily {
 
     public void setUnitId(Integer unitId) {
         this.unitId = unitId;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     @ManyToMany(mappedBy = "familyId")
@@ -77,18 +90,5 @@ public class BaseFamily {
         this.serviceId = serviceId;
     }
 
-//    //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-////    @JoinTable(name = "sys_family_communtity", joinColumns = {@JoinColumn(name = "familyId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "communtityId", referencedColumnName = "id")})
-//    @JsonIgnore
-//    @OneToOne(cascade = CascadeType.ALL)//family是关系的维护端
-//    @JoinTable(name = "sys_family_communtity", joinColumns = @JoinColumn(name = "familyId"), inverseJoinColumns = @JoinColumn(name = "communtityId"))
-//    private BaseCommuntity communtityId;
-//
-//    public BaseCommuntity getCommuntityId() {
-//        return communtityId;
-//    }
-//
-//    public void setCommuntityId(BaseCommuntity communtityId) {
-//        this.communtityId = communtityId;
-//    }
+
 }

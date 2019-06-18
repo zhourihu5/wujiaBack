@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -41,6 +42,7 @@ public class BaseFamilyService {
      */
     @Transactional
     public void saveFamily(BaseFamily family) {
+        family.setCreateDate(new Date());
         baseFamilyRepository.save(family);
     }
 

@@ -30,7 +30,7 @@ public class RestrictController {
     public ResponseMessage addRestrict(@RequestBody SysRestrict restrict) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("新增/修改限行接口:/v1/restrict/addRestrict userId=", claims.get("userId"));
+        logger.info("新增/修改限行接口:/v1/restrict/addRestrict userId=" + claims.get("userId"));
         restrictService.saveRestrict(restrict);
         return ResponseMessage.ok();
     }

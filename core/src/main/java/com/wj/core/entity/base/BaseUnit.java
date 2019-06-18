@@ -1,5 +1,6 @@
 package com.wj.core.entity.base;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -7,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Date;
 
 /*
  * 单元表
@@ -23,6 +25,8 @@ public class BaseUnit {
     private Integer storey;
     @ApiModelProperty(value = "楼ID")
     private Integer floorId;
+    @ApiModelProperty(value = "创建时间")
+    private Date createDate;
 
     public Integer getId() {
         return id;
@@ -56,4 +60,12 @@ public class BaseUnit {
         this.floorId = floorId;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 }

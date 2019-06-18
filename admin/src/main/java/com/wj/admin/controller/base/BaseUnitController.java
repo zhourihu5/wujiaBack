@@ -37,7 +37,7 @@ public class BaseUnitController {
     public ResponseMessage addUnit(@RequestBody BaseUnit unit) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("保存单元内容接口:/v1/unit/addUnit userId=", claims.get("userId"));
+        logger.info("保存单元内容接口:/v1/unit/addUnit userId=" + claims.get("userId"));
         baseUnitService.saveUnit(unit);
         return ResponseMessage.ok();
     }
@@ -47,7 +47,7 @@ public class BaseUnitController {
     public ResponseMessage<Page<BaseUnit>> findAll(Integer floorId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("获取单元分页信息接口:/v1/unit/findAll userId=", claims.get("userId"));
+        logger.info("获取单元分页信息接口:/v1/unit/findAll userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<BaseUnit> page = baseUnitService.findAll(floorId, pageable);
@@ -59,7 +59,7 @@ public class BaseUnitController {
     public ResponseMessage<List<BaseUnit>> findByUnit(Integer floorId) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("查询楼所属单元接口:/v1/unit/findByUnit userId=", claims.get("userId"));
+        logger.info("查询楼所属单元接口:/v1/unit/findByUnit userId=" + claims.get("userId"));
         List<BaseUnit> list = baseUnitService.findByFloorId(floorId);
         return ResponseMessage.ok(list);
     }

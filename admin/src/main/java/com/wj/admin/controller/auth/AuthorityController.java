@@ -33,7 +33,7 @@ public class AuthorityController {
     public ResponseMessage<List<SysAuthority>> findAll() {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("获取路由列表接口:/v1/authority/findAll userId=", claims.get("userId"));
+        logger.info("获取路由列表接口:/v1/authority/findAll userId=" + claims.get("userId"));
         List<SysAuthority> list = authorityService.findAll();
         return ResponseMessage.ok(list);
     }
@@ -43,7 +43,7 @@ public class AuthorityController {
     public ResponseMessage addAuthority(@RequestBody SysAuthority sysAuthority) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("新增/修改接口接口:/v1/authority/addAuthority userId=", claims.get("userId"));
+        logger.info("新增/修改接口接口:/v1/authority/addAuthority userId=" + claims.get("userId"));
         authorityService.saveAuthority(sysAuthority);
         return ResponseMessage.ok();
     }
@@ -53,7 +53,7 @@ public class AuthorityController {
     public ResponseMessage delAuthority(@RequestBody SysAuthority sysAuthority) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("删除接口接口:/v1/authority/delAuthority userId=", claims.get("userId"));
+        logger.info("删除接口接口:/v1/authority/delAuthority userId=" + claims.get("userId"));
         authorityService.delAuthority(sysAuthority);
         return ResponseMessage.ok();
     }

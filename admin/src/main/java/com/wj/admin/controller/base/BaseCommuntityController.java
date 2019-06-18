@@ -36,7 +36,7 @@ public class BaseCommuntityController {
     public ResponseMessage<Page<BaseCommuntity>> findAll(Integer areaCode, String name, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("获取社区分页信息接口:/v1/communtity/findAll userId=", claims.get("userId"));
+        logger.info("获取社区分页信息接口:/v1/communtity/findAll userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<BaseCommuntity> page = baseCommuntityService.findAll(areaCode, name, pageable);
@@ -48,7 +48,7 @@ public class BaseCommuntityController {
     public ResponseMessage<BaseCommuntity> findById(Integer id) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("根据ID查询社区信息接口:/v1/communtity/findById userId=", claims.get("userId"));
+        logger.info("根据ID查询社区信息接口:/v1/communtity/findById userId=" + claims.get("userId"));
         BaseCommuntity baseCommuntity = baseCommuntityService.findById(id);
         return ResponseMessage.ok(baseCommuntity);
     }
@@ -58,7 +58,7 @@ public class BaseCommuntityController {
     public ResponseMessage addCommuntity(@RequestBody BaseCommuntity communtity) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("保存社区内容接口:/v1/communtity/addCommuntity userId=", claims.get("userId"));
+        logger.info("保存社区内容接口:/v1/communtity/addCommuntity userId=" + claims.get("userId"));
         baseCommuntityService.saveCommuntity(communtity);
         return ResponseMessage.ok();
     }
@@ -68,7 +68,7 @@ public class BaseCommuntityController {
     public ResponseMessage<List<BaseCommuntity>> findByArea(Integer areaCode) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("查询区下所属社区接口:/v1/communtity/findByArea userId=", claims.get("userId"));
+        logger.info("查询区下所属社区接口:/v1/communtity/findByArea userId=" + claims.get("userId"));
         List<BaseCommuntity> list = baseCommuntityService.findByAreaCode(areaCode);
         return ResponseMessage.ok(list);
     }

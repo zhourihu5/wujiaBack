@@ -78,7 +78,7 @@ public class UserFamilyController {
     public ResponseMessage addFamily(String userName, int familyId) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("首页添加家庭成员接口:/v1/userFamily/addFamily userId=", claims.get("userId"));
+        logger.info("首页添加家庭成员接口:/v1/userFamily/addFamily userId=" + claims.get("userId"));
         Integer code = userInfoService.saveUserAndFamily(userName, familyId);
         if (code.equals(1)) {
             return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "手机号已存在");

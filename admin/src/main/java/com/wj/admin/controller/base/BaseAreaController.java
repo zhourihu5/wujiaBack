@@ -41,7 +41,7 @@ public class BaseAreaController {
     ResponseMessage<List<BaseArea>> findArea(Integer pid) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("根据pid查询省市区信息接口:/v1/area/findArea userId=", claims.get("userId"));
+        logger.info("根据pid查询省市区信息接口:/v1/area/findArea userId=" + claims.get("userId"));
         if (pid == null) {
             pid = 0;
         }
@@ -55,7 +55,7 @@ public class BaseAreaController {
     ResponseMessage findProByPid(Integer pid, HttpServletRequest request) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("省市区三级联动接口:/v1/area/findProByPid userId=", claims.get("userId"));
+        logger.info("省市区三级联动接口:/v1/area/findProByPid userId=" + claims.get("userId"));
         final HttpSession httpSession = request.getSession();
         Object data = httpSession.getAttribute("area");
         Map<String, Object> map = new HashMap<>();

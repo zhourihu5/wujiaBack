@@ -37,7 +37,7 @@ public class ServiceCategoryController {
     public ResponseMessage<List<OpServiceCategory>> findByFamilyId() {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("我的服务类别列表接口:/v1/category/findByFamilyId userId=", claims.get("userId"));
+        logger.info("我的服务类别列表接口:/v1/category/findByFamilyId userId=" + claims.get("userId"));
         List<OpServiceCategory> list = serviceCategoryService.allList();
         return ResponseMessage.ok(list);
     }
@@ -47,7 +47,7 @@ public class ServiceCategoryController {
     public ResponseMessage addServiceCategory(@RequestBody OpServiceCategory serviceCategory) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("添加/更新服务类别接口:/v1/category/addServiceCategory userId=", claims.get("userId"));
+        logger.info("添加/更新服务类别接口:/v1/category/addServiceCategory userId=" + claims.get("userId"));
         serviceCategoryService.saveServiceCategory(serviceCategory);
         return ResponseMessage.ok();
     }

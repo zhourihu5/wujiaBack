@@ -38,7 +38,7 @@ public class BaseFloorController {
     public ResponseMessage addFloor(@RequestBody BaseFloor floor) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("保存楼内容接口:/v1/floor/addFloor userId=", claims.get("userId"));
+        logger.info("保存楼内容接口:/v1/floor/addFloor userId=" + claims.get("userId"));
         baseFloorService.saveFloor(floor);
         return ResponseMessage.ok();
     }
@@ -48,9 +48,9 @@ public class BaseFloorController {
     public ResponseMessage<Page<BaseFloor>> findAll(Integer communtityId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("获取楼分页信息接口:/v1/floor/findAll userId=", claims.get("userId"));
+        logger.info("获取楼分页信息接口:/v1/floor/findAll userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
-        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<BaseFloor> page = baseFloorService.findAll(communtityId, pageable);
         return ResponseMessage.ok(page);
     }
@@ -60,7 +60,7 @@ public class BaseFloorController {
     public ResponseMessage<List<BaseFloor>> findByFloor(Integer communtityId) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("查询社区下所属楼接口:/v1/floor/findByFloor userId=", claims.get("userId"));
+        logger.info("查询社区下所属楼接口:/v1/floor/findByFloor userId=" + claims.get("userId"));
         List<BaseFloor> list = baseFloorService.findByCommuntityId(communtityId);
         return ResponseMessage.ok(list);
     }

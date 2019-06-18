@@ -35,7 +35,7 @@ public class UserRoleController {
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("新增/修改用户角色接口:/v1/userRole/addUserRole userId=", claims.get("userId"));
+        logger.info("新增/修改用户角色接口:/v1/userRole/addUserRole userId=" + claims.get("userId"));
         userRoleService.saveUserRole(userRole);
         return ResponseMessage.ok();
     }
@@ -47,7 +47,7 @@ public class UserRoleController {
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("删除用户角色接口:/v1/userRole/delUserRole userId=", claims.get("userId"));
+        logger.info("删除用户角色接口:/v1/userRole/delUserRole userId=" + claims.get("userId"));
         userRoleService.delUserRole(userRole);
         return ResponseMessage.ok();
     }

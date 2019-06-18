@@ -37,7 +37,7 @@ public class ServeController {
     public ResponseMessage<List<OpService>> findByFamilyId(Integer familyId) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("根据id查询服务详情接口:/v1/service/findByFamilyId userId=", claims.get("userId"));
+        logger.info("根据id查询服务详情接口:/v1/service/findByFamilyId userId=" + claims.get("userId"));
         List<OpService> list = serviceService.findByFamilyId(familyId);
         return ResponseMessage.ok(list);
     }
@@ -47,7 +47,7 @@ public class ServeController {
     public ResponseMessage addService(@RequestBody OpService service) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("添加/更新服务接口:/v1/service/addService userId=", claims.get("userId"));
+        logger.info("添加/更新服务接口:/v1/service/addService userId=" + claims.get("userId"));
         serviceService.saveService(service);
         return ResponseMessage.ok();
     }
