@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /*
@@ -29,6 +26,9 @@ public class BaseFloor {
     private Integer communtityId;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
+    @ApiModelProperty(value = "社区名称")
+    @Transient
+    private String communtityName;
 
     public Integer getId() {
         return id;
@@ -77,5 +77,13 @@ public class BaseFloor {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getCommuntityName() {
+        return communtityName;
+    }
+
+    public void setCommuntityName(String communtityName) {
+        this.communtityName = communtityName;
     }
 }

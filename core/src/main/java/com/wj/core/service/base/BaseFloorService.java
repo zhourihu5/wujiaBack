@@ -1,7 +1,9 @@
 package com.wj.core.service.base;
 
+import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseFloor;
+import com.wj.core.repository.base.BaseCommuntityRepository;
 import com.wj.core.repository.base.BaseFloorRepository;
 import com.wj.core.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class BaseFloorService {
 
     @Autowired
     private BaseFloorRepository baseFloorRepository;
+
+    @Autowired
+    private BaseCommuntityRepository baseCommuntityRepository;
 
     /**
      * 保存楼信息
@@ -38,11 +43,17 @@ public class BaseFloorService {
      * @return Page<BaseFloor>
      */
     public Page<BaseFloor> findAll(Integer communtityId, Pageable pageable) {
+        Page<BaseFloor> page = null;
         if (communtityId != null) {
-            return baseFloorRepository.findByCommuntityId(communtityId, pageable);
+            page = baseFloorRepository.findByCommuntityId(communtityId, pageable);
         } else {
-            return baseFloorRepository.findAll(pageable);
+            page = baseFloorRepository.findAll(pageable);
         }
+        for (BaseFloor baseFloor: page) {
+            BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(baseFloor.getCommuntityId());
+            if (communtity != null) baseFloor.setCommuntityName(communtity.getName());
+        }
+        return page;
     }
 
     public List<BaseFloor> findByCommuntityId(Integer communtityId) {
