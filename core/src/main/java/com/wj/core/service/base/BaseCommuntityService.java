@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class BaseCommuntityService {
@@ -51,7 +52,7 @@ public class BaseCommuntityService {
      *
      * @param areaCode
      * @param name
-     * @return void
+     * @return Page<BaseCommuntity>
      */
     public Page<BaseCommuntity> findAll(Integer areaCode, String name, Pageable pageable) {
         Page<BaseCommuntity> page = null;
@@ -75,5 +76,16 @@ public class BaseCommuntityService {
         }
         return page;
     }
+
+    /**
+     * 根据市code查询当前所有社区
+     *
+     * @param areaCode
+     * @return List<BaseCommuntity>
+     */
+    public List<BaseCommuntity> findByAreaCode(Integer areaCode) {
+        return baseCommuntityRepository.findByAreaCode(areaCode);
+    }
+
 
 }

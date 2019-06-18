@@ -11,6 +11,8 @@ import com.wj.core.repository.base.BaseUnitRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +66,19 @@ public class BaseFamilyService {
         return communtity;
     }
 
+    /**
+     * 获取家庭分页信息
+     *
+     * @param unitId
+     * @return Page<BaseFamily>
+     */
+    public Page<BaseFamily> findAll(Integer unitId, Pageable pageable) {
+        if (unitId != null) {
+            return baseFamilyRepository.findByUnitId(unitId, pageable);
+        } else {
+            return baseFamilyRepository.findAll(pageable);
+        }
+    }
 
 
 }

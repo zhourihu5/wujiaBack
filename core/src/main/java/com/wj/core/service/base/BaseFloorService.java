@@ -32,24 +32,18 @@ public class BaseFloorService {
     /**
      * 获取楼分页信息
      *
-     * @param name
-     * @return void
+     * @param communtityId
+     * @return Page<BaseFloor>
      */
-    public Page<BaseFloor> findAll(String name, Pageable pageable) {
-        if (!CommonUtils.isNull(name)) {
-            return baseFloorRepository.findByName(name, pageable);
+    public Page<BaseFloor> findAll(Integer communtityId, Pageable pageable) {
+        if (communtityId != null) {
+            return baseFloorRepository.findByCommuntityId(communtityId, pageable);
         } else {
             return baseFloorRepository.findAll(pageable);
         }
-//        if (areaCode != null && !CommonUtils.isNull(name)) {
-//            return baseCommuntityRepository.findByAreaCodeAndName(areaCode, name, pageable);
-//        } else if (areaCode != null && CommonUtils.isNull(name)) {
-//            return baseCommuntityRepository.findByAreaCode(areaCode, pageable);
-//        } else if (areaCode == null && !CommonUtils.isNull(name)) {
-//            return baseCommuntityRepository.findByName(name, pageable);
-//        } else {
-//            return baseCommuntityRepository.findAll(pageable);
-//        }
     }
 
+    public List<BaseFloor> findByCommuntityId(Integer communtityId) {
+        return baseFloorRepository.findByCommuntityId(communtityId);
+    }
 }

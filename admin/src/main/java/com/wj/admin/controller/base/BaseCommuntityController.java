@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(value = "/v1/communtity", tags = "社区接口模块")
 @RestController
 @RequestMapping("/v1/communtity/")
@@ -43,6 +45,13 @@ public class BaseCommuntityController {
     public ResponseMessage addCommuntity(@RequestBody BaseCommuntity communtity) {
         baseCommuntityService.saveCommuntity(communtity);
         return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value = "查询区下所属社区", notes = "查询区下所属社区")
+    @GetMapping("findByArea")
+    public ResponseMessage<List<BaseCommuntity>> findByArea(Integer areaCode) {
+        List<BaseCommuntity> list = baseCommuntityService.findByAreaCode(areaCode);
+        return ResponseMessage.ok(list);
     }
 }
 

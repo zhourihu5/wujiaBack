@@ -24,7 +24,7 @@ public class BaseAreaService {
     /**
      * 根据id查询省市区信息
      * @param id
-     * @return BaseArea
+     * @return List<BaseArea>
      */
     public List<BaseArea> findByPid(Integer id) {
         return areaRepository.findByPid(id);

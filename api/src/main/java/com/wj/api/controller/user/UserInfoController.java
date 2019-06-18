@@ -15,6 +15,8 @@ import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.IndexDTO;
 import com.wj.core.entity.user.dto.UserInfoDTO;
 import com.wj.core.service.base.*;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
 import io.jsonwebtoken.Claims;
@@ -68,6 +70,9 @@ public class UserInfoController {
         String key = request.getParameter("deviceKey");
         // 设备信息-对应家庭
         BaseDevice baseDevice = baseDeviceService.findByKey(key);
+        if (baseDevice == null) {
+            throw new ServiceException("此设备没有绑定家庭", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         // 家庭成员列表 根据机器key查询家庭ID 根据家庭ID查询家庭成员
         List<SysUserInfo> sysUserInfoList = userFamilyService.findFamilyToUser(baseDevice.getFamilyId());
         // 根据家庭id查看社区信息

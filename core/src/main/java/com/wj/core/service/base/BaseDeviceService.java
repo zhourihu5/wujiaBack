@@ -27,7 +27,7 @@ public class BaseDeviceService {
     /**
      * 根据家庭ID查询所属设备
      * @param familyId
-     * @return BaseDevice
+     * @return List<BaseDevice>
      */
     public List<BaseDevice> findByFamilyId(Integer familyId) {
         return baseDeviceRepository.findByFamilyId(familyId);

@@ -24,4 +24,11 @@ public interface BaseFloorRepository extends JpaRepository<BaseFloor, Integer> {
      */
     @Query(value = "select * from base_floor where id = ?1", nativeQuery = true)
     public BaseFloor findByFloorId(Integer floorId);
+
+    @Query(value = "select * from base_floor where communtity_id = ?1", nativeQuery = true)
+    public Page<BaseFloor> findByCommuntityId(Integer communtityId, Pageable pageable);
+
+    @Query(value = "select * from base_floor where communtity_id = ?1", nativeQuery = true)
+    public List<BaseFloor> findByCommuntityId(Integer communtityId);
+
 }
