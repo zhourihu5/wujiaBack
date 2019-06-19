@@ -57,18 +57,19 @@ public class ServeController {
     }
 
     /**
-     * 全部服务接口
+     * 服务接口
      * @param type
-     * @return List<ServiceDTO>
+     * @return ServiceAllDTO
      * @author thz
      */
-    @ApiOperation(value = "全部服务接口", notes = "全部服务接口")
-    @GetMapping("all")
-    public ResponseMessage<ServiceAllDTO> all(Integer type) {
+    @ApiOperation(value = "服务接口", notes = "服务接口")
+    @ApiImplicitParam(name = "type", dataType = "Integer", value = "1.我的服务 2.发现 3.政务 4.全部服务", required = true)
+    @GetMapping("findListByType")
+    public ResponseMessage<ServiceAllDTO> findListByType(Integer type) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
-        ServiceAllDTO serviceAllDTO = serviceService.allList(type, userId);
+        ServiceAllDTO serviceAllDTO = serviceService.findListByType(type, userId);
         return ResponseMessage.ok(serviceAllDTO);
     }
 
@@ -76,7 +77,7 @@ public class ServeController {
      * 订阅接口
      * @param serviceId
      * @param isSubscribe
-     * @return Object
+     * @return ResponseMessage
      * @author thz
      */
     @ApiOperation(value = "订阅接口", notes = "订阅接口")

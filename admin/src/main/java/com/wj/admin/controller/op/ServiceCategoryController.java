@@ -24,14 +24,9 @@ public class ServiceCategoryController {
     @Autowired
     private ServiceCategoryService serviceCategoryService;
 
-    /**
-     * 我的服务类别列表
-     * @return List<OpServiceCategory>
-     * @author thz
-     */
     @ApiOperation(value = "我的服务类别列表", notes = "我的服务类别列表")
-    @GetMapping("findByFamilyId")
-    public ResponseMessage<List<OpServiceCategory>> findByFamilyId() {
+    @GetMapping("allServiceCategory")
+    public ResponseMessage<List<OpServiceCategory>> allServiceCategory() {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("我的服务类别列表接口:/v1/category/findByFamilyId userId=" + claims.get("userId"));

@@ -1,5 +1,6 @@
 package com.wj.core.entity.op;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.user.SysUserInfo;
@@ -39,6 +40,10 @@ public class OpService {
     private Integer status;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
+    @ApiModelProperty(value = "订阅数量")
+    @Transient
+    private Integer subscribeNum;
+
     @ManyToMany(mappedBy = "serviceId")
     @JsonIgnore
     private List<BaseFamily> familyId;
@@ -106,7 +111,7 @@ public class OpService {
     public void setStatus(Integer status) {
         this.status = status;
     }
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getCreateDate() {
         return createDate;
     }
@@ -129,5 +134,13 @@ public class OpService {
 
     public void setFamilyId(List<BaseFamily> familyId) {
         this.familyId = familyId;
+    }
+
+    public Integer getSubscribeNum() {
+        return subscribeNum;
+    }
+
+    public void setSubscribeNum(Integer subscribeNum) {
+        this.subscribeNum = subscribeNum;
     }
 }

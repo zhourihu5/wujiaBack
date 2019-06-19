@@ -60,12 +60,12 @@ public class ServeService {
     }
 
     /**
-     * 全部服务
+     * 根据类型查询服务
      * @param type
      * @param uid
      * @return ServiceAllDTO
      */
-    public ServiceAllDTO allList(Integer type, Integer uid) {
+    public ServiceAllDTO findListByType(Integer type, Integer uid) {
         ServiceAllDTO serviceAllDTO = new ServiceAllDTO();
         List<ServiceDTO> list = new ArrayList<>();
         List<OpService> serviceList = new ArrayList<>();
@@ -73,30 +73,30 @@ public class ServeService {
             SysUserInfo userInfo = userInfoRepository.getOne(uid);
             serviceList = userInfo.getServiceId();
             ServiceDTO serviceDTO = new ServiceDTO();
-            serviceDTO.setTypeId(1);
-            serviceDTO.setTypeName(ServiceType.getName(type));
+//            serviceDTO.setTypeId(1);
+//            serviceDTO.setTypeName(ServiceType.getName(type));
             serviceDTO.setList(serviceList);
             list.add(serviceDTO);
         } else if (type == ServiceType.TWO.toInt()) {
             List<OpBanner> bannerList = bannerRepository.findByModuleIdList(1);
-            for (int i = 1; i <= FindType.values().length; i++) {
+//            for (int i = 1; i <= FindType.values().length; i++) {
                 serviceList = serviceRepository.findByType(type);
                 ServiceDTO serviceDTO = new ServiceDTO();
 //                serviceDTO.setTypeId(i);
 //                serviceDTO.setTypeName(FindType.getName(i));
                 serviceDTO.setList(serviceList);
                 list.add(serviceDTO);
-            }
+//            }
             serviceAllDTO.setBannerList(bannerList);
         } else if (type == ServiceType.THREE.toInt()) {
-            for (int i = 1; i <= GovernmentType.values().length; i++) {
+//            for (int i = 1; i <= GovernmentType.values().length; i++) {
                 serviceList = serviceRepository.findByType(type);
                 ServiceDTO serviceDTO = new ServiceDTO();
 //                serviceDTO.setTypeId(i);
 //                serviceDTO.setTypeName(GovernmentType.getName(i));
                 serviceDTO.setList(serviceList);
                 list.add(serviceDTO);
-            }
+//            }
         } else {
             for (int i = 1; i <= AllServiceType.values().length; i++) {
                 serviceList = serviceRepository.findByTypeAndCategory(type, i);
@@ -123,7 +123,7 @@ public class ServeService {
         FamilyService fs = new FamilyService();
         fs.setServiceId(serviceId);
         fs.setUserId(userId);
-        familyService.setId(fs);
+        familyService.setFamilyService(fs);
         return familyServeRepository.saveAndFlush(familyService);
     }
 
@@ -135,6 +135,32 @@ public class ServeService {
     @Transactional
     public void saveService(OpService service) {
         serviceRepository.save(service);
+    }
+
+    /**
+     * 全部服务
+     * @return List<OpService>
+     */
+    public List<OpService> findAll() {
+        return serviceRepository.findAll();
+    }
+
+    /**
+     * 根据服务ID查询订阅人数
+     * @param serviceId
+     * @return Integer
+     */
+    public Integer findCountByServiceId(Integer serviceId) {
+        return familyServeRepository.findCountByServiceId(serviceId);
+    }
+
+    /**
+     * 根据服务ID查询用户订阅列表
+     * @param serviceId
+     * @return Integer
+     */
+    public List<OpFamilyService> findListByServiceId(Integer serviceId) {
+        return familyServeRepository.findListByServiceId(serviceId);
     }
 
 }

@@ -12,15 +12,6 @@ import java.util.List;
 public interface ServeRepository extends JpaRepository<OpService, Integer> {
 
 
-//    /**
-//     * 根据家庭id查询服务列表
-//     * @param name
-//     * @return SysUserInfo
-//     */
-//    @Query(value = "select * from sys_user_info where user_name = ?1", nativeQuery = true)
-//    public SysUserInfo findByName(String name);
-//
-
     /**
      * 发现/政务列表
      * @param

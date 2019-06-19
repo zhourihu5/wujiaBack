@@ -52,4 +52,27 @@ public class ServeController {
         return ResponseMessage.ok();
     }
 
+    @ApiOperation(value = "用户订阅服务列表排行榜", notes = "用户订阅服务列表排行榜")
+    @GetMapping("subscribeList")
+    public ResponseMessage<List<OpService>> subscribeList() {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("用户订阅服务列表接口:/v1/service/subscribeList userId=" + claims.get("userId"));
+        List<OpService> serviceList = serviceService.findAll();
+        serviceList.forEach(OpService -> {
+            OpService.setSubscribeNum(serviceService.findCountByServiceId(OpService.getId()));
+        });
+        return ResponseMessage.ok(serviceList);
+    }
+
+    @ApiOperation(value = "全部服务列表", notes = "全部服务列表")
+    @GetMapping("AllServiceList")
+    public ResponseMessage<List<OpService>> AllServiceList() {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("全部服务列表接口:/v1/service/AllServiceList userId=" + claims.get("userId"));
+        List<OpService> list = serviceService.findAll();
+        return ResponseMessage.ok(list);
+    }
+
 }

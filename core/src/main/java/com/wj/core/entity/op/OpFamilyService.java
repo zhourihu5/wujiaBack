@@ -18,7 +18,7 @@ public class OpFamilyService {
     @ApiModelProperty(value = "是否订阅 0.否 1.是")
     private Integer isSubscribe;
     @EmbeddedId
-    private FamilyService id;
+    private FamilyService familyService;
 
     public Integer getIsSubscribe() {
         return isSubscribe;
@@ -28,11 +28,11 @@ public class OpFamilyService {
         this.isSubscribe = isSubscribe;
     }
 
-    public FamilyService getId() {
-        return id;
+    public FamilyService getFamilyService() {
+        return familyService;
     }
 
-    public void setId(FamilyService id) {
-        this.id = id;
+    public void setFamilyService(FamilyService familyService) {
+        this.familyService = familyService;
     }
 }
