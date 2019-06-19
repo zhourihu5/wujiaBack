@@ -59,14 +59,14 @@ public class WeatherController {
             if (null == baseArea) {
                 return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
             }
-            Map<String, String> headers = new HashMap<String, String>();
-            //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
-            headers.put("Authorization", "APPCODE " + CommonUtils.APPCODE);
-            Map<String, String> querys = new HashMap<String, String>();
-            querys.put("area", baseArea.getAreaName());
-            HttpResponse response = HttpUtils.doGet(CommonUtils.HOST, CommonUtils.PATH, CommonUtils.METHOD, headers, querys);
-            String json = EntityUtils.toString(response.getEntity());
-            weatherDTO.setWeather(JSONArray.parse(json));
+//            Map<String, String> headers = new HashMap<String, String>();
+//            //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+//            headers.put("Authorization", "APPCODE " + CommonUtils.APPCODE);
+//            Map<String, String> querys = new HashMap<String, String>();
+//            querys.put("area", baseArea.getAreaName());
+//            HttpResponse response = HttpUtils.doGet(CommonUtils.HOST, CommonUtils.PATH, CommonUtils.METHOD, headers, querys);
+//            String json = EntityUtils.toString(response.getEntity());
+//            weatherDTO.setWeather(JSONArray.parse(json));
         } catch (Exception e) {
             e.printStackTrace();
         }
