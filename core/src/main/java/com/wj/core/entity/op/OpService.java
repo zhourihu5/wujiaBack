@@ -30,6 +30,8 @@ public class OpService {
     private String cover;
     @ApiModelProperty(value = "地址")
     private String url;
+    @ApiModelProperty(value = "包名")
+    private String packageName;
     @ApiModelProperty(value = "服务类型 1.发现 2.政务")
     private Integer type;
     @ApiModelProperty(value = "类别 1.本周 2.人气 等")
@@ -153,5 +155,13 @@ public class OpService {
 
     public void setIsSubscribe(Integer isSubscribe) {
         this.isSubscribe = isSubscribe;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 }
