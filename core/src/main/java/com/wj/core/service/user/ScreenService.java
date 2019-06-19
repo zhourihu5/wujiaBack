@@ -7,6 +7,8 @@ import com.wj.core.repository.user.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ScreenService {
 
@@ -27,7 +29,7 @@ public class ScreenService {
      * @param communtityId
      * @return SysScreen
      */
-    public SysScreen findByCommuntityId(int communtityId) {
+    public List<SysScreen> findByCommuntityId(int communtityId) {
         return screenRepository.findByCommuntityId(communtityId);
     }
 
@@ -36,8 +38,8 @@ public class ScreenService {
      * @param
      * @return SysScreen
      */
-    public SysScreen find() {
-        return screenRepository.find();
+    public List<SysScreen> findAll() {
+        return screenRepository.findAll();
     }
 
 

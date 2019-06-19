@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Api(value = "/v1/screen", tags = "屏保接口模块")
 @RestController
@@ -28,14 +29,15 @@ public class ScreenController {
     /**
      * 查看屏保信息
      * @param
-     * @return SysScreen
+     * @return ResponseMessage<List<SysScreen>>
      * @author thz
      */
     @ApiOperation(value = "查看屏保信息", notes = "查看屏保信息")
     @GetMapping("findAll")
     public ResponseMessage<SysScreen> findAll() {
-        SysScreen screen = screenService.find();
-        return ResponseMessage.ok(screen);
+        List<SysScreen> list = screenService.findAll();
+        SysScreen sysScreen = list.get(0);
+        return ResponseMessage.ok(sysScreen);
     }
 
 

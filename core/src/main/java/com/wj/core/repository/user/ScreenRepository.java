@@ -15,7 +15,7 @@ public interface ScreenRepository extends JpaRepository<SysScreen, Integer> {
      * @return SysScreen
      */
     @Query(value = "select * from sys_screen where communtity_id = ?1", nativeQuery = true)
-    public SysScreen findById(int communtityId);
+    public List<SysScreen> findByCommuntityId(int communtityId);
 
     /**
      * 根据id查询屏保
@@ -23,15 +23,9 @@ public interface ScreenRepository extends JpaRepository<SysScreen, Integer> {
      * @return SysScreen
      */
     @Query(value = "select * from sys_screen where id = ?1", nativeQuery = true)
-    public SysScreen findByCommuntityId(int id);
+    public SysScreen findById(int id);
 
-    /**
-     * 查询屏保
-     * @param
-     * @return SysScreen
-     */
-    @Query(value = "select * from sys_screen", nativeQuery = true)
-    public SysScreen find();
+
 
 
 }

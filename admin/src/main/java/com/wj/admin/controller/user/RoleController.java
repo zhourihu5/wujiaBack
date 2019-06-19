@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Api(value = "/v1/role", tags = "用户接口模块")
+@Api(value = "/v1/role", tags = "角色接口模块")
 @RestController
 @RequestMapping("/v1/role/")
 public class RoleController {
