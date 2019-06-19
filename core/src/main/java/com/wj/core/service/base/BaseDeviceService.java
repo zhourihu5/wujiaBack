@@ -12,6 +12,7 @@ import java.util.List;
 
 @Service
 public class BaseDeviceService {
+
     @Autowired
     private BaseDeviceRepository baseDeviceRepository;
 

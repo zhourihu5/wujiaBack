@@ -75,12 +75,21 @@ public class BaseFamilyService {
      * @return Page<BaseFamily>
      */
     public Page<BaseFamily> findAll(Integer unitId, Pageable pageable) {
+        Page<BaseFamily> page = null;
         if (unitId != null) {
-            return baseFamilyRepository.findByUnitId(unitId, pageable);
+            page = baseFamilyRepository.findByUnitId(unitId, pageable);
         } else {
-            return baseFamilyRepository.findAll(pageable);
+            page = baseFamilyRepository.findAll(pageable);
         }
+        for (BaseFamily baseFamily: page) {
+            BaseUnit baseUnit = baseUnitRepository.findByUnitId(baseFamily.getUnitId());
+            if (baseUnit != null) baseFamily.setUnitName(baseUnit.getNum());
+            BaseFloor baseFloor = baseFloorRepository.findByFloorId(baseUnit.getFloorId());
+            if (baseFloor != null) baseUnit.setFloorName(baseFloor.getName());
+            BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(baseFloor.getCommuntityId());
+            if (communtity != null) baseUnit.setCommuntityName(communtity.getName());
+        }
+        return page;
     }
-
 
 }

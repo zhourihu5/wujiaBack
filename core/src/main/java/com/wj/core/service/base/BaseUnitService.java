@@ -1,7 +1,10 @@
 package com.wj.core.service.base;
 
+import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseFloor;
 import com.wj.core.entity.base.BaseUnit;
+import com.wj.core.repository.base.BaseCommuntityRepository;
+import com.wj.core.repository.base.BaseFloorRepository;
 import com.wj.core.repository.base.BaseUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +20,12 @@ public class BaseUnitService {
 
     @Autowired
     private BaseUnitRepository baseUnitRepository;
+
+    @Autowired
+    private BaseFloorRepository baseFloorRepository;
+
+    @Autowired
+    private BaseCommuntityRepository baseCommuntityRepository;
 
     /**
      * 保存单元信息
@@ -37,12 +46,21 @@ public class BaseUnitService {
      * @return Page<BaseUnit>
      */
     public Page<BaseUnit> findAll(Integer floorId, Pageable pageable) {
+        Page<BaseUnit> page = null;
         if (floorId != null) {
-            return baseUnitRepository.findByFloorId(floorId, pageable);
+            page = baseUnitRepository.findByFloorId(floorId, pageable);
         } else {
-            return baseUnitRepository.findAll(pageable);
+            page = baseUnitRepository.findAll(pageable);
         }
+        for (BaseUnit baseUnit: page) {
+            BaseFloor baseFloor = baseFloorRepository.findByFloorId(baseUnit.getFloorId());
+            if (baseFloor != null) baseUnit.setFloorName(baseFloor.getName());
+            BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(baseFloor.getCommuntityId());
+            if (communtity != null) baseUnit.setCommuntityName(communtity.getName());
+        }
+        return page;
     }
+
 
     public List<BaseUnit> findByFloorId(Integer floorId) {
         return baseUnitRepository.findByFloorId(floorId);

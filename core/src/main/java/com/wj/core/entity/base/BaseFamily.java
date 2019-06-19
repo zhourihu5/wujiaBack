@@ -23,11 +23,19 @@ public class BaseFamily {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "门牌号")
-    private Integer num;
+    private String num;
     @ApiModelProperty(value = "所属单元id")
     private Integer unitId;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
+    @Transient
+    private String communtityName;
+    @ApiModelProperty(value = "楼名称")
+    @Transient
+    private String floorName;
+    @ApiModelProperty(value = "单元名称")
+    @Transient
+    private String unitName;
 
     public Integer getId() {
         return id;
@@ -37,11 +45,11 @@ public class BaseFamily {
         this.id = id;
     }
 
-    public Integer getNum() {
+    public String getNum() {
         return num;
     }
 
-    public void setNum(Integer num) {
+    public void setNum(String num) {
         this.num = num;
     }
 
@@ -62,9 +70,31 @@ public class BaseFamily {
         this.createDate = createDate;
     }
 
+    public String getCommuntityName() {
+        return communtityName;
+    }
+
+    public void setCommuntityName(String communtityName) {
+        this.communtityName = communtityName;
+    }
+
+    public String getFloorName() {
+        return floorName;
+    }
+
+    public void setFloorName(String floorName) {
+        this.floorName = floorName;
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
     @ManyToMany(mappedBy = "familyId")
-//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinTable(name = "sys_user_family", joinColumns = {@JoinColumn(name = "familyId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "userId", referencedColumnName = "id")})
     @JsonIgnore
     private List<SysUserInfo> userId;
 
@@ -76,7 +106,6 @@ public class BaseFamily {
         this.userId = userId;
     }
 
-    //    @ManyToMany(mappedBy = "familyId")
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "op_family_service", joinColumns = {@JoinColumn(name = "familyId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "serviceId", referencedColumnName = "id")})
     @JsonIgnore

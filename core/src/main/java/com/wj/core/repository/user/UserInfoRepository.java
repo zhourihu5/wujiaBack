@@ -40,16 +40,6 @@ public interface UserInfoRepository extends JpaRepository<SysUserInfo, Integer> 
     public SysUserInfo findByUserId(Integer uid);
 
     /**
-     * 添加用户
-     *
-     * @param
-     * @return Integer
-     */
-    @Modifying
-    @Query(value = "insert into sys_user_info(user_id, sub_user_id, user_name) values(?1,?2,?3)", nativeQuery = true)
-    public Integer insert(Integer userId, Integer subUserId, String userName);
-
-    /**
      * 根据用户名和密码查询用户是否存在
      *
      * @param name

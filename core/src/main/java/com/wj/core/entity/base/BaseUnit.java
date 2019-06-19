@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /*
@@ -20,13 +17,19 @@ public class BaseUnit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "单元号")
-    private Integer num;
+    private String num;
     @ApiModelProperty(value = "每个单元共有多少楼层")
     private Integer storey;
     @ApiModelProperty(value = "楼ID")
     private Integer floorId;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
+    @ApiModelProperty(value = "社区名称")
+    @Transient
+    private String communtityName;
+    @ApiModelProperty(value = "楼名称")
+    @Transient
+    private String floorName;
 
     public Integer getId() {
         return id;
@@ -36,11 +39,11 @@ public class BaseUnit {
         this.id = id;
     }
 
-    public Integer getNum() {
+    public String getNum() {
         return num;
     }
 
-    public void setNum(Integer num) {
+    public void setNum(String num) {
         this.num = num;
     }
 
@@ -67,5 +70,21 @@ public class BaseUnit {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getCommuntityName() {
+        return communtityName;
+    }
+
+    public void setCommuntityName(String communtityName) {
+        this.communtityName = communtityName;
+    }
+
+    public String getFloorName() {
+        return floorName;
+    }
+
+    public void setFloorName(String floorName) {
+        this.floorName = floorName;
     }
 }

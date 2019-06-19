@@ -21,7 +21,6 @@ public class BaseCommuntityService {
     @Autowired
     private BaseCommuntityRepository baseCommuntityRepository;
 
-
     @Autowired
     private BaseAreaRepository baseAreaRepository;
 
