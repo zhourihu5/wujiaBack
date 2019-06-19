@@ -4,6 +4,7 @@ import com.wj.core.entity.op.OpBanner;
 import com.wj.core.entity.op.OpService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class ServiceAllDTO {
     @ApiModelProperty(value = "轮播图")
     private List<OpBanner> bannerList;
     @ApiModelProperty(value = "服务列表")
-    private List<ServiceDTO> serviceList;
+    private Page<OpService> page;
 
     public List<OpBanner> getBannerList() {
         return bannerList;
@@ -28,11 +29,11 @@ public class ServiceAllDTO {
         this.bannerList = bannerList;
     }
 
-    public List<ServiceDTO> getServiceList() {
-        return serviceList;
+    public Page<OpService> getPage() {
+        return page;
     }
 
-    public void setServiceList(List<ServiceDTO> serviceList) {
-        this.serviceList = serviceList;
+    public void setPage(Page<OpService> page) {
+        this.page = page;
     }
 }

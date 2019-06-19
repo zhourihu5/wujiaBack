@@ -43,6 +43,9 @@ public class OpService {
     @ApiModelProperty(value = "订阅数量")
     @Transient
     private Integer subscribeNum;
+    @ApiModelProperty(value = "是否订阅 0.否 1.是")
+    @Transient
+    private Integer isSubscribe;
 
     @ManyToMany(mappedBy = "serviceId")
     @JsonIgnore
@@ -142,5 +145,13 @@ public class OpService {
 
     public void setSubscribeNum(Integer subscribeNum) {
         this.subscribeNum = subscribeNum;
+    }
+
+    public Integer getIsSubscribe() {
+        return isSubscribe;
+    }
+
+    public void setIsSubscribe(Integer isSubscribe) {
+        this.isSubscribe = isSubscribe;
     }
 }

@@ -14,6 +14,7 @@ public interface FamilyServeRepository extends JpaRepository<OpFamilyService, In
 
     /**
      * 向家庭服务订阅表中添加数据
+     *
      * @param
      * @return Integer
      */
@@ -23,6 +24,7 @@ public interface FamilyServeRepository extends JpaRepository<OpFamilyService, In
 
     /**
      * 删除数据
+     *
      * @param serviceId
      * @param userId
      * @return void
@@ -34,6 +36,7 @@ public interface FamilyServeRepository extends JpaRepository<OpFamilyService, In
 
     /**
      * 根据服务ID查询订阅人数
+     *
      * @param serviceId
      * @return Integer
      */
@@ -42,9 +45,20 @@ public interface FamilyServeRepository extends JpaRepository<OpFamilyService, In
 
     /**
      * 根据服务ID查询用户订阅列表
+     *
      * @param serviceId
      * @return List<OpFamilyService>
      */
-    @Query(value = "select * from op_family_service where service_id = ?1  and is_subscribe = 1", nativeQuery = true)
+    @Query(value = "select * from op_family_service where service_id = ?1 and is_subscribe = 1", nativeQuery = true)
     public List<OpFamilyService> findListByServiceId(Integer serviceId);
+
+    /**
+     * 根据服务ID和用户ID查询用户是否订阅
+     *
+     * @param serviceId
+     * @param userId
+     * @return OpFamilyService
+     */
+    @Query(value = "select * from op_family_service where service_id = ?1 and user_id = ?2", nativeQuery = true)
+    public OpFamilyService findByServiceIdAndUserId(Integer serviceId, Integer userId);
 }

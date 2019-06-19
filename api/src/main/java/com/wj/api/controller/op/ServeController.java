@@ -13,10 +13,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -65,11 +65,13 @@ public class ServeController {
     @ApiOperation(value = "服务接口", notes = "服务接口")
     @ApiImplicitParam(name = "type", dataType = "Integer", value = "1.我的服务 2.发现 3.政务 4.全部服务", required = true)
     @GetMapping("findListByType")
-    public ResponseMessage<ServiceAllDTO> findListByType(Integer type) {
+    public ResponseMessage<ServiceAllDTO> findListByType(Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
-        ServiceAllDTO serviceAllDTO = serviceService.findListByType(type, userId);
+        pageNum = pageNum - 1;
+        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.ASC, "id");
+        ServiceAllDTO serviceAllDTO = serviceService.findListByType(type, userId, pageable);
         return ResponseMessage.ok(serviceAllDTO);
     }
 
