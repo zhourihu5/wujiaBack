@@ -25,7 +25,7 @@ public interface FamilyCommuntityRepository extends JpaRepository<SysFamilyCommu
      * @return Integer
      */
     @Query(value = "select * from sys_family_communtity where communtity_id = ?1", nativeQuery = true)
-    public List<FamilyCommuntity> findByCommuntityId(Integer communtityId);
+    public List<SysFamilyCommuntity> findByCommuntityId(Integer communtityId);
 
 
 

@@ -72,5 +72,15 @@ public class BaseCommuntityController {
         List<BaseCommuntity> list = baseCommuntityService.findByAreaCode(areaCode);
         return ResponseMessage.ok(list);
     }
+
+    @ApiOperation(value = "根据社区查询所有用户", notes = "根据社区查询所有用户")
+    @GetMapping("findUserListByCid")
+    public ResponseMessage<List<SysUserInfo>> findUserListByCid(Integer communtityId) {
+//        String token = JwtUtil.getJwtToken();
+//        Claims claims = JwtUtil.parseJwt(token);
+//        logger.info("根据社区查询所有用户接口:/v1/communtity/findUserListByCid userId=" + claims.get("userId"));
+        List<SysUserInfo> list = baseCommuntityService.findUserListByCid(communtityId);
+        return ResponseMessage.ok(list);
+    }
 }
 

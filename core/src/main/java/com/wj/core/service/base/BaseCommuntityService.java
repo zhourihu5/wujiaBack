@@ -2,6 +2,7 @@ package com.wj.core.service.base;
 
 import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.BaseCommuntity;
+import com.wj.core.entity.base.SysFamilyCommuntity;
 import com.wj.core.entity.base.embeddable.FamilyCommuntity;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
@@ -110,9 +111,9 @@ public class BaseCommuntityService {
      */
     public List<SysUserInfo> findUserListByCid(Integer communtityId) {
         List<SysUserInfo> list = new ArrayList<>();
-        List<FamilyCommuntity> familyCommuntityList = familyCommuntityRepository.findByCommuntityId(communtityId);
-        familyCommuntityList.forEach(FamilyCommuntity -> {
-            List<SysUserFamily> userFamilyList = userFamilyRepository.findByFamilyId(FamilyCommuntity.getFamilyId());
+        List<SysFamilyCommuntity> familyCommuntityList = familyCommuntityRepository.findByCommuntityId(communtityId);
+        familyCommuntityList.forEach(SysFamilyCommuntity -> {
+            List<SysUserFamily> userFamilyList = userFamilyRepository.findByFamilyId(SysFamilyCommuntity.getFamilyCommuntity().getFamilyId());
             userFamilyList.forEach(SysUserFamily -> {
                 System.out.println(SysUserFamily.getUserFamily().getUserId());
                 SysUserInfo sysUserInfo = userInfoRepository.findByUserId(SysUserFamily.getUserFamily().getUserId());
