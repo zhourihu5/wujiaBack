@@ -28,7 +28,7 @@ public interface UserFamilyRepository extends JpaRepository<SysUserFamily, Integ
     /**
      * 根据用户id和家庭id查询家庭信息
      * @param userId
-     * @param familyId
+     * @param familyId 
      * @return SysUserFamily
      */
     @Query(value = "select * from sys_user_family where user_id = ?1 and family_id = ?2", nativeQuery = true)
