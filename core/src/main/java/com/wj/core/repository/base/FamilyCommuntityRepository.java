@@ -1,6 +1,7 @@
 package com.wj.core.repository.base;
 
 import com.wj.core.entity.base.SysFamilyCommuntity;
+import com.wj.core.entity.base.embeddable.FamilyCommuntity;
 import com.wj.core.entity.user.SysUserFamily;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +18,14 @@ public interface FamilyCommuntityRepository extends JpaRepository<SysFamilyCommu
      */
     @Query(value = "select communtity_id from sys_family_communtity where family_id = ?1", nativeQuery = true)
     public Integer findByFamilyId(Integer fid);
+
+    /**
+     * 根据社区id查询所有家庭
+     * @param communtityId
+     * @return Integer
+     */
+    @Query(value = "select * from sys_family_communtity where communtity_id = ?1", nativeQuery = true)
+    public List<FamilyCommuntity> findByCommuntityId(Integer communtityId);
 
 
 

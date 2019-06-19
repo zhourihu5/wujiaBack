@@ -2,9 +2,14 @@ package com.wj.core.service.base;
 
 import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.BaseCommuntity;
-import com.wj.core.entity.base.dto.BaseCommuntityDTO;
+import com.wj.core.entity.base.embeddable.FamilyCommuntity;
+import com.wj.core.entity.user.SysUserFamily;
+import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.base.BaseAreaRepository;
 import com.wj.core.repository.base.BaseCommuntityRepository;
+import com.wj.core.repository.base.FamilyCommuntityRepository;
+import com.wj.core.repository.user.UserFamilyRepository;
+import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +29,16 @@ public class BaseCommuntityService {
 
     @Autowired
     private BaseAreaRepository baseAreaRepository;
+
+    @Autowired
+    private FamilyCommuntityRepository familyCommuntityRepository;
+
+    @Autowired
+    private UserFamilyRepository userFamilyRepository;
+
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+
 
     /**
      * 根据id查询社区信息
@@ -84,6 +100,26 @@ public class BaseCommuntityService {
      */
     public List<BaseCommuntity> findByAreaCode(Integer areaCode) {
         return baseCommuntityRepository.findByAreaCode(areaCode);
+    }
+
+    /**
+     * 根据社区ID查询当前社区所有用户
+     *
+     * @param communtityId
+     * @return List<SysUserInfo>
+     */
+    public List<SysUserInfo> findUserListByCid(Integer communtityId) {
+        List<SysUserInfo> list = new ArrayList<>();
+        List<FamilyCommuntity> familyCommuntityList = familyCommuntityRepository.findByCommuntityId(communtityId);
+        familyCommuntityList.forEach(FamilyCommuntity -> {
+            List<SysUserFamily> userFamilyList = userFamilyRepository.findByFamilyId(FamilyCommuntity.getFamilyId());
+            userFamilyList.forEach(SysUserFamily -> {
+                System.out.println(SysUserFamily.getUserFamily().getUserId());
+                SysUserInfo sysUserInfo = userInfoRepository.findByUserId(SysUserFamily.getUserFamily().getUserId());
+                list.add(sysUserInfo);
+            });
+        });
+        return list;
     }
 
 }
