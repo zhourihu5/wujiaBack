@@ -162,6 +162,7 @@ public class LoginController {
         // 根据家庭id查看社区信息
         BaseCommuntity communtity = baseFamilyService.findCommuntityByFamilyId(baseDevice.getFamilyId());
         userInfo.setCommuntityId(communtity.getId());
+        userInfo.setFid(baseDevice.getFamilyId());
         String jwtToken = JwtUtil.generateToken(userInfo);
         loginDTO.setToken(jwtToken);
         loginDTO.setUserInfo(userInfo);

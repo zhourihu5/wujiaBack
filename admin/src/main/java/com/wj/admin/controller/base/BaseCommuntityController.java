@@ -23,7 +23,7 @@ import java.util.List;
 
 @Api(value = "/v1/communtity", tags = "社区接口模块")
 @RestController
-@RequestMapping("/communtity/")
+@RequestMapping("/v1/communtity/")
 public class BaseCommuntityController {
 
     private final static Logger logger = LoggerFactory.getLogger(BaseCommuntityController.class);
@@ -76,9 +76,9 @@ public class BaseCommuntityController {
     @ApiOperation(value = "根据社区查询所有用户", notes = "根据社区查询所有用户")
     @GetMapping("findUserListByCid")
     public ResponseMessage<List<SysUserInfo>> findUserListByCid(Integer communtityId) {
-//        String token = JwtUtil.getJwtToken();
-//        Claims claims = JwtUtil.parseJwt(token);
-//        logger.info("根据社区查询所有用户接口:/v1/communtity/findUserListByCid userId=" + claims.get("userId"));
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("根据社区查询所有用户接口:/v1/communtity/findUserListByCid userId=" + claims.get("userId"));
         List<SysUserInfo> list = baseCommuntityService.findUserListByCid(communtityId);
         return ResponseMessage.ok(list);
     }

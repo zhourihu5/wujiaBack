@@ -41,8 +41,12 @@ public class SysUserInfo {
     private Integer flag;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
+    @ApiModelProperty(value = "社区ID")
     @Transient
     private Integer communtityId;
+    @ApiModelProperty(value = "家庭ID")
+    @Transient
+    private Integer fid;
 
     public Integer getId() {
         return id;
@@ -115,6 +119,14 @@ public class SysUserInfo {
 
     public void setCommuntityId(Integer communtityId) {
         this.communtityId = communtityId;
+    }
+
+    public Integer getFid() {
+        return fid;
+    }
+
+    public void setFid(Integer fid) {
+        this.fid = fid;
     }
 
     //因为多对多之间会通过一张中间表来维护两表直接的关系，
