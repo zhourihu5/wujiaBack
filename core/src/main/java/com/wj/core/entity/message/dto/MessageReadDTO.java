@@ -1,14 +1,15 @@
 package com.wj.core.entity.message.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+@Data
+@ApiModel(description = "消息未读实体")
 public class MessageReadDTO {
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    Integer id;
+    @ApiModelProperty(value = "消息主键ID")
+    private Integer id;
 
 }

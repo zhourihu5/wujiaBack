@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(value="/v1/message", tags="消息接口模块")
 @RestController
 @RequestMapping("/v1")
@@ -31,10 +33,24 @@ public class MessageController {
         return ResponseMessage.ok(messageService.getList("", pageNo, type, status));
     }
 
+    @ApiOperation(value="更新消息未已读状态")
+    @ApiImplicitParam(name = "messageReadDTO", dataType = "MessageReadDTO", value = "消息状态实体")
     @PostMapping("/message/read")
     public ResponseMessage read(@RequestBody MessageReadDTO messageReadDTO) {
         messageService.modifyRead("", messageReadDTO.getId());
         return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value="获取3条未读消息")
+    @GetMapping("/message/top3UnRead")
+    public ResponseMessage<List<Message>> getTopUnReadMessage() {
+        return ResponseMessage.ok(messageService.getTop3UnReadMessage(""));
+    }
+
+    @ApiOperation(value="是否有未读消息")
+    @GetMapping("/message/isUnRead")
+    public ResponseMessage<Boolean> getIsUnReadMessage() {
+        return ResponseMessage.ok(messageService.isUnReadMessage(""));
     }
 
 }

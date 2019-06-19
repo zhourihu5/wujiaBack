@@ -30,5 +30,7 @@ public class OpCard {
     private Integer userId;
     @Enumerated(EnumType.ORDINAL)
     private CardStatus isShow;
+    private String services;
+    private String content;
 
 }
