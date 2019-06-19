@@ -2,7 +2,6 @@ package com.wj.api.controller.message;
 
 import com.wj.api.filter.ResponseMessage;
 import com.wj.core.entity.message.Message;
-import com.wj.core.entity.message.dto.MessageReadDTO;
 import com.wj.core.service.message.MessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -34,10 +33,10 @@ public class MessageController {
     }
 
     @ApiOperation(value="更新消息未已读状态")
-    @ApiImplicitParam(name = "messageReadDTO", dataType = "MessageReadDTO", value = "消息状态实体")
+    @ApiImplicitParam(name = "id", dataType = "Integer", value = "消息主键")
     @PostMapping("/message/read")
-    public ResponseMessage read(@RequestBody MessageReadDTO messageReadDTO) {
-        messageService.modifyRead("", messageReadDTO.getId());
+    public ResponseMessage read(Integer id) {
+        messageService.modifyRead("", id);
         return ResponseMessage.ok();
     }
 
