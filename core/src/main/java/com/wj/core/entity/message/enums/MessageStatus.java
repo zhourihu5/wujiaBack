@@ -8,7 +8,6 @@ public enum MessageStatus {
     NO("未读"),
     YES("已读");
 
-    @JsonValue
     public String getName() {
         return name;
     }

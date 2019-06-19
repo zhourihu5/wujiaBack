@@ -43,7 +43,7 @@ public class MessageService {
                     predicates.add(criteriaBuilder.equal(root.get("type"), MessageType.WY));
                 }
             }
-            if (status != null && type < 99) {
+            if (status != null && status < 99) {
                 if (status == MessageStatus.NO.ordinal()) {
                     predicates.add(criteriaBuilder.equal(root.get("status"), MessageStatus.NO));
                 }

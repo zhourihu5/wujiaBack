@@ -9,7 +9,6 @@ public enum MessageType {
     WY("物业通知"),
     SQ("社区通知");
 
-    @JsonValue
     public String getName() {
         return name;
     }
