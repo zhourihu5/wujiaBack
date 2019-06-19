@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Api(value = "/v1/service", tags = "服务接口模块")
@@ -62,6 +64,11 @@ public class ServeController {
         serviceList.forEach(OpService -> {
             OpService.setSubscribeNum(serviceService.findCountByServiceId(OpService.getId()));
         });
+        //排序 降序
+        Collections.sort(serviceList, new Comparator<OpService>(){
+            public int compare(OpService o1, OpService o2) {
+                return o2.getSubscribeNum()-o1.getSubscribeNum();
+            }});
         return ResponseMessage.ok(serviceList);
     }
 

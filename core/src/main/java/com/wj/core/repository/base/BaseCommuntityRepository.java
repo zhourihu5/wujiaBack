@@ -27,7 +27,7 @@ public interface BaseCommuntityRepository extends JpaRepository<BaseCommuntity, 
     @Query(value = "select * from base_communtity where area = ?1", nativeQuery = true)
     public Page<BaseCommuntity> findByAreaCode(Integer areaCode, Pageable pageable);
 
-    @Query(value = "select * from base_communtity where areaCode = ?1 and name like CONCAT('%',?2,'%')", nativeQuery = true)
+    @Query(value = "select * from base_communtity where area = ?1 and name like CONCAT('%',?2,'%')", nativeQuery = true)
     public Page<BaseCommuntity> findByAreaCodeAndName(Integer areaCode, String nickName, Pageable pageable);
 
     /**
