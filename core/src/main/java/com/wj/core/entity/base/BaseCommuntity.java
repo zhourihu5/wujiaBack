@@ -121,4 +121,20 @@ public class BaseCommuntity {
     public void setProvinceName(String provinceName) {
         this.provinceName = provinceName;
     }
+    //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinTable(name = "sys_family_communtity", joinColumns = {@JoinColumn(name = "communtityId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "familyId", referencedColumnName = "id")})
+    // 所在社区
+//    @OneToOne(mappedBy = "communtityId", cascade = {CascadeType.MERGE, CascadeType.REFRESH}, optional = false)
+//    @JsonIgnore
+//    @OneToOne(cascade=CascadeType.ALL)//family是关系的维护端
+//    @JoinTable(name="sys_family_communtity",joinColumns=@JoinColumn(name="communtityId"),inverseJoinColumns=@JoinColumn(name="familyId"))
+//    private BaseFamily familyId;
+//
+//    public BaseFamily getFamilyId() {
+//        return familyId;
+//    }
+//
+//    public void setFamilyId(BaseFamily familyId) {
+//        this.familyId = familyId;
+//    }
 }

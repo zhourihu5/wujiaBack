@@ -1,8 +1,6 @@
 package com.wj.core.repository.base;
 
-import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseFloor;
-import com.wj.core.entity.base.BaseUnit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -87,5 +87,4 @@ public class BaseCommuntityService {
         return baseCommuntityRepository.findByAreaCode(areaCode);
     }
 
-
 }

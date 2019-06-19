@@ -23,7 +23,7 @@ import java.util.List;
 
 @Api(value = "/v1/communtity", tags = "社区接口模块")
 @RestController
-@RequestMapping("/v1/communtity/")
+@RequestMapping("/communtity/")
 public class BaseCommuntityController {
 
     private final static Logger logger = LoggerFactory.getLogger(BaseCommuntityController.class);

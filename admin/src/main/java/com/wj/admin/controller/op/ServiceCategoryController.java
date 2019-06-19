@@ -2,10 +2,7 @@ package com.wj.admin.controller.op;
 
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
-import com.wj.core.entity.op.OpService;
 import com.wj.core.entity.op.OpServiceCategory;
-import com.wj.core.repository.op.ServiceCategoryRepository;
-import com.wj.core.service.op.ServeService;
 import com.wj.core.service.op.ServiceCategoryService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
