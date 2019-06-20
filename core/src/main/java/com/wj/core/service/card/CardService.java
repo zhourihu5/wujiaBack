@@ -2,20 +2,17 @@ package com.wj.core.service.card;
 
 import com.google.common.collect.Lists;
 import com.wj.core.entity.card.OpCard;
-import com.wj.core.entity.card.UserCard;
 import com.wj.core.entity.card.dto.CardDTO;
 import com.wj.core.entity.card.dto.CardDetailDTO;
 import com.wj.core.entity.card.dto.CardServicesDTO;
 import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.op.OpService;
-import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.card.CardRepository;
 import com.wj.core.repository.op.ServeRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.util.mapper.BeanMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,8 +27,6 @@ public class CardService {
     private ServeRepository serveRepository;
     @Autowired
     private UserInfoRepository userInfoRepository;
-    @Value("${wj.image.url}")
-    private String imgUrl;
 
 
     // 获取用户卡片
