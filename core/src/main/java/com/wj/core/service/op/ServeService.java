@@ -76,7 +76,7 @@ public class ServeService {
 //        List<ServiceDTO> list = new ArrayList<>();
 //        List<OpService> serviceList = new ArrayList<>();
         if (type == ServiceType.ONE.toInt()) {
-            page = serviceRepository.findByUserId(userId, pageable);
+            page = serviceRepository.findByUserIdAAndIsSubscribe(userId, pageable);
 //            SysUserInfo userInfo = userInfoRepository.getOne(uid);
 //            serviceList = userInfo.getServiceId();
 //            ServiceDTO serviceDTO = new ServiceDTO();

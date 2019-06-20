@@ -40,4 +40,12 @@ public interface ServeRepository extends JpaRepository<OpService, Integer> {
     @Query(value = "select * from op_service a,op_family_service b where a.id = b.service_id and b.user_id = ?1", nativeQuery = true)
     public Page<OpService> findByUserId(Integer userId, Pageable pageable);
 
+    /**
+     * 我的服务
+     * @param userId
+     * @return Page<OpService>
+     */
+    @Query(value = "select * from op_service a,op_family_service b where a.id = b.service_id and b.user_id = ?1 and b.is_subscribe = 1", nativeQuery = true)
+    public Page<OpService> findByUserIdAAndIsSubscribe(Integer userId, Pageable pageable);
+
 }

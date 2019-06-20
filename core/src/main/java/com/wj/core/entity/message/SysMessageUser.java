@@ -14,6 +14,21 @@ public class SysMessageUser {
 
     @EmbeddedId
     private MessageUser messageUser;
+    private Integer isRead;
 
+    public MessageUser getMessageUser() {
+        return messageUser;
+    }
 
+    public void setMessageUser(MessageUser messageUser) {
+        this.messageUser = messageUser;
+    }
+
+    public Integer getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(Integer isRead) {
+        this.isRead = isRead;
+    }
 }
