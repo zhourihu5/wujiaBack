@@ -18,4 +18,7 @@ public interface MessageUserRepository extends JpaRepository<SysMessageUser, Int
 
     @Query(value = "select is_read from sys_message_user where message_id = ?1 and user_id = ?2", nativeQuery = true)
     public Integer findByMessageAndUser(Integer messageId, Integer userId);
+
+    @Query(value = "select count(*) from sys_message_user where user_id = ?1 and is_read = ?2", nativeQuery = true)
+    public Integer isUnReadMessage(Integer userId, Integer isRead);
 }

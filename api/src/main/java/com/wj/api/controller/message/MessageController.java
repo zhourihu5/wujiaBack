@@ -60,35 +60,13 @@ public class MessageController {
         return ResponseMessage.ok(messageService.updateIsRead(messageId, userId, 1));
     }
 
-//    @ApiOperation(value="查询消息接口")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "pageNo", dataType = "Integer", value = "分页Id"),
-//            @ApiImplicitParam(name = "type", dataType = "Integer", value = "消息类型0、系统 1、物业 2、社区"),
-//            @ApiImplicitParam(name = "status", dataType = "Integer", value = "消息状态0、未读 1、已读")
-//    })
-//    @GetMapping("/message/list")
-//    public ResponseMessage<Page<Message>> getList(Integer pageNo, Integer type, Integer status) {
-//        return ResponseMessage.ok(messageService.getList("", pageNo, type, status));
-//    }
-//
-//    @ApiOperation(value="更新消息未已读状态")
-//    @ApiImplicitParam(name = "id", dataType = "Integer", value = "消息主键")
-//    @PostMapping("/message/read")
-//    public ResponseMessage read(Integer id) {
-//        messageService.modifyRead("", id);
-//        return ResponseMessage.ok();
-//    }
-//
-//    @ApiOperation(value="获取3条未读消息")
-//    @GetMapping("/message/top3UnRead")
-//    public ResponseMessage<List<Message>> getTopUnReadMessage() {
-//        return ResponseMessage.ok(messageService.getTop3UnReadMessage(""));
-//    }
-//
-//    @ApiOperation(value="是否有未读消息")
-//    @GetMapping("/message/isUnRead")
-//    public ResponseMessage<Boolean> getIsUnReadMessage() {
-//        return ResponseMessage.ok(messageService.isUnReadMessage(""));
-//    }
+    @ApiOperation(value="是否有未读消息")
+    @GetMapping("/isUnRead")
+    public ResponseMessage<Boolean> getIsUnReadMessage() {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        return ResponseMessage.ok(messageService.isUnReadMessage(userId, 0));
+    }
 
 }

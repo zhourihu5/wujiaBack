@@ -65,4 +65,13 @@ public class MessageService {
         return messageUserRepository.updateIsRead(messageId, userId, isRead);
     }
 
+    public Boolean isUnReadMessage(Integer userId, Integer isRead) {
+        Boolean flag = false;
+        Integer count = messageUserRepository.isUnReadMessage(userId, isRead);
+        if (count > 0) {
+            flag = true;
+        }
+        return flag;
+    }
+
 }
