@@ -1,6 +1,7 @@
 package com.wj.admin.controller.upload;
 
 import com.wj.admin.filter.ResponseMessage;
+import com.wj.core.entity.op.OpAdv;
 import com.wj.core.service.upload.OssUploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

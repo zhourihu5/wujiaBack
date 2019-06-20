@@ -70,4 +70,13 @@ public class UserFamilyService {
         return userFamilyRepository.findByUidAndFid(userId, familyId);
     }
 
+    /**
+     * 绑定用户和家庭关系
+     * @param userFamily
+     * @return void
+     */
+    public void addUserAndFamily(SysUserFamily userFamily) {
+        userFamilyRepository.save(userFamily);
+    }
+
 }

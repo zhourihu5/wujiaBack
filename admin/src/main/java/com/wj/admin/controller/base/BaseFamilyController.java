@@ -7,8 +7,10 @@ import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.base.BaseFloor;
 import com.wj.core.entity.base.BaseUnit;
+import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.service.base.BaseFamilyService;
+import com.wj.core.service.user.UserFamilyService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +35,10 @@ public class BaseFamilyController {
     @Autowired
     private BaseFamilyService baseFamilyService;
 
+    @Autowired
+    private UserFamilyService userFamilyService;
+
+
     @ApiOperation(value = "保存家庭内容", notes = "保存家庭内容")
     @PostMapping("addFamily")
     public ResponseMessage addFamily(@RequestBody BaseFamily family) {
@@ -53,6 +59,16 @@ public class BaseFamilyController {
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<BaseFamily> page = baseFamilyService.findAll(unitId, pageable);
         return ResponseMessage.ok(page);
+    }
+
+    @ApiOperation(value = "绑定用户和家庭关系", notes = "绑定用户和家庭关系")
+    @PostMapping("addUserAndFamily")
+    public ResponseMessage addUserAndFamily(@RequestBody SysUserFamily userFamily) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("保存家庭内容接口:/v1/family/addUserAndFamily userId=" + claims.get("userId"));
+        userFamilyService.addUserAndFamily(userFamily);
+        return ResponseMessage.ok();
     }
 
 
