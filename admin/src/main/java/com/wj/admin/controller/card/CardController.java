@@ -27,13 +27,6 @@ public class CardController {
         return ResponseMessage.ok();
     }
 
-    @GetMapping("/card/user")
-    public ResponseMessage<List<OpCard>> getUserCard() {
-        List<OpCard> list = cardService.getUserCard("");
-        return ResponseMessage.ok(list);
-    }
-
-
     @GetMapping("/card/all")
     public ResponseMessage<List<OpCard>> getUserAllCard() {
         List<OpCard> list = cardService.getCardList("");

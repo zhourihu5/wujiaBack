@@ -28,7 +28,6 @@ public class MessageController {
     })
     @PostMapping("/message/save")
     public ResponseMessage saveMessage(@RequestBody MessageDTO messageDTO) {
-        messageService.sendMessage(messageDTO);
         return ResponseMessage.ok();
     }
 

@@ -40,9 +40,6 @@ public class CardController {
         return ResponseMessage.ok(list);
     }
 
-    
-
-
     @ApiOperation(value="获取推送给用户的所有卡片")
     @GetMapping("/card/all")
     public ResponseMessage<List<OpCard>> getUserAllCard() {
