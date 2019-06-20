@@ -53,7 +53,6 @@ public class UserFamilyService {
         List<SysUserFamily> userFamilyList = userFamilyRepository.findByFamilyId(familyId);
         List<SysUserInfo> sysUserInfoList = new ArrayList<>();
         for (SysUserFamily sysUserFamily : userFamilyList) {
-            System.out.println(sysUserFamily.getUserFamily().getUserId()+"-------");
             SysUserInfo sysUserInfo = userInfoRepository.findByUserId(sysUserFamily.getUserFamily().getUserId());
             sysUserInfoList.add(sysUserInfo);
         }
