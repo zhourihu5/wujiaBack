@@ -3,6 +3,7 @@ package com.wj.api.controller.card;
 
 import com.wj.api.filter.ResponseMessage;
 import com.wj.core.entity.card.OpCard;
+import com.wj.core.entity.card.dto.CardDTO;
 import com.wj.core.entity.card.dto.CardDetailDTO;
 import com.wj.core.service.card.CardService;
 import io.swagger.annotations.Api;
@@ -10,10 +11,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,8 +35,8 @@ public class CardController {
 
     @ApiOperation(value="获取用户卡片")
     @GetMapping("/card/user")
-    public ResponseMessage<List<OpCard>> getUserCard() {
-        List<OpCard> list = cardService.getUserCard("");
+    public ResponseMessage<List<CardDTO>> getUserCard() {
+        List<CardDTO> list = cardService.getUserCard("");
         return ResponseMessage.ok(list);
     }
 
@@ -54,7 +52,7 @@ public class CardController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", dataType = "Integer", value = "卡片ID", required = true)})
     @PostMapping("/card/remove")
-    public ResponseMessage removeCard(Integer id) {
+    public ResponseMessage removeCard(@RequestParam("id") Integer id) {
         cardService.removeUserCard("", id);
         return ResponseMessage.ok();
     }

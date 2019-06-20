@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wj.core.entity.base.BaseFamily;
+import com.wj.core.entity.card.UserCard;
 import com.wj.core.entity.op.OpService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -47,6 +48,17 @@ public class SysUserInfo {
     @ApiModelProperty(value = "家庭ID")
     @Transient
     private Integer fid;
+
+    public List<UserCard> getUserCards() {
+        return userCards;
+    }
+
+    public void setUserCards(List<UserCard> userCards) {
+        this.userCards = userCards;
+    }
+
+    @OneToMany(mappedBy = "userInfo")
+    private List<UserCard> userCards;
 
     public Integer getId() {
         return id;

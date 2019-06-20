@@ -14,15 +14,6 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Integer>, JpaSpecificationExecutor<Message> {
 
-//    @Modifying
-//    @Query(value = "update sys_message m set m.status = ?1 where m.id = ?2 and m.user_id = ?3", nativeQuery = true)
-//    void modityStatus(String status, Integer id, Integer userId);
-//
-//    List<Message> findTop3ByUserIdAndStatusOrderByCreateDateDesc(Integer userId, MessageStatus status);
-//
-//    int countByUserIdAndStatus(Integer userId, MessageStatus status);
-
-
     @Query(value = "select * from sys_message a,sys_message_user b where a.id = b.message_id and b.user_id = ?1", nativeQuery = true)
     public Page<Message> findByUserId(Integer userId, Pageable pageable);
 

@@ -11,11 +11,13 @@ import java.util.List;
 
 public interface CardRepository extends JpaRepository<OpCard, Integer> {
 
-    List<OpCard> findByUserIdAndIsShow(Integer userId, CardStatus status);
-    List<OpCard> findByUserId(Integer userId);
-    Long deleteByUserIdAndId(Integer userId, Integer id);
+    List<OpCard> findByUserCards_UserInfo_IdAndUserCards_IsShow(Integer userId, CardStatus status);
+    List<OpCard> findByUserCards_UserInfo_Id(Integer userId);
+    //List<OpCard> findByUserCardsUserId(Integer userId, CardStatus status);
+    //List<OpCard> findByUserId(Integer userId);
+   // Long deleteByUserIdAndId(Integer userId, Integer id);
 
     @Modifying
-    @Query("update OpCard o set o.isShow = ?1 where o.userId = ?2 and o.id = ?3")
-    void modityCardStatus(CardStatus status, Integer userId, Integer id);
+    @Query(value = "update op_user_card o set o.is_show = ?1 where o.user_id = ?2 and o.card_id = ?3", nativeQuery = true)
+    void modityCardStatus(Integer status, Integer userId, Integer id);
 }

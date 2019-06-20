@@ -7,6 +7,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by sun on 2019/5/30.
@@ -27,10 +28,9 @@ public class OpCard {
     private Short location;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
-    private Integer userId;
-    @Enumerated(EnumType.ORDINAL)
-    private CardStatus isShow;
-    private String services;
     private String content;
+    @OneToMany(mappedBy = "opCard")
+    private List<UserCard> userCards;
+    private String services;
 
 }

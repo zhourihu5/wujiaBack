@@ -5,8 +5,8 @@ package com.wj.core.entity.card.enums;
  */
 public enum CardStatus {
 
-    NO("显示"),
-    YES("隐藏");
+    NO("隐藏"),
+    YES("显示");
 
     private final String name;
 
