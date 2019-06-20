@@ -31,19 +31,6 @@ public class ServeController {
     private ServeService serviceService;
 
     /**
-     * 我的服务列表
-     * @param familyId
-     * @return List<OpService>
-     * @author thz
-     */
-    @ApiOperation(value = "根据id查询服务详情", notes = "根据id查询服务详情")
-    @GetMapping("findByFamilyId")
-    public ResponseMessage<List<OpService>> findByFamilyId(Integer familyId) {
-        List<OpService> list = serviceService.findByFamilyId(familyId);
-        return ResponseMessage.ok(list);
-    }
-
-    /**
      * 根据id查询服务详情
      * @param id
      * @return OpService

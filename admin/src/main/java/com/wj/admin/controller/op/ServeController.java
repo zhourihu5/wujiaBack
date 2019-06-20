@@ -40,7 +40,8 @@ public class ServeController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("根据id查询服务详情接口:/v1/service/findByFamilyId userId=" + claims.get("userId"));
-        List<OpService> list = serviceService.findByFamilyId(familyId);
+        List<OpService> list = null;
+//                serviceService.findByFamilyId(familyId);
         return ResponseMessage.ok(list);
     }
 

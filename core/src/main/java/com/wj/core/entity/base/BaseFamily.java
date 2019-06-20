@@ -106,18 +106,6 @@ public class BaseFamily {
         this.userId = userId;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "op_family_service", joinColumns = {@JoinColumn(name = "familyId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "serviceId", referencedColumnName = "id")})
-    @JsonIgnore
-    private List<OpService> serviceId;
-
-    public List<OpService> getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(List<OpService> serviceId) {
-        this.serviceId = serviceId;
-    }
 
 
 }

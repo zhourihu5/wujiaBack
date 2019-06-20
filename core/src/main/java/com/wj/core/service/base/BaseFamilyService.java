@@ -85,9 +85,9 @@ public class BaseFamilyService {
             BaseUnit baseUnit = baseUnitRepository.findByUnitId(baseFamily.getUnitId());
             if (baseUnit != null) baseFamily.setUnitName(baseUnit.getNum());
             BaseFloor baseFloor = baseFloorRepository.findByFloorId(baseUnit.getFloorId());
-            if (baseFloor != null) baseUnit.setFloorName(baseFloor.getName());
+            if (baseFloor != null) baseFamily.setFloorName(baseFloor.getName());
             BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(baseFloor.getCommuntityId());
-            if (communtity != null) baseUnit.setCommuntityName(communtity.getName());
+            if (communtity != null) baseFamily.setCommuntityName(communtity.getName());
         }
         return page;
     }

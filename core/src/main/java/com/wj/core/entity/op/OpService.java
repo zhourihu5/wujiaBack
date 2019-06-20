@@ -49,10 +49,6 @@ public class OpService {
     @Transient
     private Integer isSubscribe;
 
-    @ManyToMany(mappedBy = "serviceId")
-    @JsonIgnore
-    private List<BaseFamily> familyId;
-
     public Integer getId() {
         return id;
     }
@@ -131,14 +127,6 @@ public class OpService {
 
     public void setCategory(Integer category) {
         this.category = category;
-    }
-
-    public List<BaseFamily> getFamilyId() {
-        return familyId;
-    }
-
-    public void setFamilyId(List<BaseFamily> familyId) {
-        this.familyId = familyId;
     }
 
     public Integer getSubscribeNum() {

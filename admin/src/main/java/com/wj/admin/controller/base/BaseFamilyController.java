@@ -34,11 +34,11 @@ public class BaseFamilyController {
     private BaseFamilyService baseFamilyService;
 
     @ApiOperation(value = "保存家庭内容", notes = "保存家庭内容")
-    @PostMapping("addUnit")
-    public ResponseMessage addUnit(@RequestBody BaseFamily family) {
+    @PostMapping("addFamily")
+    public ResponseMessage addFamily(@RequestBody BaseFamily family) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("保存家庭内容接口:/v1/family/addUnit userId=" + claims.get("userId"));
+        logger.info("保存家庭内容接口:/v1/family/addFamily userId=" + claims.get("userId"));
         baseFamilyService.saveFamily(family);
         return ResponseMessage.ok();
     }

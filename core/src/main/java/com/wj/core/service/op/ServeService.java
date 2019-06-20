@@ -41,17 +41,6 @@ public class ServeService {
     @Autowired
     private BannerRepository bannerRepository;
 
-    /**
-     * 根据家庭id查询我的服务列表
-     *
-     * @param fid
-     * @return OpService
-     */
-    public List<OpService> findByFamilyId(Integer fid) {
-        BaseFamily baseFamily = baseFamilyRepository.getOne(fid);
-        List<OpService> serviceList = baseFamily.getServiceId();
-        return serviceList;
-    }
 
     /**
      * 根据id查询服务详情
