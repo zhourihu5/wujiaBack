@@ -1,7 +1,6 @@
 package com.wj.core.entity.card;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.card.enums.CardType;
 import lombok.Data;
 
