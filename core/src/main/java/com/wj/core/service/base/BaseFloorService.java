@@ -5,6 +5,8 @@ import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseFloor;
 import com.wj.core.repository.base.BaseCommuntityRepository;
 import com.wj.core.repository.base.BaseFloorRepository;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,9 +51,11 @@ public class BaseFloorService {
         } else {
             page = baseFloorRepository.findAll(pageable);
         }
-        for (BaseFloor baseFloor: page) {
+        for (BaseFloor baseFloor : page) {
             BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(baseFloor.getCommuntityId());
-            if (communtity != null) baseFloor.setCommuntityName(communtity.getName());
+            if (communtity == null)
+                throw new ServiceException("社区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+            baseFloor.setCommuntityName(communtity.getName());
         }
         return page;
     }

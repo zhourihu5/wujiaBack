@@ -83,11 +83,20 @@ public class BaseFamilyService {
         }
         for (BaseFamily baseFamily: page) {
             BaseUnit baseUnit = baseUnitRepository.findByUnitId(baseFamily.getUnitId());
-            if (baseUnit != null) baseFamily.setUnitName(baseUnit.getNum());
+            if (baseUnit == null) {
+                throw new ServiceException("单元数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+            baseFamily.setUnitName(baseUnit.getNum());
             BaseFloor baseFloor = baseFloorRepository.findByFloorId(baseUnit.getFloorId());
-            if (baseFloor != null) baseFamily.setFloorName(baseFloor.getName());
+            if (baseFloor == null) {
+                throw new ServiceException("楼数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+            baseFamily.setFloorName(baseFloor.getName());
             BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(baseFloor.getCommuntityId());
-            if (communtity != null) baseFamily.setCommuntityName(communtity.getName());
+            if (communtity == null) {
+                throw new ServiceException("社区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+            baseFamily.setCommuntityName(communtity.getName());
         }
         return page;
     }

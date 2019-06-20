@@ -45,7 +45,7 @@ public class OssUploadService {
             // 上传文件流
             ossClient.putObject(BUCKETNAME, KEY + fileNames, input);
             ossClient.shutdown();
-            ret.put("msg", KEY + fileNames);
+            ret.put("msg", ENDPOINT + '/' + KEY + fileNames);
             System.out.println(("图片上传阿里云 name=" + KEY + fileNames));
 
         } catch (IOException e) {
