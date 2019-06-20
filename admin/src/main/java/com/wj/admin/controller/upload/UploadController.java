@@ -3,7 +3,6 @@ package com.wj.admin.controller.upload;
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
-import com.wj.core.service.upload.UploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -17,13 +16,11 @@ import java.io.File;
 import java.io.IOException;
 
 @Api(value = "/upload", tags = "上传接口模块")
-@RestController
-@RequestMapping("/upload/")
-//@Controller
+//@RestController
+@RequestMapping("/upload")
+@Controller
 public class UploadController {
     public final static Logger logger = LoggerFactory.getLogger(UploadController.class);
-    @Autowired
-    private UploadService uploadService;
 
     @ApiOperation(value = "上传", notes = "上传")
     @PostMapping("/upload")

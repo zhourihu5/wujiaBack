@@ -43,12 +43,12 @@ public class BaseFamilyController {
         return ResponseMessage.ok();
     }
 
-    @ApiOperation(value = "获取单元分页信息", notes = "获取单元分页信息")
+    @ApiOperation(value = "获取家庭分页信息", notes = "获取家庭分页信息")
     @GetMapping("findAll")
     public ResponseMessage<Page<BaseFamily>> findAll(Integer unitId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("获取单元分页信息接口:/v1/family/findAll userId=" + claims.get("userId"));
+        logger.info("获取家庭分页信息 接口:/v1/family/findAll userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<BaseFamily> page = baseFamilyService.findAll(unitId, pageable);
