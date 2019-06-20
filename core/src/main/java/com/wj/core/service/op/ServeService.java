@@ -62,49 +62,18 @@ public class ServeService {
     public ServiceAllDTO findListByType(Integer type, Integer userId, Pageable pageable) {
         ServiceAllDTO serviceAllDTO = new ServiceAllDTO();
         Page<OpService> page = null;
-//        List<ServiceDTO> list = new ArrayList<>();
-//        List<OpService> serviceList = new ArrayList<>();
         if (type == ServiceType.ONE.toInt()) {
             page = serviceRepository.findByUserIdAAndIsSubscribe(userId, pageable);
-//            SysUserInfo userInfo = userInfoRepository.getOne(uid);
-//            serviceList = userInfo.getServiceId();
-//            ServiceDTO serviceDTO = new ServiceDTO();
-//            serviceDTO.setTypeId(1);
-//            serviceDTO.setTypeName(ServiceType.getName(type));
-//            serviceDTO.setList(serviceList);
-//            list.add(serviceDTO);
         } else if (type == ServiceType.TWO.toInt()) {
             List<OpBanner> bannerList = bannerRepository.findByModuleIdList(1);
             serviceAllDTO.setBannerList(bannerList);
-//            for (int i = 1; i <= FindType.values().length; i++) {
             page = serviceRepository.findByType(1, pageable);
-//                ServiceDTO serviceDTO = new ServiceDTO();
-//                serviceDTO.setTypeId(i);
-//                serviceDTO.setTypeName(FindType.getName(i));
-//                serviceDTO.setList(serviceList);
-//                list.add(serviceDTO);
-//            }
         } else if (type == ServiceType.THREE.toInt()) {
-//            for (int i = 1; i <= GovernmentType.values().length; i++) {
             page = serviceRepository.findByType(2, pageable);
-//                ServiceDTO serviceDTO = new ServiceDTO();
-//                serviceDTO.setTypeId(i);
-//                serviceDTO.setTypeName(GovernmentType.getName(i));
-//                serviceDTO.setList(serviceList);
-//                list.add(serviceDTO);
-//            }
         } else {
             page = serviceRepository.findAll(pageable);
-//            for (int i = 1; i <= AllServiceType.values().length; i++) {
-//                serviceList = serviceRepository.findByTypeAndCategory(type, i);
-//                ServiceDTO serviceDTO = new ServiceDTO();
-//                serviceDTO.setTypeId(i);
-//                serviceDTO.setTypeName(AllServiceType.getName(i));
-//                serviceDTO.setList(serviceList);
-//                list.add(serviceDTO);
-//            }
         }
-        for (OpService service: page) {
+        for (OpService service : page) {
             OpFamilyService familyService = familyServeRepository.findByServiceIdAndUserId(service.getId(), userId);
             if (familyService == null) {
                 service.setIsSubscribe(0);
@@ -113,7 +82,6 @@ public class ServeService {
             }
         }
         serviceAllDTO.setPage(page);
-//        serviceAllDTO.setServiceList(list);
         return serviceAllDTO;
     }
 
