@@ -5,16 +5,26 @@ import com.wj.core.entity.card.OpCard;
 import com.wj.core.entity.card.dto.CardDTO;
 import com.wj.core.entity.card.dto.CardDetailDTO;
 import com.wj.core.entity.card.dto.CardServicesDTO;
+import com.wj.core.entity.card.dto.CreateCardDTO;
 import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.op.OpService;
 import com.wj.core.repository.card.CardRepository;
 import com.wj.core.repository.op.ServeRepository;
-import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.upload.OssUploadService;
 import com.wj.core.util.mapper.BeanMapper;
+import com.wj.core.util.time.ClockUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -26,12 +36,15 @@ public class CardService {
     @Autowired
     private ServeRepository serveRepository;
     @Autowired
-    private UserInfoRepository userInfoRepository;
-
+    private OssUploadService ossUploadService;
+    @Value("${wj.path.card}")
+    private String path;
+    @Value("${wj.oss.access}")
+    private String url;
 
     // 获取用户卡片
-    public List<CardDTO> getUserCard(String token) {
-        List<OpCard> list = cardRepository.findByUserCards_UserInfo_IdAndUserCards_IsShow(1, CardStatus.YES);
+    public List<CardDTO> getUserCard(Integer userId) {
+        List<OpCard> list = cardRepository.findByUserCards_UserInfo_IdAndUserCards_IsShowAndStatusOrderByLocationAsc(1, CardStatus.YES, CardStatus.YES);
         List<CardDTO> cardDTOS = Lists.newArrayList();
         for (OpCard op : list) {
             CardDTO cd = BeanMapper.map(op, CardDTO.class);
@@ -42,19 +55,19 @@ public class CardService {
     }
 
     // 获取所有卡片
-    public List<OpCard> getCardList(String token) {
-        return cardRepository.findByUserCards_UserInfo_Id(1);
+    public List<OpCard> getCardList(Integer userId) {
+        return cardRepository.findByUserCards_UserInfo_IdAndStatusOrderByLocationAsc(1, CardStatus.YES);
     }
 
     // 保存用户卡片
     @Transactional
-    public void saveUserCard(String token, Integer id) {
+    public void saveUserCard(Integer userId, Integer id) {
         cardRepository.modityCardStatus(CardStatus.YES.ordinal(), 1, id);
     }
 
     // 删除用户卡片
     @Transactional
-    public void removeUserCard(String token, Integer cardId) {
+    public void removeUserCard(Integer userId, Integer cardId) {
         cardRepository.modityCardStatus(CardStatus.NO.ordinal(), 1, cardId);
     }
 
@@ -75,6 +88,52 @@ public class CardService {
             cardDetailDTO.setServices(servicesDTOList);
         }
         return cardDetailDTO;
+    }
+
+    @Transactional
+    public void saveCard(CreateCardDTO cardDTO, MultipartFile file) {
+        String filePath = ossUploadService.ossUpload(file, path);
+        OpCard card = BeanMapper.map(cardDTO, OpCard.class);
+        card.setCreateDate(ClockUtil.currentDate());
+        if (StringUtils.isNotBlank(filePath)) {
+            card.setIcon(url + filePath);
+        }
+        if (card.getLocation() == 0) {
+            OpCard lastOpCard = cardRepository.findFirstByOrderByIdDesc();
+            card.setLocation(lastOpCard.getLocation() + 1);
+        } else {
+            List<OpCard> opCardList = cardRepository.findByLocationIsLessThan(card.getLocation());
+            opCardList.forEach(opCard -> {
+                cardRepository.modityLocation(opCard.getLocation() + 1, opCard.getId());
+            });
+        }
+        cardRepository.save(card);
+    }
+
+    @Transactional
+    public void removeCard(Integer id) {
+        cardRepository.modityUserCardStatus(CardStatus.NO.ordinal(), id);
+        cardRepository.modityCardStatus(CardStatus.NO.ordinal(), id);
+    }
+
+
+    public Page<OpCard> getList(Integer pageNo, Integer type, Integer status) {
+        Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
+
+            List<Predicate> predicates = Lists.newArrayList();
+            if (type != null) {
+                predicates.add(criteriaBuilder.equal(root.get("type"), type));
+            }
+            if (status != null) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), status));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+        if (pageNo == null) {
+            pageNo = 1;
+        }
+        Pageable page = PageRequest.of(pageNo - 1, 10, Sort.Direction.ASC, "createDate");
+        return cardRepository.findAll(specification, page);
     }
 
 }

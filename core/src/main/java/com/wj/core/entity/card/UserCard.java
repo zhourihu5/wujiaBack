@@ -1,7 +1,6 @@
 package com.wj.core.entity.card;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.user.SysUserInfo;
 import lombok.Data;

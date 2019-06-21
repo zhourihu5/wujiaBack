@@ -35,10 +35,5 @@ spring:
 logging:
   config: classpath:log4j2.yml
 
-wj:
-  image:
-    url: https://wujia01.oss-cn-beijing.aliyuncs.com
-
-
 
 

@@ -33,9 +33,7 @@ public class JPush {
         final NettyHttpClient client = new NettyHttpClient(ServiceHelper.getBasicAuthorization(APP_KEY, MASTER_SECRET),
                 null, clientConfig);
         try {
-
             URI uri = new URI(host + clientConfig.get(ClientConfig.PUSH_PATH));
-
             PushPayload payload = null;
             switch (type) {
                 case SYS :
@@ -50,6 +48,26 @@ public class JPush {
         } finally {
             client.close();
         }
+    }
+
+    public static void sendPushAll() {
+        ClientConfig clientConfig = ClientConfig.getInstance();
+        String host = (String) clientConfig.get(ClientConfig.PUSH_HOST_NAME);
+        final NettyHttpClient client = new NettyHttpClient(ServiceHelper.getBasicAuthorization(APP_KEY, MASTER_SECRET),
+                null, clientConfig);
+        try {
+            URI uri = new URI(host + clientConfig.get(ClientConfig.PUSH_PATH));
+            PushPayload payload = buildPushMessageAsALl("CARD", "test1");
+            client.sendRequest(HttpMethod.POST, payload.toString(), uri, responseWrapper -> LOG.info("Got result: " + responseWrapper.responseContent));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } finally {
+            client.close();
+        }
+    }
+
+    public static void main(String[] args) {
+        sendPushAll();
     }
 
 

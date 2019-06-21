@@ -2,6 +2,7 @@ package com.wj.api.controller.card;
 
 
 import com.wj.api.filter.ResponseMessage;
+import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.card.OpCard;
 import com.wj.core.entity.card.dto.CardDTO;
 import com.wj.core.entity.card.dto.CardDetailDTO;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.wj.api.utils.JwtUtil.*;
 
 @Api(value="/v1/card", tags="卡片接口模块")
 @RestController
@@ -29,21 +32,24 @@ public class CardController {
             @ApiImplicitParam(name = "id", dataType = "Integer", value = "卡片ID", required = true)})
     @PostMapping("/card/save")
     public ResponseMessage saveUserCard(Integer id) {
-        cardService.saveUserCard("", id);
+        Integer userId = getUserIdFromToken(getJwtToken());
+        cardService.saveUserCard(userId, id);
         return ResponseMessage.ok();
     }
 
     @ApiOperation(value="获取用户卡片")
     @GetMapping("/card/user")
     public ResponseMessage<List<CardDTO>> getUserCard() {
-        List<CardDTO> list = cardService.getUserCard("");
+        Integer userId = getUserIdFromToken(getJwtToken());
+        List<CardDTO> list = cardService.getUserCard(userId);
         return ResponseMessage.ok(list);
     }
 
     @ApiOperation(value="获取推送给用户的所有卡片")
     @GetMapping("/card/all")
     public ResponseMessage<List<OpCard>> getUserAllCard() {
-        List<OpCard> list = cardService.getCardList("");
+        Integer userId = getUserIdFromToken(getJwtToken());
+        List<OpCard> list = cardService.getCardList(userId);
         return ResponseMessage.ok(list);
     }
 
@@ -52,7 +58,8 @@ public class CardController {
             @ApiImplicitParam(name = "id", dataType = "Integer", value = "卡片ID", required = true)})
     @PostMapping("/card/remove")
     public ResponseMessage removeCard(@RequestParam("id") Integer id) {
-        cardService.removeUserCard("", id);
+        Integer userId = getUserIdFromToken(getJwtToken());
+        cardService.removeUserCard(userId, id);
         return ResponseMessage.ok();
     }
 
