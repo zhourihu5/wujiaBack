@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
+
 
 public interface MessageUserRepository extends JpaRepository<SysMessageUser, Integer> {
 
@@ -21,4 +23,8 @@ public interface MessageUserRepository extends JpaRepository<SysMessageUser, Int
 
     @Query(value = "select count(*) from sys_message_user where user_id = ?1 and is_read = ?2", nativeQuery = true)
     public Integer isUnReadMessage(Integer userId, Integer isRead);
+
+    @Modifying
+    @Query(value = "insert into sys_message_user(message_id, user_id, is_read, create_date) values(?1,?2,?3,?4)", nativeQuery = true)
+    public Integer addMessageUser(Integer messageId, Integer userId, Integer isRead, Date date);
 }

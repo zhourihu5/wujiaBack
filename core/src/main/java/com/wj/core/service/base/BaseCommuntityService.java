@@ -41,8 +41,6 @@ public class BaseCommuntityService {
     private UserInfoRepository userInfoRepository;
 
 
-
-
     /**
      * 根据id查询社区信息
      *
@@ -83,7 +81,7 @@ public class BaseCommuntityService {
         } else {
             page = baseCommuntityRepository.findAll(pageable);
         }
-        for (BaseCommuntity baseCommuntity: page) {
+        for (BaseCommuntity baseCommuntity : page) {
             BaseArea area = baseAreaRepository.findByCityId(baseCommuntity.getArea());
             BaseArea city = baseAreaRepository.findByCityId(baseCommuntity.getCity());
             BaseArea provice = baseAreaRepository.findByCityId(baseCommuntity.getProvince());
@@ -117,13 +115,11 @@ public class BaseCommuntityService {
         familyCommuntityList.forEach(SysFamilyCommuntity -> {
             List<SysUserFamily> userFamilyList = userFamilyRepository.findByFamilyId(SysFamilyCommuntity.getFamilyCommuntity().getFamilyId());
             userFamilyList.forEach(SysUserFamily -> {
-                System.out.println(SysUserFamily.getUserFamily().getUserId());
                 SysUserInfo sysUserInfo = userInfoRepository.findByUserId(SysUserFamily.getUserFamily().getUserId());
                 list.add(sysUserInfo);
             });
         });
         return list;
     }
-
 
 }

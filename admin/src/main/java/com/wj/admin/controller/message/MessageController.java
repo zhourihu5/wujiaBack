@@ -41,15 +41,15 @@ public class MessageController {
         return ResponseMessage.ok();
     }
 
-    @ApiOperation(value="绑定消息和用户")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "SysMessageUser", dataType = "SysMessageUser", value = "消息用户实体"),
-    })
-    @PostMapping("saveMessageUser")
-    public ResponseMessage saveMessageUser(@RequestBody SysMessageUser messageUser) {
-        messageService.saveMessageUser(messageUser);
-        return ResponseMessage.ok();
-    }
+//    @ApiOperation(value="绑定消息和用户")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "SysMessageUser", dataType = "SysMessageUser", value = "消息用户实体"),
+//    })
+//    @PostMapping("saveMessageUser")
+//    public ResponseMessage saveMessageUser(@RequestBody SysMessageUser messageUser) {
+//        messageService.saveMessageUser(messageUser);
+//        return ResponseMessage.ok();
+//    }
 
 
     @ApiOperation(value = "消息分页信息", notes = "消息分页信息")
@@ -69,7 +69,7 @@ public class MessageController {
 
     @ApiOperation(value="推送消息")
     @PostMapping("pushMessage")
-    public ResponseMessage pushMessage(Integer messageId, Integer[] communtity) {
+    public ResponseMessage pushMessage(Integer messageId, String communtity) {
         messageService.pushMessage(messageId, communtity);
         return ResponseMessage.ok();
     }

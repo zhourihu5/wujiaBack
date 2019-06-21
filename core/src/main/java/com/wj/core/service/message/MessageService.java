@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -101,20 +102,20 @@ public class MessageService {
 
     /**
      * 向用户推送消息
-     *
-     * @param
-     * @return
+     * @param messageId
+     * @param communtity
+     * @return void
      */
-    public void pushMessage(Integer messageId, Integer[] communtity) {
-        SysMessageUser sysMessageUser = new SysMessageUser();
-        for (int i = 0; i < communtity.length; i++) {
-            List<SysUserInfo> list = baseCommuntityService.findUserListByCid(communtity[i]);
+    @Transactional
+    public void pushMessage(Integer messageId, String communtity) {
+        String[] strArray = communtity.split(",");
+        for (int i = 0; i < strArray.length; i++) {
+            // 保存消息和社区关系
+            messageCommuntityRepository.addMessageCommuntity(messageId, Integer.valueOf(strArray[i]), new Date());
+            List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
             list.forEach(SysUserInfo -> {
-                MessageUser messageUser = new MessageUser();
-                messageUser.setMessageId(messageId);
-                messageUser.setUserId(SysUserInfo.getId());
-                sysMessageUser.setIsRead(0);
-                messageUserRepository.save(sysMessageUser);
+                // 保存消息和用户关系
+                messageUserRepository.addMessageUser(messageId, SysUserInfo.getId(), 0, new Date());
             });
         }
     }
