@@ -6,8 +6,11 @@ import com.wj.core.entity.op.OpBanner;
 import com.wj.core.repository.op.BannerRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.util.number.RandomUtil;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,11 +23,14 @@ import java.util.List;
 public class OssUploadService {
 
 
-    public static String ENDPOINT = "http://oss-cn-beijing.aliyuncs.com";
-    private static String ACCESSKEYID = "LTAIBcmvGzaNrYGd";
-    private static String ACCESSKEYSECRET = "0PWTcwRaXzlb7XWG9IflqCc9Y6xmfA";
-    private static String BUCKETNAME = "wujia01";
-    private static String KEY = "images/";
+    @Value("${wj.oss.point}")
+    private String point;
+    @Value("${wj.oss.key}")
+    private String key;
+    @Value("${wj.oss.secret}")
+    private String secret;
+    @Value("${wj.oss.bucket}")
+    private String bucket;
 
     /**
      * @param
@@ -34,24 +40,22 @@ public class OssUploadService {
      * @Date
      * @Since JDK 1.8
      */
-    public String ossUpload(MultipartFile file) {
-        JSONObject ret = new JSONObject();
-        ret.put("msg", "请求失败");
+    public String ossUpload(MultipartFile file, String path) {
         try {
-            String fileNames = file.getOriginalFilename();
-            InputStream input = file.getInputStream();
-            // 创建OSSClient实例
-            OSSClient ossClient = new OSSClient(ENDPOINT, ACCESSKEYID, ACCESSKEYSECRET);
-            // 上传文件流
-            ossClient.putObject(BUCKETNAME, KEY + fileNames, input);
-            ossClient.shutdown();
-            ret.put("msg", ENDPOINT + '/' + KEY + fileNames);
-            System.out.println(("图片上传阿里云 name=" + KEY + fileNames));
-
+            if (!file.isEmpty()) {
+                String fileNames = RandomUtil.randomStringFixLength(6) + "." + StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
+                InputStream input = file.getInputStream();
+                // 创建OSSClient实例
+                OSSClient ossClient = new OSSClient(point, key, secret);
+                // 上传文件流
+                ossClient.putObject(bucket, path + fileNames, input);
+                ossClient.shutdown();
+                return path + fileNames;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ret.getString("msg");
+        return null;
     }
 
 

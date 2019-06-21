@@ -1,6 +1,7 @@
 package com.wj.api.utils;
 
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.util.number.NumberUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -29,6 +30,9 @@ public class JwtUtil {
         claims.put("createDate", new Date());
         return createJwt(claims);
     }
+
+
+
 
     /**
      * 定义泛型方法，方便传入任何类型入参对象
@@ -78,6 +82,18 @@ public class JwtUtil {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+
+    public static Integer getUserIdFromToken(String token) {
+        Integer userId;
+        try {
+            final Claims claims = parseJwt(token);
+            userId = NumberUtil.toIntObject(claims.get("userId").toString());
+        } catch (Exception e) {
+            userId = null;
+        }
+        return userId;
     }
 
 

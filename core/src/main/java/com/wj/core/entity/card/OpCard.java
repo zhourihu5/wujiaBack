@@ -16,7 +16,7 @@ import java.util.List;
 public class OpCard {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
     private String memo;
@@ -24,12 +24,13 @@ public class OpCard {
     private CardType type;
     private String url;
     private String icon;
-    private Short location;
+    private Integer location;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     private String content;
     @OneToMany(mappedBy = "opCard")
     private List<UserCard> userCards;
     private String services;
+    private String status;
 
 }

@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum  PushType {
 
-    SYS("系统推送"),
-    BUS("业务推送"),
-    MSG("消息通知");
+    SYS("系统升级"),
+    CARD("卡片"),
+    ADV("广告"),
+    MSG("消息");
 
     @JsonValue
     public String getName() {
