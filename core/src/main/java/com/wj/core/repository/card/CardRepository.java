@@ -18,7 +18,7 @@ public interface CardRepository extends JpaRepository<OpCard, Integer>, JpaSpeci
 
     OpCard findFirstByOrderByIdDesc();
 
-    List<OpCard> findByLocationIsLessThan(Integer location);
+    List<OpCard> findByLocationIsGreaterThanEqual(Integer location);
 
     @Modifying
     @Query(value = "update op_user_card o set o.is_show = ?1 where o.user_id = ?2 and o.card_id = ?3", nativeQuery = true)

@@ -36,8 +36,8 @@ public class CardController {
             @ApiImplicitParam(name = "file", dataType = "MultipartFile", value = "卡片实体", required = true)
     })
     @PostMapping("/card/save")
-    public ResponseMessage save(@RequestParam("title") String title, @RequestParam("file") MultipartFile file) {
-        //cardService.saveCard(cardDTO, file);
+    public ResponseMessage save(@ModelAttribute CreateCardDTO cardDTO, @RequestParam("file") MultipartFile file) {
+        cardService.saveCard(cardDTO, file);
         return ResponseMessage.ok();
     }
 
@@ -50,13 +50,13 @@ public class CardController {
     }
 
 
-    @ApiOperation(value="添加卡片")
+    @ApiOperation(value="卡片列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNo", dataType = "Integer", value = "页号"),
             @ApiImplicitParam(name = "status", dataType = "Integer", value = "卡片状态 0 推送中 1 停止推送"),
             @ApiImplicitParam(name = "type", dataType = "Integer", value = "卡片类型 0.功能 1.外链 2.内链 3.图文")
     })
-    @PostMapping("/card/list")
+    @GetMapping("/card/list")
     public ResponseMessage<Page<OpCard>> list(Integer pageNo, Integer status, Integer type) {
         return ResponseMessage.ok(cardService.getList(pageNo, type, status));
     }

@@ -7,6 +7,7 @@ import com.wj.core.entity.card.dto.CardDetailDTO;
 import com.wj.core.entity.card.dto.CardServicesDTO;
 import com.wj.core.entity.card.dto.CreateCardDTO;
 import com.wj.core.entity.card.enums.CardStatus;
+import com.wj.core.entity.card.enums.CardType;
 import com.wj.core.entity.op.OpService;
 import com.wj.core.repository.card.CardRepository;
 import com.wj.core.repository.op.ServeRepository;
@@ -95,14 +96,28 @@ public class CardService {
         String filePath = ossUploadService.ossUpload(file, path);
         OpCard card = BeanMapper.map(cardDTO, OpCard.class);
         card.setCreateDate(ClockUtil.currentDate());
+        card.setStatus(String.valueOf(CardStatus.NO.ordinal()));
+        if (cardDTO.getCardType().equals("0")) {
+            card.setType(CardType.OP);
+        }
+        if (cardDTO.getCardType().equals("1")) {
+            card.setType(CardType.WU);
+        }
+        if (cardDTO.getCardType().equals("2")) {
+            card.setType(CardType.IU);
+        }
+        if (cardDTO.getCardType().equals("3")) {
+            card.setType(CardType.IMG);
+        }
         if (StringUtils.isNotBlank(filePath)) {
             card.setIcon(url + filePath);
         }
+        // location 顺序
         if (card.getLocation() == 0) {
             OpCard lastOpCard = cardRepository.findFirstByOrderByIdDesc();
             card.setLocation(lastOpCard.getLocation() + 1);
         } else {
-            List<OpCard> opCardList = cardRepository.findByLocationIsLessThan(card.getLocation());
+            List<OpCard> opCardList = cardRepository.findByLocationIsGreaterThanEqual(card.getLocation());
             opCardList.forEach(opCard -> {
                 cardRepository.modityLocation(opCard.getLocation() + 1, opCard.getId());
             });
@@ -122,7 +137,18 @@ public class CardService {
 
             List<Predicate> predicates = Lists.newArrayList();
             if (type != null) {
-                predicates.add(criteriaBuilder.equal(root.get("type"), type));
+                if (type == 0) {
+                    predicates.add(criteriaBuilder.equal(root.get("type"), CardType.OP));
+                }
+                if (type == 1) {
+                    predicates.add(criteriaBuilder.equal(root.get("type"), CardType.WU));
+                }
+                if (type == 2) {
+                    predicates.add(criteriaBuilder.equal(root.get("type"), CardType.IU));
+                }
+                if (type == 3) {
+                    predicates.add(criteriaBuilder.equal(root.get("type"), CardType.IMG));
+                }
             }
             if (status != null) {
                 predicates.add(criteriaBuilder.equal(root.get("status"), status));
@@ -133,7 +159,8 @@ public class CardService {
             pageNo = 1;
         }
         Pageable page = PageRequest.of(pageNo - 1, 10, Sort.Direction.ASC, "createDate");
-        return cardRepository.findAll(specification, page);
+        Page<OpCard> pageCard = cardRepository.findAll(specification, page);
+        return pageCard;
     }
 
 }

@@ -35,5 +35,15 @@ spring:
 logging:
   config: classpath:log4j2.yml
 
+wj:
+  oss:
+    point: http://oss-cn-beijing.aliyuncs.com
+    key: LTAIBcmvGzaNrYGd
+    secret: 0PWTcwRaXzlb7XWG9IflqCc9Y6xmfA
+    bucket: wujia01
+    access: https://wujia01.oss-cn-beijing.aliyuncs.com
+  path:
+    card: /images/card/icon
+
 
 
