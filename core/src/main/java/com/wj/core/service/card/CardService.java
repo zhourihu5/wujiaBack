@@ -7,6 +7,7 @@ import com.wj.core.entity.card.dto.CardDetailDTO;
 import com.wj.core.entity.card.dto.CardServicesDTO;
 import com.wj.core.entity.card.dto.CreateCardDTO;
 import com.wj.core.entity.card.enums.CardStatus;
+import com.wj.core.entity.card.enums.CardType;
 import com.wj.core.entity.op.OpService;
 import com.wj.core.repository.card.CardRepository;
 import com.wj.core.repository.op.ServeRepository;
@@ -95,6 +96,19 @@ public class CardService {
         String filePath = ossUploadService.ossUpload(file, path);
         OpCard card = BeanMapper.map(cardDTO, OpCard.class);
         card.setCreateDate(ClockUtil.currentDate());
+        card.setStatus(String.valueOf(CardStatus.NO.ordinal()));
+        if (cardDTO.getCardType() == "0") {
+            card.setType(CardType.OP);
+        }
+        if (cardDTO.getCardType() == "1") {
+            card.setType(CardType.WU);
+        }
+        if (cardDTO.getCardType() == "2") {
+            card.setType(CardType.IU);
+        }
+        if (cardDTO.getCardType() == "3") {
+            card.setType(CardType.IMG);
+        }
         if (StringUtils.isNotBlank(filePath)) {
             card.setIcon(url + filePath);
         }
@@ -133,7 +147,8 @@ public class CardService {
             pageNo = 1;
         }
         Pageable page = PageRequest.of(pageNo - 1, 10, Sort.Direction.ASC, "createDate");
-        return cardRepository.findAll(specification, page);
+        Page<OpCard> pageCard = cardRepository.findAll(specification, page);
+        return pageCard;
     }
 
 }

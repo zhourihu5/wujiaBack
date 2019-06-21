@@ -28,7 +28,7 @@ public class OpCard {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     private String content;
-    @OneToMany(mappedBy = "opCard")
+    @OneToMany(mappedBy = "opCard", fetch = FetchType.LAZY)
     private List<UserCard> userCards;
     private String services;
     private String status;

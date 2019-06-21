@@ -12,9 +12,8 @@ public class CreateCardDTO {
     private String title;
     private String memo;
     @ApiModelProperty(value = "0.功能 1.外链 2.内链 3.图文")
-    private String type;
+    private String cardType;
     private String url;
-    private String icon;
     private String pushDate;
     private String content;
     @ApiModelProperty(value = "0 默认排序 非0 传过来就好")
