@@ -25,7 +25,7 @@ public class MessageController {
 
     @ApiOperation(value="保存消息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "messageDTO", dataType = "MessageDTO", value = "消息实体"),
+            @ApiImplicitParam(name = "Message", dataType = "Message", value = "消息实体"),
     })
     @PostMapping("saveMessage")
     public ResponseMessage saveMessage(@RequestBody Message message) {
@@ -35,7 +35,7 @@ public class MessageController {
 
     @ApiOperation(value="保存消息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "messageDTO", dataType = "MessageDTO", value = "消息实体"),
+            @ApiImplicitParam(name = "SysMessageUser", dataType = "SysMessageUser", value = "消息用户实体"),
     })
     @PostMapping("saveMessageUser")
     public ResponseMessage saveMessageUser(@RequestBody SysMessageUser messageUser) {
