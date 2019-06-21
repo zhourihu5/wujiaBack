@@ -112,6 +112,7 @@ public class CardService {
         if (StringUtils.isNotBlank(filePath)) {
             card.setIcon(url + filePath);
         }
+        // location 顺序
         if (card.getLocation() == 0) {
             OpCard lastOpCard = cardRepository.findFirstByOrderByIdDesc();
             card.setLocation(lastOpCard.getLocation() + 1);
@@ -137,7 +138,7 @@ public class CardService {
             List<Predicate> predicates = Lists.newArrayList();
             if (type != null) {
                 if (type == 0) {
-                    predicates.add(criteriaBuilder.equal(root.get("type"), CardType.IU));
+                    predicates.add(criteriaBuilder.equal(root.get("type"), CardType.OP));
                 }
                 if (type == 1) {
                     predicates.add(criteriaBuilder.equal(root.get("type"), CardType.WU));

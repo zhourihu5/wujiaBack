@@ -90,5 +90,14 @@ public class JPush {
                 .build();
     }
 
+    public static PushPayload buildPushMessageAsTag(List<String> tags, String type, String content) {
+        return PushPayload.newBuilder()
+                .setPlatform(Platform.android())
+                .setAudience(Audience.tag(tags))
+                .setMessage(Message.newBuilder().setContentType(type).setMsgContent(content).build())
+                .setOptions(Options.newBuilder().setApnsProduction(false).build())
+                .build();
+    }
+
 
 }
