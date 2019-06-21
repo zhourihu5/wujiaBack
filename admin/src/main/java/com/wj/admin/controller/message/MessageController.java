@@ -65,4 +65,12 @@ public class MessageController {
         Page<Message> page = messageService.findAll(title, pageable);
         return ResponseMessage.ok(page);
     }
+
+
+    @ApiOperation(value="推送消息")
+    @PostMapping("pushMessage")
+    public ResponseMessage pushMessage(Integer messageId, Integer[] communtity) {
+        messageService.pushMessage(messageId, communtity);
+        return ResponseMessage.ok();
+    }
 }

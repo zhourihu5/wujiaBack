@@ -3,6 +3,9 @@ package com.wj.core.service.message;
 import com.wj.core.entity.message.Message;
 import com.wj.core.entity.message.SysMessageCommuntity;
 import com.wj.core.entity.message.SysMessageUser;
+import com.wj.core.entity.message.embeddable.MessageCommuntity;
+import com.wj.core.entity.message.embeddable.MessageUser;
+import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.message.MessageCommuntityRepository;
 import com.wj.core.repository.message.MessageRepository;
 import com.wj.core.repository.message.MessageUserRepository;
@@ -27,15 +30,18 @@ public class MessageService {
     @Autowired
     private MessageUserRepository messageUserRepository;
 
+    @Autowired
+    private BaseCommuntityService baseCommuntityService;
 
+    @Transactional
     public void saveMessage(Message message) {
         messageRepository.save(message);
     }
 
+    @Transactional
     public void saveMessageUser(SysMessageUser messageUser) {
         messageUserRepository.save(messageUser);
     }
-
 
     public Page<Message> findListByUserId(Integer userId, Integer isRead, Integer type, Pageable pageable) {
         Page<Message> page = null;
@@ -48,7 +54,7 @@ public class MessageService {
         } else {
             page = messageRepository.findByUserId(userId, pageable);
         }
-        for (Message message: page) {
+        for (Message message : page) {
             Integer status = messageUserRepository.findByMessageAndUser(message.getId(), userId);
             if (status == null) {
                 message.setIsRead(0);
@@ -79,13 +85,14 @@ public class MessageService {
 
     /**
      * 消息分页列表
+     *
      * @param title
      * @return Page<Message>
      */
     public Page<Message> findAll(String title, Pageable pageable) {
         Page<Message> page = null;
         if (title != null) {
-            page = messageRepository.findByTitle(title ,pageable);
+            page = messageRepository.findByTitle(title, pageable);
         } else {
             page = messageRepository.findAll(pageable);
         }
@@ -94,17 +101,22 @@ public class MessageService {
 
     /**
      * 向用户推送消息
+     *
      * @param
      * @return
      */
-//    public void pushMessage(SysMessageCommuntity messageCommuntity) {
-//        Integer messageId = 0;
-//        List<SysMessageCommuntity> messageCommuntityList = messageCommuntityRepository.findCommuntityByMessageId(messageId);
-//        messageCommuntityList.forEach(SysMessageCommuntity -> {
-//
-//        });
-//
-//        messageUserRepository.save(messageUser);
-//    }
+    public void pushMessage(Integer messageId, Integer[] communtity) {
+        SysMessageUser sysMessageUser = new SysMessageUser();
+        for (int i = 0; i < communtity.length; i++) {
+            List<SysUserInfo> list = baseCommuntityService.findUserListByCid(communtity[i]);
+            list.forEach(SysUserInfo -> {
+                MessageUser messageUser = new MessageUser();
+                messageUser.setMessageId(messageId);
+                messageUser.setUserId(SysUserInfo.getId());
+                sysMessageUser.setIsRead(0);
+                messageUserRepository.save(sysMessageUser);
+            });
+        }
+    }
 
 }

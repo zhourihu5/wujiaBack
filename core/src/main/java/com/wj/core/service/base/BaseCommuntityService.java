@@ -41,6 +41,8 @@ public class BaseCommuntityService {
     private UserInfoRepository userInfoRepository;
 
 
+
+
     /**
      * 根据id查询社区信息
      *
@@ -122,5 +124,6 @@ public class BaseCommuntityService {
         });
         return list;
     }
+
 
 }

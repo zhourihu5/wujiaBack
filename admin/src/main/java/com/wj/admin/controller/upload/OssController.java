@@ -26,8 +26,10 @@ public class OssController {
      */
     @ApiOperation(value = "上传", notes = "上传")
     @PostMapping("/oss")
-    public Object ossUpload(@RequestParam("file") MultipartFile file) {
+    public Object ossUpload(@RequestParam("file") MultipartFile file, String name) {
         String url = ossUploadService.ossUpload(file, "");
+        System.out.println(url);
+        System.out.println(name);
         return ResponseMessage.ok(url);
 //        JSONObject ret = new JSONObject();
 //        String fileNames = "";

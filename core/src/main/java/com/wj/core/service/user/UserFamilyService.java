@@ -3,9 +3,12 @@ package com.wj.core.service.user;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.embeddable.UserFamily;
+import com.wj.core.entity.user.enums.UserIdentity;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,7 @@ public class UserFamilyService {
 
     /**
      * 根据用户ID查询所属家庭
+     *
      * @param userId
      * @return List<SysUserFamily>
      */
@@ -64,6 +68,7 @@ public class UserFamilyService {
 
     /**
      * 根据用户id和家庭id查询家庭信息
+     *
      * @param userId
      * @param familyId
      * @return SysUserFamily
@@ -74,16 +79,23 @@ public class UserFamilyService {
 
     /**
      * 绑定用户和家庭关系
+     *
      * @param userFamily
      * @return void
      */
     @Transactional
     public void addUserAndFamily(SysUserFamily userFamily) {
+        if (UserIdentity.Owner.equals(userFamily.getIdentity())) {
+            Integer count = userFamilyRepository.findByFamilyIdAndIdentity(userFamily.getUserFamily().getFamilyId(), userFamily.getIdentity());
+            if (count > 0)
+                throw new ServiceException("不能重复添加户主", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         userFamilyRepository.save(userFamily);
     }
 
     /**
      * 解绑用户和家庭关系
+     *
      * @param userFamily
      * @return void
      */
