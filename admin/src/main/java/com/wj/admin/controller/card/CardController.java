@@ -50,7 +50,7 @@ public class CardController {
     }
 
 
-    @ApiOperation(value="添加卡片")
+    @ApiOperation(value="卡片列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNo", dataType = "Integer", value = "页号"),
             @ApiImplicitParam(name = "status", dataType = "Integer", value = "卡片状态 0 推送中 1 停止推送"),

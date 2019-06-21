@@ -43,7 +43,7 @@ wj:
     bucket: wujia01
     access: https://wujia01.oss-cn-beijing.aliyuncs.com
   path:
-    card: images/card/icon
+    card: /images/card/icon
 
 
 

@@ -32,5 +32,6 @@ public class OpCard {
     private List<UserCard> userCards;
     private String services;
     private String status;
+    private String pushDate;
 
 }
