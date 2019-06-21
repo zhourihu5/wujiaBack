@@ -25,11 +25,11 @@ public class MessageService {
     private MessageUserRepository messageUserRepository;
 
 
-    public void addMessage(Message message) {
+    public void saveMessage(Message message) {
         messageRepository.save(message);
     }
 
-    public void addMessageUser(SysMessageUser messageUser) {
+    public void saveMessageUser(SysMessageUser messageUser) {
         messageUserRepository.save(messageUser);
     }
 

@@ -41,9 +41,9 @@ public class BaseFamilyService {
      * @return void
      */
     @Transactional
-    public void saveFamily(BaseFamily family) {
+    public BaseFamily saveFamily(BaseFamily family) {
         family.setCreateDate(new Date());
-        baseFamilyRepository.save(family);
+        return baseFamilyRepository.save(family);
     }
 
     /**

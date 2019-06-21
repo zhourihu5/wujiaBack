@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Api(value = "/v1/userFamily", tags = "屏保接口模块")
+@Api(value = "/v1/userFamily", tags = "用户家庭接口模块")
 @RestController
 @RequestMapping("/v1/userFamily/")
 public class UserFamilyController {
