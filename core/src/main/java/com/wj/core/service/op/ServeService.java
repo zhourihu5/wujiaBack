@@ -2,6 +2,7 @@ package com.wj.core.service.op;
 
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.enums.*;
+import com.wj.core.entity.op.OpAdv;
 import com.wj.core.entity.op.OpBanner;
 import com.wj.core.entity.op.embeddable.FamilyService;
 import com.wj.core.entity.op.OpFamilyService;
@@ -140,6 +141,16 @@ public class ServeService {
      */
     public List<OpFamilyService> findListByServiceId(Integer serviceId) {
         return familyServeRepository.findListByServiceId(serviceId);
+    }
+
+    /**
+     * 服务分页列表
+     *
+     * @param pageable
+     * @return Page<OpService>
+     */
+    public Page<OpService> findAllPage(Pageable pageable) {
+        return serviceRepository.findAll(pageable);
     }
 
 }
