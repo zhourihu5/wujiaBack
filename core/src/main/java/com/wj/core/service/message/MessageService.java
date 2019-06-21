@@ -74,4 +74,19 @@ public class MessageService {
         return flag;
     }
 
+    /**
+     * 消息分页列表
+     * @param title
+     * @return Page<Message>
+     */
+    public Page<Message> findAll(String title, Pageable pageable) {
+        Page<Message> page = null;
+        if (title != null) {
+            page = messageRepository.findByTitle(title ,pageable);
+        } else {
+            page = messageRepository.findAll(pageable);
+        }
+        return page;
+    }
+
 }

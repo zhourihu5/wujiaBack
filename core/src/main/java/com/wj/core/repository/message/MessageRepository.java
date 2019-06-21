@@ -1,5 +1,6 @@
 package com.wj.core.repository.message;
 
+import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.message.Message;
 import com.wj.core.entity.message.enums.MessageStatus;
 import com.wj.core.entity.op.OpService;
@@ -29,4 +30,6 @@ public interface MessageRepository extends JpaRepository<Message, Integer>, JpaS
     @Query(value = "select * from sys_message a,sys_message_user b where a.id = b.message_id and b.user_id = ?1 and b.is_read = ?2 order by create_date desc limit 3", nativeQuery = true)
     public List<Message> findTopThreeByUserId(Integer userId, Integer isRead);
 
+    @Query(value = "select * from sys_message where title like CONCAT('%',?1,'%')", nativeQuery = true)
+    public Page<Message> findByTitle(String title, Pageable pageable);
 }
