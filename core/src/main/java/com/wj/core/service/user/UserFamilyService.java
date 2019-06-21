@@ -54,6 +54,7 @@ public class UserFamilyService {
         List<SysUserInfo> sysUserInfoList = new ArrayList<>();
         for (SysUserFamily sysUserFamily : userFamilyList) {
             SysUserInfo sysUserInfo = userInfoRepository.findByUserId(sysUserFamily.getUserFamily().getUserId());
+            sysUserInfo.setIdentity(sysUserFamily.getIdentity());
             sysUserInfoList.add(sysUserInfo);
         }
         return sysUserInfoList;

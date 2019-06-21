@@ -48,6 +48,9 @@ public class SysUserInfo {
     @ApiModelProperty(value = "家庭ID")
     @Transient
     private Integer fid;
+    @ApiModelProperty(value = "1、房产所有人 2、使用人")
+    @Transient
+    private Integer identity;
 
     public List<UserCard> getUserCards() {
         return userCards;
@@ -139,6 +142,14 @@ public class SysUserInfo {
 
     public void setFid(Integer fid) {
         this.fid = fid;
+    }
+
+    public Integer getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(Integer identity) {
+        this.identity = identity;
     }
 
     //因为多对多之间会通过一张中间表来维护两表直接的关系，

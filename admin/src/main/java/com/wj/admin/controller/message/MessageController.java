@@ -33,7 +33,7 @@ public class MessageController {
         return ResponseMessage.ok();
     }
 
-    @ApiOperation(value="保存消息")
+    @ApiOperation(value="绑定消息和用户")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "SysMessageUser", dataType = "SysMessageUser", value = "消息用户实体"),
     })

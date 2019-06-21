@@ -42,6 +42,13 @@ public class ScreenService {
         return screenRepository.findAll();
     }
 
-
+    /**
+     * 修改和保存屏保
+     * @param screen
+     * @return void
+     */
+    public void saveScreen(SysScreen screen) {
+        screenRepository.save(screen);
+    }
 
 }
