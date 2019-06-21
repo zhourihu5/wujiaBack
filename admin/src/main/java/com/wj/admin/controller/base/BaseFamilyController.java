@@ -71,6 +71,16 @@ public class BaseFamilyController {
         return ResponseMessage.ok();
     }
 
+    @ApiOperation(value = "解绑用户和家庭关系", notes = "解绑用户和家庭关系")
+    @PostMapping("delUserAndFamily")
+    public ResponseMessage delUserAndFamily(@RequestBody SysUserFamily userFamily) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("保存家庭内容接口:/v1/family/delUserAndFamily userId=" + claims.get("userId"));
+        userFamilyService.delUserAndFamily(userFamily);
+        return ResponseMessage.ok();
+    }
+
 
 }
 

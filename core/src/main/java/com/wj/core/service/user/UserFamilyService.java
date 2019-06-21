@@ -79,4 +79,13 @@ public class UserFamilyService {
         userFamilyRepository.save(userFamily);
     }
 
+    /**
+     * 解绑用户和家庭关系
+     * @param userFamily
+     * @return void
+     */
+    public Integer delUserAndFamily(SysUserFamily userFamily) {
+        return userFamilyRepository.delUserAndFamily(userFamily.getUserFamily().getUserId(), userFamily.getUserFamily().getFamilyId());
+    }
+
 }

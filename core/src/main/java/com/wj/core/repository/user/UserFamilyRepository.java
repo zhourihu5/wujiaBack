@@ -34,5 +34,14 @@ public interface UserFamilyRepository extends JpaRepository<SysUserFamily, Integ
     @Query(value = "select * from sys_user_family where user_id = ?1 and family_id = ?2", nativeQuery = true)
     public SysUserFamily findByUidAndFid(Integer userId, Integer familyId);
 
+    /**
+     * 根据用户id和家庭id查询家庭信息
+     * @param userId
+     * @param familyId
+     * @return SysUserFamily
+     */
+    @Query(value = "delete from sys_user_family where user_id = ?1 and family_id = ?2", nativeQuery = true)
+    public Integer delUserAndFamily(Integer userId, Integer familyId);
+
 
 }
