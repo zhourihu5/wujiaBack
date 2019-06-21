@@ -13,6 +13,4 @@ public class SysMessageCommuntity {
     @EmbeddedId
     private MessageCommuntity messageCommuntity;
 
-
-
 }

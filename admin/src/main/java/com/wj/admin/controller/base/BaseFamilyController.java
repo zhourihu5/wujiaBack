@@ -8,6 +8,7 @@ import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.base.BaseFloor;
 import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.entity.user.SysUserFamily;
+import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.service.base.BaseFamilyService;
 import com.wj.core.service.user.UserFamilyService;
@@ -73,7 +74,7 @@ public class BaseFamilyController {
 
     @ApiOperation(value = "解绑用户和家庭关系", notes = "解绑用户和家庭关系")
     @PostMapping("delUserAndFamily")
-    public ResponseMessage delUserAndFamily(@RequestBody SysUserFamily userFamily) {
+    public ResponseMessage delUserAndFamily(@RequestBody UserFamily userFamily) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("保存家庭内容接口:/v1/family/delUserAndFamily userId=" + claims.get("userId"));

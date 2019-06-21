@@ -2,6 +2,7 @@ package com.wj.core.repository.user;
 
 import com.wj.core.entity.user.SysUserFamily;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public interface UserFamilyRepository extends JpaRepository<SysUserFamily, Integ
      * @param familyId
      * @return SysUserFamily
      */
+    @Modifying
     @Query(value = "delete from sys_user_family where user_id = ?1 and family_id = ?2", nativeQuery = true)
     public Integer delUserAndFamily(Integer userId, Integer familyId);
 

@@ -1,7 +1,9 @@
 package com.wj.core.service.message;
 
 import com.wj.core.entity.message.Message;
+import com.wj.core.entity.message.SysMessageCommuntity;
 import com.wj.core.entity.message.SysMessageUser;
+import com.wj.core.repository.message.MessageCommuntityRepository;
 import com.wj.core.repository.message.MessageRepository;
 import com.wj.core.repository.message.MessageUserRepository;
 import com.wj.core.service.base.BaseCommuntityService;
@@ -18,8 +20,9 @@ public class MessageService {
 
     @Autowired
     private MessageRepository messageRepository;
+
     @Autowired
-    private BaseCommuntityService baseCommuntityService;
+    private MessageCommuntityRepository messageCommuntityRepository;
 
     @Autowired
     private MessageUserRepository messageUserRepository;
@@ -88,5 +91,20 @@ public class MessageService {
         }
         return page;
     }
+
+    /**
+     * 向用户推送消息
+     * @param
+     * @return
+     */
+//    public void pushMessage(SysMessageCommuntity messageCommuntity) {
+//        Integer messageId = 0;
+//        List<SysMessageCommuntity> messageCommuntityList = messageCommuntityRepository.findCommuntityByMessageId(messageId);
+//        messageCommuntityList.forEach(SysMessageCommuntity -> {
+//
+//        });
+//
+//        messageUserRepository.save(messageUser);
+//    }
 
 }

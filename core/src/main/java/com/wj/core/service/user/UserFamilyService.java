@@ -2,11 +2,13 @@ package com.wj.core.service.user;
 
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +77,7 @@ public class UserFamilyService {
      * @param userFamily
      * @return void
      */
+    @Transactional
     public void addUserAndFamily(SysUserFamily userFamily) {
         userFamilyRepository.save(userFamily);
     }
@@ -84,8 +87,9 @@ public class UserFamilyService {
      * @param userFamily
      * @return void
      */
-    public Integer delUserAndFamily(SysUserFamily userFamily) {
-        return userFamilyRepository.delUserAndFamily(userFamily.getUserFamily().getUserId(), userFamily.getUserFamily().getFamilyId());
+    @Transactional
+    public Integer delUserAndFamily(UserFamily userFamily) {
+        return userFamilyRepository.delUserAndFamily(userFamily.getUserId(), userFamily.getFamilyId());
     }
 
 }
