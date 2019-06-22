@@ -19,6 +19,7 @@ public class OssController {
     private OssUploadService ossUploadService;
     @Value("${wj.path.card}")
     private String cardPath;
+    private static final String CARD_TYPE = "card";
 
     /**
      * @param
@@ -32,36 +33,10 @@ public class OssController {
     @PostMapping("/upload")
     public ResponseMessage<String> ossUpload(@RequestParam("file") MultipartFile file, String type) {
         String path = "";
-        if (type.equals("card")) {
+        if (type.equals(CARD_TYPE)) {
             path = ossUploadService.ossUpload(file, cardPath);
-
         }
         return ResponseMessage.ok(path);
-//        JSONObject ret = new JSONObject();
-//        String fileNames = "";
-//        ret.put("success", false);
-//        ret.put("msg", "请求失败[PU01]");
-//        try {
-//            StandardMultipartHttpServletRequest req = (StandardMultipartHttpServletRequest) request;
-//            Iterator<String> iterator = req.getFileNames();
-//            while (iterator.hasNext()) {
-//                MultipartFile file = req.getFile(iterator.next());
-//                fileNames = file.getOriginalFilename();
-//                InputStream input = file.getInputStream();
-//                // 创建OSSClient实例
-//                OSSClient ossClient = new OSSClient(ENDPOINT, ACCESSKEYID, ACCESSKEYSECRET);
-//                // 上传文件流
-//                ossClient.putObject(BUCKETNAME, KEY + fileNames, input);
-//                ossClient.shutdown();
-//            }
-//            ret.put("success", true);
-//            ret.put("msg", KEY + fileNames);
-//            System.out.println(("图片上传阿里云 name=" + KEY + fileNames));
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return ret.getString("msg");
     }
 
 }

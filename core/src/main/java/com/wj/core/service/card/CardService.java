@@ -102,8 +102,7 @@ public class CardService {
     }
 
     @Transactional
-    public void saveCard(CreateCardDTO cardDTO, MultipartFile file) {
-        String filePath = ossUploadService.ossUpload(file, path);
+    public void saveCard(CreateCardDTO cardDTO) {
         OpCard card = BeanMapper.map(cardDTO, OpCard.class);
         card.setCreateDate(ClockUtil.currentDate());
         card.setStatus(CardStatus.YES);
@@ -119,8 +118,8 @@ public class CardService {
         if (cardDTO.getCardType().equals("3")) {
             card.setType(CardType.IMG);
         }
-        if (StringUtils.isNotBlank(filePath)) {
-            card.setIcon(url + filePath);
+        if (StringUtils.isNotBlank(cardDTO.getPath())) {
+            card.setIcon(url + cardDTO.getPath());
         }
         // location 顺序
         if (card.getLocation() == 0) {

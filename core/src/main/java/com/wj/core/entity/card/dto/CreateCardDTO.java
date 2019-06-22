@@ -20,5 +20,6 @@ public class CreateCardDTO {
     private Integer location;
     @ApiModelProperty(value = "多个服务以把ID用逗号拼接")
     private String service;
+    private String path;
 
 }

@@ -33,12 +33,11 @@ public class CardController {
 
     @ApiOperation(value="添加卡片")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "cardDTO", dataType = "CreateCardDTO", value = "卡片实体", required = true),
-            @ApiImplicitParam(name = "file", dataType = "MultipartFile", value = "卡片实体", required = true)
+            @ApiImplicitParam(name = "cardDTO", dataType = "CreateCardDTO", value = "卡片实体", required = true)
     })
-    @PostMapping(value = "/card/save", consumes = "multipart/form-data")
-    public ResponseMessage save(@ModelAttribute CreateCardDTO cardDTO, @RequestParam("file") MultipartFile file) {
-        cardService.saveCard(cardDTO, file);
+    @PostMapping(value = "/card/save")
+    public ResponseMessage save(@ModelAttribute CreateCardDTO cardDTO) {
+        cardService.saveCard(cardDTO);
         return ResponseMessage.ok();
     }
 
