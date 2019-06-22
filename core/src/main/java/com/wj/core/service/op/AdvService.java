@@ -6,6 +6,7 @@ import com.wj.core.entity.op.OpAdv;
 import com.wj.core.entity.op.OpBanner;
 import com.wj.core.entity.op.OpFamilyService;
 import com.wj.core.entity.op.OpService;
+import com.wj.core.entity.op.dto.AdvertDTO;
 import com.wj.core.entity.op.embeddable.FamilyService;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.ServiceAllDTO;
@@ -13,11 +14,14 @@ import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.op.*;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.base.BaseCommuntityService;
+import com.wj.core.util.jiguang.JPush;
+import com.wj.core.util.mapper.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.Date;
 import java.util.List;
@@ -93,15 +97,28 @@ public class AdvService {
      */
     @Transactional
     public void pushAdv(Integer advId, String communtity) {
-        String[] strArray = communtity.split(",");
-        for (int i = 0; i < strArray.length; i++) {
-            // 保存广告和社区关系
-            advCommuntityRepository.addAdvCommuntity(advId, Integer.valueOf(strArray[i]), new Date());
-            List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
-            list.forEach(SysUserInfo -> {
-                // 保存广告和用户关系
-                advUserRepository.addAdvUser(advId, SysUserInfo.getId(), new Date());
-            });
-        }
+//        String[] strArray = communtity.split(",");
+//        for (int i = 0; i < strArray.length; i++) {
+//            // 保存广告和社区关系
+//            advCommuntityRepository.addAdvCommuntity(advId, Integer.valueOf(strArray[i]), new Date());
+//            List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
+//            list.forEach(SysUserInfo -> {
+//                // 保存广告和用户关系
+//                advUserRepository.addAdvUser(advId, SysUserInfo.getId(), new Date());
+//            });
+//        }
+        List<OpAdv> list = advRepository.findAll();
+        //OpAdv adv = advRepository.getOne(1);
+        list.forEach(adv -> {
+            AdvertDTO advertDTO = new AdvertDTO();
+            advertDTO.setUrl(adv.getCover());
+            advertDTO.setHref(adv.getUrl());
+            advertDTO.setId(adv.getId());
+            advertDTO.setTitle(advertDTO.getTitle());
+            advertDTO.setType("0");
+            JsonMapper mapper = JsonMapper.defaultMapper();
+            JPush.sendPushAll("ADV", mapper.toJson(advertDTO));
+        });
+
     }
 }

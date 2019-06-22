@@ -36,7 +36,7 @@ public class CardController {
             @ApiImplicitParam(name = "cardDTO", dataType = "CreateCardDTO", value = "卡片实体", required = true),
             @ApiImplicitParam(name = "file", dataType = "MultipartFile", value = "卡片实体", required = true)
     })
-    @PostMapping("/card/save")
+    @PostMapping(value = "/card/save", consumes = "multipart/form-data")
     public ResponseMessage save(@ModelAttribute CreateCardDTO cardDTO, @RequestParam("file") MultipartFile file) {
         cardService.saveCard(cardDTO, file);
         return ResponseMessage.ok();

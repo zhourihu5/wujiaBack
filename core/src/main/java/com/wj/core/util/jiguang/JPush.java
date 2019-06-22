@@ -28,7 +28,6 @@ public class JPush {
     protected static final String APP_KEY = "8bc0518b5aa55c176ffbcbcb";
     protected static final String MASTER_SECRET = "52251687bfd0b5dcebda580d";
     protected static final String CARD_TYPE = "CARD";
-    protected static final String CARD_SCNAME = "card_schedule_push";
     protected static final String MSG_TYPE = "MSG";
     protected static final String MSG_CONTENT = "message custom push";
 
@@ -52,11 +51,11 @@ public class JPush {
     }
 
     // 使用 NettyHttpClient 异步接口发送请求
-    public static void sendCardSchedulePush(String time, String content) {
+    public static void sendCardSchedulePush(String scheduleName, String time, String content) {
         JPushClient jpushClient = new JPushClient(MASTER_SECRET, APP_KEY);
         try {
             PushPayload payload = buildPushMessageAsALl(CARD_TYPE, content);
-            ScheduleResult result = jpushClient.createSingleSchedule(CARD_SCNAME, time, payload);
+            ScheduleResult result = jpushClient.createSingleSchedule(scheduleName, time, payload);
             LOG.info("schedule result is " + result);
         } catch (APIConnectionException e) {
             LOG.error("Connection error. Should retry later. ", e);
@@ -84,8 +83,27 @@ public class JPush {
         }
     }
 
+    public static void testCreateDailySchedule() {
+        JPushClient jPushClient = new JPushClient(MASTER_SECRET, APP_KEY);
+        String name = "test_daily_schedule";
+        String start = "2019-08-06 12:16:13";
+        String end = "2020-08-06 12:16:13";
+        String time = "14:00:00";
+        PushPayload push = PushPayload.alertAll("test daily example.");
+        try {
+            ScheduleResult result = jPushClient.createDailySchedule(name, start, end, time, push);
+            LOG.info("schedule result is " + result);
+        } catch (APIConnectionException e) {
+            LOG.error("Connection error. Should retry later. ", e);
+        } catch (APIRequestException e) {
+            LOG.error("Error response from JPush server. Should review and fix it. ", e);
+            LOG.info("HTTP Status: " + e.getStatus());
+            LOG.info("Error Code: " + e.getErrorCode());
+            LOG.info("Error Message: " + e.getErrorMessage());
+        }
+    }
+
     public static void main(String[] args) {
-        sendCardSchedulePush("2019-06-22 10:45:00", "card add message");
     }
 
 
