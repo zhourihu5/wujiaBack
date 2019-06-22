@@ -54,12 +54,13 @@ public class CardController {
     @ApiOperation(value="卡片列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNo", dataType = "Integer", value = "页号"),
+            @ApiImplicitParam(name = "pageSize", dataType = "Integer", value = "大小"),
             @ApiImplicitParam(name = "status", dataType = "Integer", value = "卡片状态 0 推送中 1 停止推送"),
             @ApiImplicitParam(name = "type", dataType = "Integer", value = "卡片类型 0.功能 1.外链 2.内链 3.图文")
     })
     @GetMapping("/card/list")
-    public ResponseMessage<Page<OpCard>> list(Integer pageNo, Integer status, Integer type) {
-        return ResponseMessage.ok(cardService.getList(pageNo, type, status));
+    public ResponseMessage<Page<OpCard>> list(Integer pageNo, Integer pageSize, Integer status, Integer type) {
+        return ResponseMessage.ok(cardService.getList(pageNo, pageSize, type, status));
     }
 
     @ApiOperation(value="获取内链卡片模块")
