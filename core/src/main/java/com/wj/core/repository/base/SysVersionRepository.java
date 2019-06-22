@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SysVersionRepository extends JpaRepository<SysVersion, Integer> {
 
-    SysVersion findFirstBySysVerGreaterThanEqualOrderBySysVerDesc(Short ver);
+    SysVersion findFirstByOrderBySysVerDesc();
 
 }
