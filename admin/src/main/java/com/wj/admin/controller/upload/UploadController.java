@@ -24,20 +24,8 @@ public class UploadController {
 
     @ApiOperation(value = "上传", notes = "上传")
     @PostMapping("/upload")
-    public Object uploadImg(@RequestParam("file") MultipartFile[] files) throws IOException {
-        String filePath = "/Users/thz/images/";
-        File file = new File(filePath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        for (MultipartFile multipartFile : files) {
-            if (multipartFile.isEmpty()) {
-                throw new ServiceException("上传失败，请选择文件", ErrorCode.INTERNAL_SERVER_ERROR);
-            }
-            String fileName = multipartFile.getOriginalFilename();
-            file = new File(filePath + fileName);
-            multipartFile.transferTo(file);
-        }
+    public Object uploadImg(@RequestParam("file") MultipartFile file) throws IOException {
+
         return ResponseMessage.ok();
     }
 

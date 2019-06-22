@@ -6,6 +6,7 @@ import com.wj.core.service.upload.OssUploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +17,9 @@ public class OssController {
 
     @Autowired
     private OssUploadService ossUploadService;
+    @Value("${wj.path.card}")
+    private String cardPath;
+
     /**
      * @param
      * @MethodName ossUpload
@@ -25,12 +29,14 @@ public class OssController {
      * @Since JDK 1.8
      */
     @ApiOperation(value = "上传", notes = "上传")
-    @PostMapping("/oss")
-    public Object ossUpload(@RequestParam("file") MultipartFile file, String name) {
-        String url = ossUploadService.ossUpload(file, "");
-        System.out.println(url);
-        System.out.println(name);
-        return ResponseMessage.ok(url);
+    @PostMapping("/oss/upload")
+    public ResponseMessage<String> ossUpload(@RequestParam("file") MultipartFile file, String type) {
+        String path = "";
+        if (type.equals("card")) {
+            path = ossUploadService.ossUpload(file, cardPath);
+
+        }
+        return ResponseMessage.ok(path);
 //        JSONObject ret = new JSONObject();
 //        String fileNames = "";
 //        ret.put("success", false);
