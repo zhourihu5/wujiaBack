@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Api(value = "/oss", tags = "oss上传接口模块")
 @RestController
-@RequestMapping("/oss/")
+@RequestMapping("/oss")
 public class OssController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class OssController {
      * @Since JDK 1.8
      */
     @ApiOperation(value = "上传", notes = "上传")
-    @PostMapping("/oss/upload")
+    @PostMapping("/upload")
     public ResponseMessage<String> ossUpload(@RequestParam("file") MultipartFile file, String type) {
         String path = "";
         if (type.equals("card")) {
