@@ -1,5 +1,6 @@
 package com.wj.core.service.op;
 
+import com.google.common.collect.Lists;
 import com.wj.core.entity.enums.ServiceType;
 import com.wj.core.entity.message.Message;
 import com.wj.core.entity.op.OpAdv;
@@ -16,6 +17,7 @@ import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.mapper.JsonMapper;
+import com.wj.core.util.time.DateFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,20 +28,11 @@ import springfox.documentation.spring.web.json.Json;
 import java.util.Date;
 import java.util.List;
 
+import static com.wj.core.util.time.DateFormatUtil.*;
+
 @Service
 public class AdvService {
 
-    @Autowired
-    private ServeRepository serviceRepository;
-
-    @Autowired
-    private BaseFamilyRepository baseFamilyRepository;
-
-    @Autowired
-    private UserInfoRepository userInfoRepository;
-
-    @Autowired
-    private FamilyServeRepository familyServeRepository;
 
     @Autowired
     private AdvUserRepository advUserRepository;
@@ -97,28 +90,28 @@ public class AdvService {
      */
     @Transactional
     public void pushAdv(Integer advId, String communtity) {
-//        String[] strArray = communtity.split(",");
-//        for (int i = 0; i < strArray.length; i++) {
-//            // 保存广告和社区关系
-//            advCommuntityRepository.addAdvCommuntity(advId, Integer.valueOf(strArray[i]), new Date());
-//            List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
-//            list.forEach(SysUserInfo -> {
-//                // 保存广告和用户关系
-//                advUserRepository.addAdvUser(advId, SysUserInfo.getId(), new Date());
-//            });
-//        }
-        List<OpAdv> list = advRepository.findAll();
-        //OpAdv adv = advRepository.getOne(1);
-        list.forEach(adv -> {
-            AdvertDTO advertDTO = new AdvertDTO();
-            advertDTO.setUrl(adv.getCover());
-            advertDTO.setHref(adv.getUrl());
-            advertDTO.setId(adv.getId());
-            advertDTO.setTitle(advertDTO.getTitle());
-            advertDTO.setType("0");
-            JsonMapper mapper = JsonMapper.defaultMapper();
-            JPush.sendPushAll("ADV", mapper.toJson(advertDTO));
-        });
+        List tagList = Lists.newArrayList();
+        String[] strArray = communtity.split(",");
+        for (int i = 0; i < strArray.length; i++) {
+            // 保存广告和社区关系
+            tagList.add(strArray[i]);
+            advCommuntityRepository.addAdvCommuntity(advId, Integer.valueOf(strArray[i]), new Date());
+            List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
+            list.forEach(SysUserInfo -> {
+                // 保存广告和用户关系
+                advUserRepository.addAdvUser(advId, SysUserInfo.getId(), new Date());
+            });
+        }
+        // 广告推送
+//        OpAdv adv = advRepository.getOne(advId);
+//        AdvertDTO advertDTO = new AdvertDTO();
+//        advertDTO.setUrl(adv.getCover());
+//        advertDTO.setHref(adv.getUrl());
+//        advertDTO.setId(adv.getId());
+//        advertDTO.setTitle(advertDTO.getTitle());
+//        advertDTO.setType("0");
+//        JsonMapper mapper = JsonMapper.defaultMapper();
+//        JPush.sendAdvSchedulePush(tagList, "adv_schedule_push_" + advId, formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getStartDate()), formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getEndDate()), mapper.toJson(adv));
 
     }
 }

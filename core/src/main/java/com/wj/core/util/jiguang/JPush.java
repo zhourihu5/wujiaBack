@@ -29,6 +29,7 @@ public class JPush {
     protected static final String MASTER_SECRET = "52251687bfd0b5dcebda580d";
     protected static final String CARD_TYPE = "CARD";
     protected static final String MSG_TYPE = "MSG";
+    protected static final String ADV_TYPE = "ADV";
     protected static final String MSG_CONTENT = "message custom push";
 
 
@@ -83,13 +84,10 @@ public class JPush {
         }
     }
 
-    public static void testCreateDailySchedule() {
+    public static void sendAdvSchedulePush(List<String> tags, String name, String start, String end, String content) {
         JPushClient jPushClient = new JPushClient(MASTER_SECRET, APP_KEY);
-        String name = "test_daily_schedule";
-        String start = "2019-08-06 12:16:13";
-        String end = "2020-08-06 12:16:13";
-        String time = "14:00:00";
-        PushPayload push = PushPayload.alertAll("test daily example.");
+        String time = "20:00:00";
+        PushPayload push = buildPushMessageAsTag(tags, ADV_TYPE, content);
         try {
             ScheduleResult result = jPushClient.createDailySchedule(name, start, end, time, push);
             LOG.info("schedule result is " + result);

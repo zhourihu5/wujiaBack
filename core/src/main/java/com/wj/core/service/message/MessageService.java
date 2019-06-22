@@ -1,10 +1,8 @@
 package com.wj.core.service.message;
 
+import com.google.common.collect.Lists;
 import com.wj.core.entity.message.Message;
-import com.wj.core.entity.message.SysMessageCommuntity;
 import com.wj.core.entity.message.SysMessageUser;
-import com.wj.core.entity.message.embeddable.MessageCommuntity;
-import com.wj.core.entity.message.embeddable.MessageUser;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.message.MessageCommuntityRepository;
 import com.wj.core.repository.message.MessageRepository;
@@ -109,14 +107,18 @@ public class MessageService {
     @Transactional
     public void pushMessage(Integer messageId, String communtity) {
         String[] strArray = communtity.split(",");
+        List<String> tagList = Lists.newArrayList();
         for (int i = 0; i < strArray.length; i++) {
             // 保存消息和社区关系
+            tagList.add(strArray[i]);
             messageCommuntityRepository.addMessageCommuntity(messageId, Integer.valueOf(strArray[i]), new Date());
             List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
             list.forEach(SysUserInfo -> {
                 // 保存消息和用户关系
                 messageUserRepository.addMessageUser(messageId, SysUserInfo.getId(), 0, new Date());
             });
+            // 消息推送
+            //JPush.sendMsgPush(tagList);
         }
     }
 
