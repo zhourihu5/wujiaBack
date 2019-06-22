@@ -12,7 +12,7 @@ public class JwtConfig {
     public FilterRegistrationBean jwtFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new JwtFilter());
-        registrationBean.addUrlPatterns("/test/*");//配置对应路径的接口使用此 filter
+        registrationBean.addUrlPatterns("/v1g/*");//配置对应路径的接口使用此 filter
         return registrationBean;
     }
 }

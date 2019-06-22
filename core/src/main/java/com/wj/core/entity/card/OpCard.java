@@ -33,6 +33,6 @@ public class OpCard {
     private List<UserCard> userCards;
     private String services;
     private CardStatus status;
-    private String pushDate;
+    private Date pushDate;
 
 }
