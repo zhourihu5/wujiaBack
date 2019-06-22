@@ -23,5 +23,6 @@ public class SysVersion {
     private String showVer;
     private Date createDate;
     private String versionDesc;
+    private String url;
 
 }
