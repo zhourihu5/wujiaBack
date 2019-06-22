@@ -11,7 +11,6 @@ import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.card.enums.CardType;
 import com.wj.core.entity.op.OpService;
 import com.wj.core.entity.user.SysUserFamily;
-import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.repository.card.CardRepository;
 import com.wj.core.repository.card.PadModuleRepository;
 import com.wj.core.repository.op.ServeRepository;
@@ -142,6 +141,7 @@ public class CardService {
                 cardRepository.insertUserCard(userId, opCard.getId(), CardStatus.YES.ordinal());
             }
         });
+        //JPush.sendCardSchedulePush("card_schedule_push_" + opCard.getId(), opCard.getPushDate(), "add card message");
         //JPush.sendPushAll(MSG_TYPE, "Add Card");
     }
 
@@ -149,7 +149,7 @@ public class CardService {
     public void removeCard(Integer id) {
         cardRepository.modityUserCardStatus(CardStatus.NO.ordinal(), id);
         cardRepository.modityCardStatus(CardStatus.NO.ordinal(), id);
-        //JPush.sendPushAll(MSG_TYPE, "Remove Card");
+        JPush.sendPushAll("CARD", "remove card message");
     }
 
 
