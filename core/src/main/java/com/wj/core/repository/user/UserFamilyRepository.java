@@ -52,4 +52,12 @@ public interface UserFamilyRepository extends JpaRepository<SysUserFamily, Integ
      */
     @Query(value = "select count(*) from sys_user_family where family_id = ?1 and identity = ?2", nativeQuery = true)
     public Integer findByFamilyIdAndIdentity(Integer familyId, Integer identity);
+
+    /**
+     * 获取所有业主的用户ID
+     * @param identity
+     * @return List<SysUserFamily>
+     */
+    @Query(value = "select * from sys_user_family where identity = ?1", nativeQuery = true)
+    public List<SysUserFamily> findByIdentity(Integer identity);
 }

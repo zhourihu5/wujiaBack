@@ -89,7 +89,7 @@ public class LoginController {
         if (sysUserFamily == null) {
             throw new ServiceException("家庭成员数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        if (sysUserFamily.getIdentity() != 1 || sysUserFamily.getStatus() != 1) {
+        if (sysUserFamily.getIdentity() != 1) {
             throw new ServiceException("账户限制", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         final HttpSession httpSession = request.getSession();

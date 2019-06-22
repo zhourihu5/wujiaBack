@@ -104,4 +104,14 @@ public class UserFamilyService {
         return userFamilyRepository.delUserAndFamily(userFamily.getUserId(), userFamily.getFamilyId());
     }
 
+    /**
+     * 获取所有业主的用户ID
+     * @param identity
+     * @return List<SysUserFamily>
+     */
+    public List<SysUserFamily> findByIdentity(Integer identity) {
+        return userFamilyRepository.findByIdentity(identity);
+    }
+
+
 }

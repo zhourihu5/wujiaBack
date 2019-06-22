@@ -26,8 +26,8 @@ public class SysUserFamily {
     private UserFamily userFamily;
     @ApiModelProperty(value = "1、房产所有人 2、使用人")
     private Integer identity;
-    @ApiModelProperty(value = "0、禁止使用 1、允许使用 ")
-    private Integer status;
+//    @ApiModelProperty(value = "0、禁止使用 1、允许使用 ")
+//    private Integer status;
 
     public UserFamily getUserFamily() {
         return userFamily;
@@ -45,11 +45,5 @@ public class SysUserFamily {
         this.identity = identity;
     }
 
-    public int getStatus() {
-        return status;
-    }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
 }

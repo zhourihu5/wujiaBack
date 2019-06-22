@@ -112,7 +112,6 @@ public class UserInfoService {
         userFamily.setUserId(sysUserInfo.getId());
         SysUserFamily sysUserFamily = new SysUserFamily();
         sysUserFamily.setUserFamily(userFamily);
-        sysUserFamily.setStatus(2);
         sysUserFamily.setIdentity(1);
         userFamilyRepository.save(sysUserFamily);
         return 0;
