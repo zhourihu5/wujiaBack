@@ -2,6 +2,7 @@ package com.wj.core.service.card;
 
 import com.google.common.collect.Lists;
 import com.wj.core.entity.card.OpCard;
+import com.wj.core.entity.card.PadModule;
 import com.wj.core.entity.card.dto.CardDTO;
 import com.wj.core.entity.card.dto.CardDetailDTO;
 import com.wj.core.entity.card.dto.CardServicesDTO;
@@ -10,8 +11,10 @@ import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.card.enums.CardType;
 import com.wj.core.entity.op.OpService;
 import com.wj.core.repository.card.CardRepository;
+import com.wj.core.repository.card.PadModuleRepository;
 import com.wj.core.repository.op.ServeRepository;
 import com.wj.core.service.upload.OssUploadService;
+import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.mapper.BeanMapper;
 import com.wj.core.util.time.ClockUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +36,8 @@ import java.util.List;
 public class CardService {
 
     @Autowired
+    private PadModuleRepository padModuleRepository;
+    @Autowired
     private CardRepository cardRepository;
     @Autowired
     private ServeRepository serveRepository;
@@ -42,6 +47,7 @@ public class CardService {
     private String path;
     @Value("${wj.oss.access}")
     private String url;
+    private static final String MSG_TYPE = "CARD";
 
     // 获取用户卡片
     public List<CardDTO> getUserCard(Integer userId) {
@@ -96,7 +102,7 @@ public class CardService {
         String filePath = ossUploadService.ossUpload(file, path);
         OpCard card = BeanMapper.map(cardDTO, OpCard.class);
         card.setCreateDate(ClockUtil.currentDate());
-        card.setStatus(String.valueOf(CardStatus.NO.ordinal()));
+        card.setStatus(CardStatus.YES);
         if (cardDTO.getCardType().equals("0")) {
             card.setType(CardType.OP);
         }
@@ -123,12 +129,14 @@ public class CardService {
             });
         }
         cardRepository.save(card);
+        //JPush.sendPushAll(MSG_TYPE, "Add Card");
     }
 
     @Transactional
     public void removeCard(Integer id) {
         cardRepository.modityUserCardStatus(CardStatus.NO.ordinal(), id);
         cardRepository.modityCardStatus(CardStatus.NO.ordinal(), id);
+        //JPush.sendPushAll(MSG_TYPE, "Remove Card");
     }
 
 
@@ -161,6 +169,10 @@ public class CardService {
         Pageable page = PageRequest.of(pageNo - 1, 10, Sort.Direction.ASC, "createDate");
         Page<OpCard> pageCard = cardRepository.findAll(specification, page);
         return pageCard;
+    }
+
+    public List<PadModule> getPadModuleList() {
+        return padModuleRepository.findAll();
     }
 
 }

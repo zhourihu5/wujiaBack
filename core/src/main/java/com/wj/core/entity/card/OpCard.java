@@ -1,6 +1,7 @@
 package com.wj.core.entity.card;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.card.enums.CardType;
 import lombok.Data;
 
@@ -31,7 +32,7 @@ public class OpCard {
     @OneToMany(mappedBy = "opCard", fetch = FetchType.LAZY)
     private List<UserCard> userCards;
     private String services;
-    private String status;
+    private CardStatus status;
     private String pushDate;
 
 }

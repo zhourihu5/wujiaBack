@@ -14,13 +14,13 @@ public class PadModule {
 
     @Id
     private Integer id;
-    private String name;
+    private String title;
     private Integer lev;
     private Integer parentId;
     private String flag;
-    @Enumerated(EnumType.ORDINAL)
-    private CardType type;
+    private String type;
     private String icon;
+    private String memo;
 
 
 }

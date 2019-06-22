@@ -41,7 +41,7 @@
         <findbugs.version>3.0.1</findbugs.version>
         <jmail.version>1.4.7</jmail.version>
         <autocfg.version>2.0.0.BUILD-SNAPSHOT</autocfg.version>
-        <swagger.version>2.8.0</swagger.version>
+        <swagger.version>2.9.2</swagger.version>
         <quartz.version>2.3.0</quartz.version>
         <joda.version>2.5</joda.version>
         <mysql.version>5.1.32</mysql.version>

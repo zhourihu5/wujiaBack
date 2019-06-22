@@ -4,6 +4,7 @@ package com.wj.admin.controller.card;
 import com.wj.admin.controller.op.ServiceCategoryController;
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.core.entity.card.OpCard;
+import com.wj.core.entity.card.PadModule;
 import com.wj.core.entity.card.dto.CreateCardDTO;
 import com.wj.core.service.card.CardService;
 import io.swagger.annotations.Api;
@@ -59,6 +60,12 @@ public class CardController {
     @GetMapping("/card/list")
     public ResponseMessage<Page<OpCard>> list(Integer pageNo, Integer status, Integer type) {
         return ResponseMessage.ok(cardService.getList(pageNo, type, status));
+    }
+
+    @ApiOperation(value="获取内链卡片模块")
+    @GetMapping("/card/module")
+    public ResponseMessage<List<PadModule>> moduleList() {
+        return  ResponseMessage.ok(cardService.getPadModuleList());
     }
 
 }
