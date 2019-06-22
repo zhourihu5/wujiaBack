@@ -24,8 +24,6 @@ public class SysScreen {
     private String cover;
     @ApiModelProperty(value = "路径")
     private String url;
-    @ApiModelProperty(value = "社区ID")
-    private Integer communtityId;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
 
@@ -51,14 +49,6 @@ public class SysScreen {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public Integer getCommuntityId() {
-        return communtityId;
-    }
-
-    public void setCommuntityId(Integer communtityId) {
-        this.communtityId = communtityId;
     }
 
     public Date getCreateDate() {
