@@ -88,13 +88,4 @@ public class UserFamilyController {
         }
         return ResponseMessage.ok();
     }
-
-
-    @ApiOperation(value = "获取所有业主的用户ID", notes = "获取所有业主的用户ID")
-    @GetMapping("findByIdentity")
-    public ResponseMessage<List<SysUserFamily>> findByIdentity(Integer identity) {
-        List<SysUserFamily> list = userFamilyService.findByIdentity(identity);
-        return ResponseMessage.ok(list);
-    }
-
 }

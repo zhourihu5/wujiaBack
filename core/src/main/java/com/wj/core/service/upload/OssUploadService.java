@@ -50,7 +50,7 @@ public class OssUploadService {
                 // 上传文件流
                 ossClient.putObject(bucket, path + "/" + fileNames, input);
                 ossClient.shutdown();
-                return path + fileNames;
+                return path + "/" + fileNames;
             }
         } catch (IOException e) {
             e.printStackTrace();

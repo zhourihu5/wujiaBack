@@ -10,10 +10,13 @@ import com.wj.core.entity.card.dto.CreateCardDTO;
 import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.card.enums.CardType;
 import com.wj.core.entity.op.OpService;
+import com.wj.core.entity.user.SysUserFamily;
+import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.repository.card.CardRepository;
 import com.wj.core.repository.card.PadModuleRepository;
 import com.wj.core.repository.op.ServeRepository;
 import com.wj.core.service.upload.OssUploadService;
+import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.mapper.BeanMapper;
 import com.wj.core.util.time.ClockUtil;
@@ -36,6 +39,8 @@ import java.util.List;
 public class CardService {
 
     @Autowired
+    private UserFamilyService userFamilyService;
+    @Autowired
     private PadModuleRepository padModuleRepository;
     @Autowired
     private CardRepository cardRepository;
@@ -47,7 +52,7 @@ public class CardService {
     private String path;
     @Value("${wj.oss.access}")
     private String url;
-    private static final String MSG_TYPE = "CARD";
+
 
     // 获取用户卡片
     public List<CardDTO> getUserCard(Integer userId) {
@@ -120,7 +125,7 @@ public class CardService {
         }
         // location 顺序
         if (card.getLocation() == 0) {
-            OpCard lastOpCard = cardRepository.findFirstByOrderByIdDesc();
+            OpCard lastOpCard = cardRepository.findFirstByOrderByLocationDesc();
             card.setLocation(lastOpCard.getLocation() + 1);
         } else {
             List<OpCard> opCardList = cardRepository.findByLocationIsGreaterThanEqual(card.getLocation());
@@ -128,7 +133,15 @@ public class CardService {
                 cardRepository.modityLocation(opCard.getLocation() + 1, opCard.getId());
             });
         }
-        cardRepository.save(card);
+        OpCard opCard = cardRepository.save(card);
+        List<SysUserFamily> userFamilyList = userFamilyService.findByIdentity(1);
+        userFamilyList.forEach(userFamily -> {
+            Integer userId = userFamily.getUserFamily().getUserId();
+            int count = cardRepository.findUserCardCount(userId, opCard.getId());
+            if (count <= 0) {
+                cardRepository.insertUserCard(userId, opCard.getId(), CardStatus.YES.ordinal());
+            }
+        });
         //JPush.sendPushAll(MSG_TYPE, "Add Card");
     }
 
@@ -140,7 +153,7 @@ public class CardService {
     }
 
 
-    public Page<OpCard> getList(Integer pageNo, Integer type, Integer status) {
+    public Page<OpCard> getList(Integer pageNo, Integer pageSize, Integer type, Integer status) {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
 
             List<Predicate> predicates = Lists.newArrayList();
@@ -166,7 +179,10 @@ public class CardService {
         if (pageNo == null) {
             pageNo = 1;
         }
-        Pageable page = PageRequest.of(pageNo - 1, 10, Sort.Direction.ASC, "createDate");
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        Pageable page = PageRequest.of(pageNo - 1, pageSize, Sort.Direction.ASC, "createDate");
         Page<OpCard> pageCard = cardRepository.findAll(specification, page);
         return pageCard;
     }

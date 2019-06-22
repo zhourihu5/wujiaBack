@@ -15,24 +15,25 @@ public interface CardRepository extends JpaRepository<OpCard, Integer>, JpaSpeci
 
     List<OpCard> findByUserCards_UserInfo_IdAndUserCards_IsShowAndStatusOrderByLocationAsc(Integer userId, CardStatus isShow, CardStatus status);
     List<OpCard> findByUserCards_UserInfo_IdAndStatusOrderByLocationAsc(Integer userId, CardStatus status);
-
-    OpCard findFirstByOrderByIdDesc();
-
+    OpCard findFirstByOrderByLocationDesc();
     List<OpCard> findByLocationIsGreaterThanEqual(Integer location);
-
     @Modifying
     @Query(value = "update op_user_card o set o.is_show = ?1 where o.user_id = ?2 and o.card_id = ?3", nativeQuery = true)
     void modityCardStatus(Integer status, Integer userId, Integer id);
-
     @Modifying
     @Query(value = "update OpCard o set o.location = ?1 where o.id = ?2")
     void modityLocation(Integer location, Integer id);
-
     @Modifying
     @Query(value = "update op_user_card o set o.is_show = ?1 where o.card_id = ?2", nativeQuery = true)
     void modityUserCardStatus(Integer status, Integer cardId);
-
     @Modifying
     @Query(value = "update op_card o set o.status = ?1 where o.id = ?2", nativeQuery = true)
     void modityCardStatus(Integer status, Integer id);
+
+    @Query(value = "select count(1) from op_user_card where user_id = ?1 and card_id = ?2", nativeQuery = true)
+    int findUserCardCount(Integer userId, Integer cardId);
+
+    @Modifying
+    @Query(value = "insert into op_user_card(user_id, card_id, is_show) values (?1, ?2, ?3)", nativeQuery = true)
+    void insertUserCard(Integer userId, Integer cardId, Integer isShow);
 }
