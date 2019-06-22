@@ -1,7 +1,6 @@
 package com.wj.admin.controller.card;
 
 
-import com.wj.admin.controller.op.ServiceCategoryController;
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.core.entity.card.OpCard;
 import com.wj.core.entity.card.PadModule;
@@ -11,14 +10,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.xml.ws.Response;
 import java.util.List;
 
 @Api(value="/v1/card", tags="卡片接口模块")
@@ -36,7 +31,7 @@ public class CardController {
             @ApiImplicitParam(name = "cardDTO", dataType = "CreateCardDTO", value = "卡片实体", required = true)
     })
     @PostMapping(value = "/card/save")
-    public ResponseMessage save(@ModelAttribute CreateCardDTO cardDTO) {
+    public ResponseMessage save(@RequestBody CreateCardDTO cardDTO) {
         cardService.saveCard(cardDTO);
         return ResponseMessage.ok();
     }

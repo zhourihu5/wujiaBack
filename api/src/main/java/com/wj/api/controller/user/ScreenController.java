@@ -37,6 +37,4 @@ public class ScreenController {
     public ResponseMessage<SysScreen> findAll() {
         return ResponseMessage.ok(screenService.getScreen());
     }
-
-
 }
