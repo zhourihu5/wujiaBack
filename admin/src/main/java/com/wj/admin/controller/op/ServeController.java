@@ -5,6 +5,7 @@ import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.op.OpAdv;
 import com.wj.core.entity.op.OpService;
+import com.wj.core.entity.op.dto.OpServiceDTO;
 import com.wj.core.entity.user.dto.ServiceDTO;
 import com.wj.core.service.op.ServeService;
 import io.jsonwebtoken.Claims;
@@ -61,28 +62,27 @@ public class ServeController {
         return ResponseMessage.ok(serviceList);
     }
 
-//    @ApiOperation(value = "全部服务列表", notes = "全部服务列表")
-//    @GetMapping("AllServiceList")
-//    public ResponseMessage<List<OpService>> AllServiceList() {
-//        String token = JwtUtil.getJwtToken();
-//        Claims claims = JwtUtil.parseJwt(token);
-//        logger.info("全部服务列表接口:/v1/service/AllServiceList userId=" + claims.get("userId"));
-//        List<OpService> list = serviceService.findAll();
-//        return ResponseMessage.ok(list);
-//    }
-
     @ApiOperation(value = "服务分页列表", notes = "服务分页列表")
     @GetMapping("findAll")
-    public ResponseMessage<Page<OpService>> findAll(String title, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResponseMessage<Page<OpService>> findAll(String title, Integer status, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         // 获取token
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("广告分页信息 接口:/v1/adv/findAll userId=" + claims.get("userId"));
+        logger.info("广告分页信息 接口:/v1/service/findAll userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
-        Page<OpService> page = serviceService.findAllPage(pageable);
+        Page<OpService> page = serviceService.findAllPage(title, status, pageable);
         return ResponseMessage.ok(page);
     }
 
+    @ApiOperation(value = "发现管理/政务服务", notes = "发现管理/政务服务")
+    @PostMapping("updateType")
+    public ResponseMessage updateType(@RequestBody OpServiceDTO serviceDTO) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("发现管理/政务服务 接口:/v1/service/updateType userId=" + claims.get("userId"));
+        serviceService.updateType(serviceDTO.getType(), serviceDTO.getId());
+        return ResponseMessage.ok();
+    }
 }

@@ -15,7 +15,10 @@ import com.wj.core.repository.op.BannerRepository;
 import com.wj.core.repository.op.FamilyServeRepository;
 import com.wj.core.repository.op.ServeRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -149,8 +152,36 @@ public class ServeService {
      * @param pageable
      * @return Page<OpService>
      */
-    public Page<OpService> findAllPage(Pageable pageable) {
-        return serviceRepository.findAll(pageable);
+    public Page<OpService> findAllPage(String title, Integer status, Pageable pageable) {
+//        OpService service = new OpService();
+//        service.setTitle(title);
+//        service.setStatus(status);
+//        Example<OpService> example = Example.of(service);
+        Page<OpService> page = null;
+        if (title != null && status != null) {
+            page = serviceRepository.findByTitleAndStatus(title, status, pageable);
+        } else if (title != null) {
+            page = serviceRepository.findByTitle(title, pageable);
+        } else if (status != null) {
+            page = serviceRepository.findByStatus(status, pageable);
+        } else {
+            page = serviceRepository.findAll(pageable);
+        }
+        return page;
+    }
+
+    /**
+     * 发现管理/政务服务
+     *
+     * @param type
+     * @return Integer
+     */
+    @Transactional
+    public Integer updateType(Integer type, Integer id) {
+        if (type == null || id == null) {
+            throw new ServiceException("参数异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        return serviceRepository.updateType(type, id);
     }
 
 }

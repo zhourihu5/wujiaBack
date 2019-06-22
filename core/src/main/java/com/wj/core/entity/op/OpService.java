@@ -38,10 +38,12 @@ public class OpService {
     private Integer category;
     @ApiModelProperty(value = "标识 1.app 2.链接")
     private Integer flag;
-    @ApiModelProperty(value = "状态 1.可用 0.不可用")
+    @ApiModelProperty(value = "状态 1.可用/上架 0.不可用/下架")
     private Integer status;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
+    @ApiModelProperty(value = "服务商名称")
+    private String providerName;
     @ApiModelProperty(value = "订阅数量")
     @Transient
     private Integer subscribeNum;
@@ -151,5 +153,13 @@ public class OpService {
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
+    }
+
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
 }

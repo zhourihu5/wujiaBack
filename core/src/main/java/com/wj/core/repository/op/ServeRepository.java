@@ -48,4 +48,38 @@ public interface ServeRepository extends JpaRepository<OpService, Integer> {
     @Query(value = "select * from op_service a,op_family_service b where a.id = b.service_id and b.user_id = ?1 and b.is_subscribe = 1", nativeQuery = true)
     public Page<OpService> findByUserIdAAndIsSubscribe(Integer userId, Pageable pageable);
 
+    /**
+     * 发现/政务列表
+     * @param type
+     * @return Page<OpService>
+     */
+    @Modifying
+    @Query(value = "update op_service set type = ?1 where id = ?2", nativeQuery = true)
+    public Integer updateType(Integer type, Integer id);
+
+
+    /**
+     * 后台服务分页列表
+     * @param title
+     * @return Page<OpService>
+     */
+    @Query(value = "select * from op_service where title like CONCAT('%',?1,'%')", nativeQuery = true)
+    public Page<OpService> findByTitle(String title, Pageable pageable);
+
+    /**
+     * 后台服务分页列表
+     * @param status
+     * @return Page<OpService>
+     */
+    @Query(value = "select * from op_service where status = ?1", nativeQuery = true)
+    public Page<OpService> findByStatus(Integer status, Pageable pageable);
+
+    /**
+     * 后台服务分页列表
+     * @param title
+     * @param status
+     * @return Page<OpService>
+     */
+    @Query(value = "select * from op_service where title like CONCAT('%',?1,'%') and status = ?2", nativeQuery = true)
+    public Page<OpService> findByTitleAndStatus(String title, Integer status, Pageable pageable);
 }
