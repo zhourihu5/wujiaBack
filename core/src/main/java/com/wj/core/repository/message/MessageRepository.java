@@ -27,7 +27,7 @@ public interface MessageRepository extends JpaRepository<Message, Integer>, JpaS
     @Query(value = "select * from sys_message a,sys_message_user b where a.id = b.message_id and b.user_id = ?1 and b.is_read = ?2 and a.type = ?3", nativeQuery = true)
     public Page<Message> findByUserIdAndIsRead(Integer userId, Integer isRead, Integer type, Pageable pageable);
 
-    @Query(value = "select * from sys_message a,sys_message_user b where a.id = b.message_id and b.user_id = ?1 and b.is_read = ?2 order by create_date desc limit 3", nativeQuery = true)
+    @Query(value = "select * from sys_message a,sys_message_user b where a.id = b.message_id and b.user_id = ?1 and b.is_read = ?2 order by b.create_date desc limit 3", nativeQuery = true)
     public List<Message> findTopThreeByUserId(Integer userId, Integer isRead);
 
     @Query(value = "select * from sys_message where title like CONCAT('%',?1,'%')", nativeQuery = true)
