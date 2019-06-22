@@ -152,7 +152,7 @@ public class CardService {
     }
 
 
-    public Page<OpCard> getList(Integer pageNo, Integer pageSize, Integer type, Integer status) {
+    public Page<OpCard> getList(Integer pageNum, Integer pageSize, Integer type, Integer status) {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
 
             List<Predicate> predicates = Lists.newArrayList();
@@ -175,13 +175,13 @@ public class CardService {
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
-        if (pageNo == null) {
-            pageNo = 1;
+        if (pageNum == null) {
+            pageNum = 1;
         }
         if (pageSize == null) {
             pageSize = 10;
         }
-        Pageable page = PageRequest.of(pageNo - 1, pageSize, Sort.Direction.ASC, "createDate");
+        Pageable page = PageRequest.of(pageNum - 1, pageSize, Sort.Direction.DESC, "createDate");
         Page<OpCard> pageCard = cardRepository.findAll(specification, page);
         return pageCard;
     }
