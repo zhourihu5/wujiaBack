@@ -35,9 +35,7 @@ public class ScreenController {
     @ApiOperation(value = "查看屏保信息", notes = "查看屏保信息")
     @GetMapping("findAll")
     public ResponseMessage<SysScreen> findAll() {
-        List<SysScreen> list = screenService.findAll();
-        SysScreen sysScreen = list.get(0);
-        return ResponseMessage.ok(sysScreen);
+        return ResponseMessage.ok(screenService.getScreen());
     }
 
 

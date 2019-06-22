@@ -42,6 +42,10 @@ public class ScreenService {
         return screenRepository.findAll();
     }
 
+    public SysScreen getScreen() {
+        return screenRepository.findFirstByOrderByIdDesc();
+    }
+
     /**
      * 修改和保存屏保
      * @param screen
