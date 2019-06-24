@@ -8,6 +8,7 @@ import com.wj.core.repository.message.MessageCommuntityRepository;
 import com.wj.core.repository.message.MessageRepository;
 import com.wj.core.repository.message.MessageUserRepository;
 import com.wj.core.service.base.BaseCommuntityService;
+import com.wj.core.util.jiguang.JPush;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,8 +34,8 @@ public class MessageService {
     private BaseCommuntityService baseCommuntityService;
 
     @Transactional
-    public void saveMessage(Message message) {
-        messageRepository.save(message);
+    public Message saveMessage(Message message) {
+        return messageRepository.save(message);
     }
 
     @Transactional
@@ -100,6 +101,7 @@ public class MessageService {
 
     /**
      * 向用户推送消息
+     *
      * @param messageId
      * @param communtity
      * @return void
@@ -118,7 +120,7 @@ public class MessageService {
                 messageUserRepository.addMessageUser(messageId, SysUserInfo.getId(), 0, new Date());
             });
             // 消息推送
-            //JPush.sendMsgPush(tagList);
+//            JPush.sendMsgPush(tagList);
         }
     }
 

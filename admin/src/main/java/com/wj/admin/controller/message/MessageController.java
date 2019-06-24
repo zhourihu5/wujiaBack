@@ -4,6 +4,8 @@ import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.message.Message;
 import com.wj.core.entity.message.SysMessageUser;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.message.MessageService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
@@ -30,28 +32,6 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-
-    @ApiOperation(value="保存消息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Message", dataType = "Message", value = "消息实体"),
-    })
-    @PostMapping("saveMessage")
-    public ResponseMessage saveMessage(@RequestBody Message message) {
-        messageService.saveMessage(message);
-        return ResponseMessage.ok();
-    }
-
-//    @ApiOperation(value="绑定消息和用户")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "SysMessageUser", dataType = "SysMessageUser", value = "消息用户实体"),
-//    })
-//    @PostMapping("saveMessageUser")
-//    public ResponseMessage saveMessageUser(@RequestBody SysMessageUser messageUser) {
-//        messageService.saveMessageUser(messageUser);
-//        return ResponseMessage.ok();
-//    }
-
-
     @ApiOperation(value = "消息分页信息", notes = "消息分页信息")
     @GetMapping("findAll")
     public ResponseMessage<Page<Message>> findAll(String title, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -69,8 +49,10 @@ public class MessageController {
 
     @ApiOperation(value="推送消息")
     @PostMapping("pushMessage")
-    public ResponseMessage pushMessage(Integer messageId, String communtity) {
-        messageService.pushMessage(messageId, communtity);
+    public ResponseMessage pushMessage(@RequestBody Message message) {
+        Message messages = messageService.saveMessage(message);
+        if (messages == null) throw new ServiceException("消息保存异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        messageService.pushMessage(messages.getId(), messages.getCommuntity());
         return ResponseMessage.ok();
     }
 }

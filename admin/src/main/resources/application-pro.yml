@@ -53,4 +53,14 @@ wj:
     SignName: 吾家智工
     TemplateCode: SMS_166655952
 
-
+xxl:
+  job:
+    admin:
+      addresses: http://localhost:8080/xxl-job-admin
+    executor:
+      ip:
+      port: 9999
+      logpath: /data/applogs/xxl-job/jobhandler
+      appname: wj-admin
+      logretentiondays: -1
+    accessToken:

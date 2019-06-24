@@ -1,4 +1,4 @@
-package com.wj.admin.controller;
+package com.wj.admin.jobhandler;
 
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -20,13 +20,20 @@ import java.util.concurrent.TimeUnit;
  *
  * @author xuxueli 2015-12-19 19:43:36
  */
-@JobHandler(value="TestHandler")
+@JobHandler(value="demoJobHandler")
 @Component
 public class DemoJobHandler extends IJobHandler {
 
 	@Override
 	public ReturnT<String> execute(String param) throws Exception {
-		System.out.println("执行了TestHandler一次");
+//		System.out.println("爱你呦");
+//		XxlJobLogger.log("XXL-JOB, Hello World.");
+
+		for (int i = 0; i < 5; i++) {
+			System.out.println("爱你呦"+i);
+//			XxlJobLogger.log("beat at:" + i);
+//			TimeUnit.SECONDS.sleep(2);
+		}
 		return SUCCESS;
 	}
 

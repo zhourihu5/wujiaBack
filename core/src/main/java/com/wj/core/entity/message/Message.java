@@ -19,6 +19,8 @@ public class Message {
     private Date createDate;
     @Transient
     private Integer isRead;
+    @Transient
+    private String communtity;
 
     public Integer getId() {
         return id;
@@ -74,5 +76,13 @@ public class Message {
 
     public void setIsRead(Integer isRead) {
         this.isRead = isRead;
+    }
+
+    public String getCommuntity() {
+        return communtity;
+    }
+
+    public void setCommuntity(String communtity) {
+        this.communtity = communtity;
     }
 }
