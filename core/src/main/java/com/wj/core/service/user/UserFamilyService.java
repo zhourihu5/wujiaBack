@@ -60,6 +60,7 @@ public class UserFamilyService {
         List<SysUserInfo> sysUserInfoList = new ArrayList<>();
         for (SysUserFamily sysUserFamily : userFamilyList) {
             SysUserInfo sysUserInfo = userInfoRepository.findByUserId(sysUserFamily.getUserFamily().getUserId());
+            if (sysUserInfo == null)  throw new ServiceException("用户数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
             sysUserInfo.setIdentity(sysUserFamily.getIdentity());
             sysUserInfoList.add(sysUserInfo);
         }
