@@ -61,6 +61,10 @@ public class LoginController {
         if (userName.isEmpty() || password.isEmpty()) {
             throw new ServiceException("请输入正确的参数", ErrorCode.INTERNAL_SERVER_ERROR);
         }
+        SysUserInfo user = userInfoService.findByName(userName);
+        if (user != null) {
+            throw new ServiceException("此账号已经存在", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         AesUtils au = new AesUtils();
         String aesPwd = au.AESEncode(CommonUtils.AESKEY, password);
         SysUserInfo userInfo = userInfoService.findByNameAndPwd(userName, aesPwd);
