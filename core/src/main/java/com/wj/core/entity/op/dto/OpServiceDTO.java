@@ -11,7 +11,6 @@ import java.util.Date;
 
 @ApiModel(description = "服务表")
 @Data
-@Entity
 public class OpServiceDTO {
 
     @ApiModelProperty(value = "服务id，分割")
