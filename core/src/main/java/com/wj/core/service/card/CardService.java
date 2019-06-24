@@ -14,9 +14,7 @@ import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.repository.card.CardRepository;
 import com.wj.core.repository.card.PadModuleRepository;
 import com.wj.core.repository.op.ServeRepository;
-import com.wj.core.service.upload.OssUploadService;
 import com.wj.core.service.user.UserFamilyService;
-import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.mapper.BeanMapper;
 import com.wj.core.util.time.ClockUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
@@ -45,10 +42,6 @@ public class CardService {
     private CardRepository cardRepository;
     @Autowired
     private ServeRepository serveRepository;
-    @Autowired
-    private OssUploadService ossUploadService;
-    @Value("${wj.path.card}")
-    private String path;
     @Value("${wj.oss.access}")
     private String url;
 
@@ -119,7 +112,9 @@ public class CardService {
             card.setType(CardType.IMG);
         }
         if (StringUtils.isNotBlank(cardDTO.getPath())) {
-            card.setIcon(url + cardDTO.getPath());
+            if (!cardDTO.getCardType().equals("2")) {
+                card.setIcon(url + cardDTO.getPath());
+            }
         }
         // location 顺序
         if (card.getLocation() == 0) {
@@ -141,7 +136,6 @@ public class CardService {
             }
         });
         //JPush.sendCardSchedulePush("card_schedule_push_" + opCard.getId(), opCard.getPushDate(), "add card message");
-        //JPush.sendPushAll(MSG_TYPE, "Add Card");
     }
 
     @Transactional

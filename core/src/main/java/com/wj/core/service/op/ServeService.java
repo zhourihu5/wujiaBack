@@ -18,6 +18,7 @@ import com.wj.core.repository.op.ServeRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.util.jiguang.JPush;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -116,6 +117,7 @@ public class ServeService {
     @Transactional
     public void saveService(OpService service) {
         serviceRepository.save(service);
+        JPush.sendPushAll("MARKET", "99");
     }
 
     /**
@@ -182,6 +184,7 @@ public class ServeService {
         for (int i = 0; i < strArray.length; i++) {
             serviceRepository.updateType(type, Integer.valueOf(strArray[i]));
         }
+        JPush.sendPushAll("MARKET", String.valueOf(type));
     }
 
 }

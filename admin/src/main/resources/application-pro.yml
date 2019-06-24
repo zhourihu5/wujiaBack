@@ -30,6 +30,11 @@ spring:
     max-idle: 20
     # 连接池中的最小空闲连接
     min-idle: 10
+  servlet:
+      multipart:
+        enabled: true
+        max-file-size: 30MB
+        max-request-size: 50MB
 
 #在application.yml引入log4j2.yml
 logging:

@@ -51,7 +51,6 @@ public class JPush {
         }
     }
 
-    // 使用 NettyHttpClient 异步接口发送请求
     public static void sendCardSchedulePush(String scheduleName, String time, String content) {
         JPushClient jpushClient = new JPushClient(MASTER_SECRET, APP_KEY);
         try {
@@ -102,6 +101,7 @@ public class JPush {
     }
 
     public static void main(String[] args) {
+        sendPushAll("MARKET", "1");
     }
 
 

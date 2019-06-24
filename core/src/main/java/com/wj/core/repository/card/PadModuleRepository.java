@@ -9,4 +9,7 @@ public interface PadModuleRepository extends JpaRepository<PadModule, Integer> {
 
     public List<PadModule> findByParentId(Integer id);
 
+
+    PadModule findByFlag(String flag);
+
 }
