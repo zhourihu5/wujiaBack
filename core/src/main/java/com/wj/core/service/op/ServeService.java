@@ -182,6 +182,7 @@ public class ServeService {
         for (int i = 0; i < strArray.length; i++) {
             serviceRepository.updateType(type, Integer.valueOf(strArray[i]));
         }
+
     }
 
 }
