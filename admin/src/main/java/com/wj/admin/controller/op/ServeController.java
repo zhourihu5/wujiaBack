@@ -82,7 +82,7 @@ public class ServeController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("发现管理/政务服务 接口:/v1/service/updateType userId=" + claims.get("userId"));
-        serviceService.updateType(serviceDTO.getType(), serviceDTO.getId());
+        serviceService.updateType(serviceDTO.getType(), serviceDTO.getService());
         return ResponseMessage.ok();
     }
 }

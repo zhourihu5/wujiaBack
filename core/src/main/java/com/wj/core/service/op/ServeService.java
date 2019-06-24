@@ -1,5 +1,6 @@
 package com.wj.core.service.op;
 
+import com.google.common.collect.Lists;
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.enums.*;
 import com.wj.core.entity.op.OpAdv;
@@ -173,11 +174,14 @@ public class ServeService {
      * @return Integer
      */
     @Transactional
-    public Integer updateType(Integer type, Integer id) {
-        if (type == null || id == null) {
+    public void updateType(Integer type, String service) {
+        if (type == null || service == null) {
             throw new ServiceException("参数异常", ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        return serviceRepository.updateType(type, id);
+        String[] strArray = service.split(",");
+        for (int i = 0; i < strArray.length; i++) {
+            serviceRepository.updateType(type, Integer.valueOf(strArray[i]));
+        }
     }
 
 }
