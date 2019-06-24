@@ -9,6 +9,8 @@ import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.CommonUtils;
 import com.wj.core.util.mapper.BeanMapper;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,6 +40,9 @@ public class UserInfoService {
 
     @Autowired
     private UserFamilyRepository userFamilyRepository;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     /**
      * 根据名字查询用户信息
@@ -138,16 +143,23 @@ public class UserInfoService {
 
     /**
      * 新增/修改用户
+     *
      * @param sysUserInfo
      * @return void
      */
     @Transactional
     public void saveUser(SysUserInfo sysUserInfo) {
+        SysUserInfo userInfo = userInfoService.findByName(sysUserInfo.getUserName());
+        if (userInfo != null) {
+            throw new ServiceException("此账号已经存在", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        sysUserInfo.setCreateDate(new Date());
         userInfoRepository.save(sysUserInfo);
     }
 
     /**
      * 删除用户
+     *
      * @param sysUserInfo
      * @return void
      */
