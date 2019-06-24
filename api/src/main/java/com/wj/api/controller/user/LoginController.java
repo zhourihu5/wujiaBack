@@ -12,6 +12,7 @@ import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.LoginDTO;
 import com.wj.core.entity.user.dto.UserInfoDTO;
 import com.wj.core.helper.impl.RedisHelperImpl;
+import com.wj.core.service.SendSms;
 import com.wj.core.service.base.BaseDeviceService;
 import com.wj.core.service.base.BaseFamilyService;
 import com.wj.core.service.exception.ErrorCode;
@@ -60,6 +61,9 @@ public class LoginController {
     @Autowired
     private BaseFamilyService baseFamilyService;
 
+    @Autowired
+    private SendSms sendSms;
+
     /**
      * 获取验证码
      *
@@ -71,7 +75,7 @@ public class LoginController {
     @GetMapping("sendMsg")
     public ResponseMessage<String> sendMsg(HttpServletRequest request) {
         String userName = request.getParameter("userName");
-        logger.info(userName+"发送验证码info");
+        logger.info(userName + "发送验证码info");
         SysUserInfo userInfo = userInfoService.findByName(userName);
         if (userInfo == null) {
             throw new ServiceException("你不是平台用户", ErrorCode.INTERNAL_SERVER_ERROR);
@@ -98,9 +102,10 @@ public class LoginController {
         try {
             if (code == null) {
                 smsCode = CommonUtils.createRandomNum(6);// 生成随机数
-                smsCode = "123456";
                 redisHelper.valuePut(userName, smsCode);
             }
+            // 发送验证码
+            String message = sendSms.send(userName, smsCode);
             //TimerTask实现5分钟后从session中删除smsCode验证码
             final Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -111,14 +116,12 @@ public class LoginController {
                     logger.info(userName + "的验证码已失效");
                 }
             }, 5 * 60 * 1000);
-
+            return ResponseMessage.ok(smsCode);
+//            return ResponseMessage.ok(message);
         } catch (Exception e) {
             e.printStackTrace();
         }
-//            // 发送请求,第三方短信通信接口参数设置：账号accName 密码accPwd  乐信短信api文档查看地址：http://www.lx598.com/apitext.html
-//            responseBody = sendSms(String   accName,String accPwd,recPhoneNum,"你的短信验证码是："+captcha);
-//        return ResultUtil.success(HttpServletResponse.SC_OK, "SUCCESS", smsCode);
-        return ResponseMessage.ok(smsCode);
+        return ResponseMessage.ok("");
     }
 
     /**

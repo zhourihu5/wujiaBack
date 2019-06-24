@@ -24,7 +24,7 @@ public class OpService {
     private Integer id;
     @ApiModelProperty(value = "标题")
     private String title;
-    @ApiModelProperty(value = "剪辑")
+    @ApiModelProperty(value = "简介")
     private String memo;
     @ApiModelProperty(value = "封面")
     private String cover;

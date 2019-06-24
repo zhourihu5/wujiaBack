@@ -1,6 +1,7 @@
 package com.wj.api.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.*;
 import com.wj.core.entity.base.BaseArea;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -59,14 +61,14 @@ public class WeatherController {
             if (null == baseArea) {
                 return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
             }
-//            Map<String, String> headers = new HashMap<String, String>();
-//            //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
-//            headers.put("Authorization", "APPCODE " + CommonUtils.APPCODE);
-//            Map<String, String> querys = new HashMap<String, String>();
-//            querys.put("area", baseArea.getAreaName());
-//            HttpResponse response = HttpUtils.doGet(CommonUtils.HOST, CommonUtils.PATH, CommonUtils.METHOD, headers, querys);
-//            String json = EntityUtils.toString(response.getEntity());
-//            weatherDTO.setWeather(JSONArray.parse(json));
+            Map<String, String> headers = new HashMap<String, String>();
+            //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+            headers.put("Authorization", "APPCODE " + CommonUtils.APPCODE);
+            Map<String, String> querys = new HashMap<String, String>();
+            querys.put("area", baseArea.getAreaName());
+            HttpResponse response = HttpUtils.doGet(CommonUtils.HOST, CommonUtils.PATH, CommonUtils.METHOD, headers, querys);
+            String json = EntityUtils.toString(response.getEntity());
+            weatherDTO.setWeather(JSONArray.parse(json));
         } catch (Exception e) {
             e.printStackTrace();
         }

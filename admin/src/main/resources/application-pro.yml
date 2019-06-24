@@ -45,7 +45,12 @@ wj:
   path:
     card: images/card/icon
     service: images/service/icon
-
-
+  send:
+    product: Dysmsapi
+    domain: dysmsapi.aliyuncs.com
+    action: SendSms
+    version: 2017-05-25
+    SignName: 吾家智工
+    TemplateCode: SMS_166655952
 
 
