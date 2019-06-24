@@ -152,16 +152,12 @@ public class ServeService {
      * @param pageable
      * @return Page<OpService>
      */
-    public Page<OpService> findAllPage(String title, Integer status, Pageable pageable) {
-//        OpService service = new OpService();
-//        service.setTitle(title);
-//        service.setStatus(status);
-//        Example<OpService> example = Example.of(service);
+    public Page<OpService> findAllPage(Integer type, Integer status, Pageable pageable) {
         Page<OpService> page = null;
-        if (title != null && status != null) {
-            page = serviceRepository.findByTitleAndStatus(title, status, pageable);
-        } else if (title != null) {
-            page = serviceRepository.findByTitle(title, pageable);
+        if (type != null && status != null) {
+            page = serviceRepository.findByTypeAndStatus(type, status, pageable);
+        } else if (type != null) {
+            page = serviceRepository.findByType(type, pageable);
         } else if (status != null) {
             page = serviceRepository.findByStatus(status, pageable);
         } else {

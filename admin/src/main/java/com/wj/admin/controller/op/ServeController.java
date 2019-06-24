@@ -64,7 +64,7 @@ public class ServeController {
 
     @ApiOperation(value = "服务分页列表", notes = "服务分页列表")
     @GetMapping("findAll")
-    public ResponseMessage<Page<OpService>> findAll(String title, Integer status, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResponseMessage<Page<OpService>> findAll(Integer type, Integer status, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         // 获取token
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
@@ -72,7 +72,7 @@ public class ServeController {
         logger.info("广告分页信息 接口:/v1/service/findAll userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
-        Page<OpService> page = serviceService.findAllPage(title, status, pageable);
+        Page<OpService> page = serviceService.findAllPage(type, status, pageable);
         return ResponseMessage.ok(page);
     }
 

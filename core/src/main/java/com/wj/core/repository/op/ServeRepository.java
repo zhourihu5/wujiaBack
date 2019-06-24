@@ -82,4 +82,13 @@ public interface ServeRepository extends JpaRepository<OpService, Integer> {
      */
     @Query(value = "select * from op_service where title like CONCAT('%',?1,'%') and status = ?2", nativeQuery = true)
     public Page<OpService> findByTitleAndStatus(String title, Integer status, Pageable pageable);
+
+    /**
+     * 后台服务分页列表
+     * @param type
+     * @param status
+     * @return Page<OpService>
+     */
+    @Query(value = "select * from op_service where type = ?1 and status = ?2", nativeQuery = true)
+    public Page<OpService> findByTypeAndStatus(Integer type, Integer status, Pageable pageable);
 }
