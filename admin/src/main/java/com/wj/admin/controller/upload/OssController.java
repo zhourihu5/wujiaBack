@@ -19,8 +19,10 @@ public class OssController {
     private OssUploadService ossUploadService;
     @Value("${wj.path.card}")
     private String cardPath;
+    @Value("${wj.path.service}")
+    private String servicePath;
     private static final String CARD_TYPE = "card";
-
+    private static final String SERVICE_TYPE = "service";
     /**
      * @param
      * @MethodName ossUpload
@@ -35,6 +37,9 @@ public class OssController {
         String path = "";
         if (type.equals(CARD_TYPE)) {
             path = ossUploadService.ossUpload(file, cardPath);
+        }
+        if (type.equals(SERVICE_TYPE)) {
+            path = ossUploadService.ossUpload(file, servicePath);
         }
         return ResponseMessage.ok(path);
     }

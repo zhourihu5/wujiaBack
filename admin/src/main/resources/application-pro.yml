@@ -44,6 +44,7 @@ wj:
     access: https://wujia01.oss-cn-beijing.aliyuncs.com/
   path:
     card: images/card/icon
+    service: images/service/icon
 
 
 
