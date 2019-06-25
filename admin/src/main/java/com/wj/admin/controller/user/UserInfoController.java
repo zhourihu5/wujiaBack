@@ -1,10 +1,7 @@
 package com.wj.admin.controller.user;
 
 import com.wj.admin.filter.ResponseMessage;
-import com.wj.admin.utils.CommonUtils;
-import com.wj.admin.utils.HttpUtils;
-import com.wj.admin.utils.JwtUtil;
-import com.wj.admin.utils.ResultUtil;
+import com.wj.admin.utils.*;
 import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDevice;
@@ -87,6 +84,8 @@ public class UserInfoController {
         // 通过token获取用户信息
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("新增/修改用户接口:/v1/user/addUser userId=" + claims.get("userId"));
+        AesUtils au = new AesUtils();
+        user.setPassword(au.AESEncode(CommonUtils.AESKEY, user.getPassword()));
         userInfoService.saveUser(user);
         return ResponseMessage.ok();
     }
