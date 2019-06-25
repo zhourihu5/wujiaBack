@@ -13,5 +13,8 @@ public interface AdvCommuntityRepository extends JpaRepository<OpAdvCommuntity, 
     @Modifying
     @Query(value = "insert into op_adv_communtity(adv_id, communtity_id, create_date) values(?1,?2,?3)", nativeQuery = true)
     public Integer addAdvCommuntity(Integer advId, Integer communtityId, Date date);
-    
+
+    @Modifying
+    @Query(value = "delete from op_adv_communtity where adv_id = ?1", nativeQuery = true)
+    public Integer delAdvCommuntityByAdvId(Integer advId);
 }

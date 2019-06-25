@@ -65,9 +65,22 @@ public class AdvService {
      * @return void
      */
     @Transactional
-    public void saveService(OpAdv adv) {
+    public OpAdv saveAdv(OpAdv adv) {
         adv.setCreateDate(new Date());
-        advRepository.save(adv);
+        return advRepository.save(adv);
+    }
+
+    /**
+     * 删除广告
+     *
+     * @param id
+     * @return void
+     */
+    @Transactional
+    public void delAdv(Integer id) {
+        advCommuntityRepository.delAdvCommuntityByAdvId(id);
+        advUserRepository.delAdvUserByAdvId(id);
+        advRepository.deleteById(id);
     }
 
     /**

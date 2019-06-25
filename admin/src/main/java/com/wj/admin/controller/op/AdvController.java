@@ -5,6 +5,8 @@ import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.message.Message;
 import com.wj.core.entity.message.SysMessageUser;
 import com.wj.core.entity.op.OpAdv;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.message.MessageService;
 import com.wj.core.service.op.AdvService;
 import io.jsonwebtoken.Claims;
@@ -37,9 +39,19 @@ public class AdvController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "OpAdv", dataType = "OpAdv", value = "广告实体"),
     })
-    @PostMapping("saveMessage")
-    public ResponseMessage saveMessage(@RequestBody OpAdv adv) {
-        advService.saveService(adv);
+    @PostMapping("saveAdv")
+    public ResponseMessage saveAdv(@RequestBody OpAdv adv) {
+        advService.saveAdv(adv);
+        return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value="删除广告")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "OpAdv", dataType = "OpAdv", value = "广告实体"),
+    })
+    @PostMapping("delAdv")
+    public ResponseMessage delAdv(@RequestBody OpAdv adv) {
+        advService.delAdv(adv.getId());
         return ResponseMessage.ok();
     }
 
@@ -58,10 +70,12 @@ public class AdvController {
     }
 
 
-    @ApiOperation(value="推送广告")
+    @ApiOperation(value="保存并推送广告")
     @PostMapping("pushAdv")
-    public ResponseMessage pushAdv(Integer advId, String communtity) {
-        advService.pushAdv(advId, communtity);
+    public ResponseMessage pushAdv(@RequestBody OpAdv adv) {
+        OpAdv opAdv = advService.saveAdv(adv);
+        if (opAdv == null) throw new ServiceException("数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        advService.pushAdv(opAdv.getId(), adv.getCommuntity());
         return ResponseMessage.ok();
     }
 

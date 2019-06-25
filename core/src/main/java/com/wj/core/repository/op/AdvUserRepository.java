@@ -13,4 +13,8 @@ public interface AdvUserRepository extends JpaRepository<OpAdvUser, Integer> {
     @Query(value = "insert into op_adv_user(adv_id, user_id, create_date) values(?1,?2,?3)", nativeQuery = true)
     public Integer addAdvUser(Integer advId, Integer userId, Date date);
 
+    @Modifying
+    @Query(value = "delete from op_adv_user where adv_id = ?1", nativeQuery = true)
+    public Integer delAdvUserByAdvId(Integer advId);
+
 }
