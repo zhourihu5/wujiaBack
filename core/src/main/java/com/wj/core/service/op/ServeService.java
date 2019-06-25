@@ -70,7 +70,7 @@ public class ServeService {
         if (type == ServiceType.ONE.toInt()) {
             page = serviceRepository.findByUserIdAAndIsSubscribe(userId, pageable);
         } else if (type == ServiceType.TWO.toInt()) {
-            List<OpBanner> bannerList = bannerRepository.findByModuleIdList(1);
+            List<OpBanner> bannerList = bannerRepository.findByModuleTypeList(1);
             serviceAllDTO.setBannerList(bannerList);
             page = serviceRepository.findByType(1, pageable);
         } else if (type == ServiceType.THREE.toInt()) {

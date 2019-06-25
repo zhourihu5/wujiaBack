@@ -22,7 +22,7 @@ public class OpBanner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "模块ID 1.代表发现模块")
-    private Integer moduleId;
+    private Integer moduleType;
     @ApiModelProperty(value = "封面")
     private String cover;
     @ApiModelProperty(value = "地址")
@@ -38,12 +38,12 @@ public class OpBanner {
         this.id = id;
     }
 
-    public Integer getModuleId() {
-        return moduleId;
+    public Integer getModuleType() {
+        return moduleType;
     }
 
-    public void setModuleId(Integer moduleId) {
-        this.moduleId = moduleId;
+    public void setModuleType(Integer moduleType) {
+        this.moduleType = moduleType;
     }
 
     public String getCover() {
