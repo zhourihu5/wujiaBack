@@ -47,11 +47,11 @@ public class AdvController {
 
     @ApiOperation(value="删除广告")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", dataType = "id", value = "广告id"),
+            @ApiImplicitParam(name = "OpAdv", dataType = "OpAdv", value = "广告实体"),
     })
     @PostMapping("delAdv")
-    public ResponseMessage delAdv(Integer id) {
-        advService.delAdv(id);
+    public ResponseMessage delAdv(@RequestBody OpAdv adv) {
+        advService.delAdv(adv.getId());
         return ResponseMessage.ok();
     }
 
