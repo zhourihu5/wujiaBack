@@ -16,7 +16,10 @@ public class SystemService {
     private SysVersionRepository sysVersionRepository;
 
     public SysVersion getVer() {
-        return sysVersionRepository.findFirstByOrderBySysVerDesc();
+        SysVersion v = sysVersionRepository.findFirstByOrderBySysVerDesc();
+//        JsonMapper mapper = JsonMapper.defaultMapper();
+//        JPush.sendPushAll("SYS", mapper.toJson(v));
+        return v;
     }
 
     @Transactional

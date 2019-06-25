@@ -1,7 +1,5 @@
 package com.wj.core.entity.message.enums;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
 public enum MessageType {
 
 
