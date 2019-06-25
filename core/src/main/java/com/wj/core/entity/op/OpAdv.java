@@ -37,5 +37,6 @@ public class OpAdv {
     private Date createDate;
     @Transient
     private String communtity;
+    private String dayTime;
 
 }

@@ -124,7 +124,7 @@ public class AdvService {
 //        advertDTO.setTitle(advertDTO.getTitle());
 //        advertDTO.setType("0");
 //        JsonMapper mapper = JsonMapper.defaultMapper();
-//        JPush.sendAdvSchedulePush(tagList, "adv_schedule_push_" + advId, formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getStartDate()), formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getEndDate()), mapper.toJson(adv));
+//        JPush.sendAdvSchedulePush(tagList, "adv_schedule_push_" + advId, formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getStartDate()), formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getEndDate()),adv.getDayTime(), mapper.toJson(adv));
 
     }
 }

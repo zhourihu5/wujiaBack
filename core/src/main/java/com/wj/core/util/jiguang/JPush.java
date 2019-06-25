@@ -83,9 +83,8 @@ public class JPush {
         }
     }
 
-    public static void sendAdvSchedulePush(List<String> tags, String name, String start, String end, String content) {
+    public static void sendAdvSchedulePush(List<String> tags, String name, String start, String end,String time, String content) {
         JPushClient jPushClient = new JPushClient(MASTER_SECRET, APP_KEY);
-        String time = "20:00:00";
         PushPayload push = buildPushMessageAsTag(tags, ADV_TYPE, content);
         try {
             ScheduleResult result = jPushClient.createDailySchedule(name, start, end, time, push);

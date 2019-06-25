@@ -23,6 +23,7 @@ public class OssController {
     private String servicePath;
     private static final String CARD_TYPE = "card";
     private static final String SERVICE_TYPE = "service";
+    private static final String ADV_TYPE = "adv";
     /**
      * @param
      * @MethodName ossUpload
@@ -40,6 +41,9 @@ public class OssController {
         }
         if (type.equals(SERVICE_TYPE)) {
             path = ossUploadService.ossUpload(file, servicePath);
+        }
+        if (type.equals(ADV_TYPE)) {
+            path = ossUploadService.ossUpload(file, "images/adv/icon");
         }
         return ResponseMessage.ok(path);
     }
