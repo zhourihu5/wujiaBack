@@ -11,6 +11,10 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,11 +31,13 @@ public class ScreenController {
 
     @ApiOperation(value = "查看屏保信息", notes = "查看屏保信息")
     @GetMapping("findAll")
-    public ResponseMessage<List<SysScreen>> findAll() {
+    public ResponseMessage<Page<SysScreen>> findAll(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("查看屏保信息接口:/v1/screen/findAll userId=" + claims.get("userId"));
-        List<SysScreen> list = screenService.findAll();
+        pageNum = pageNum - 1;
+        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Page<SysScreen> list = screenService.findAll(pageable);
         return ResponseMessage.ok(list);
     }
 

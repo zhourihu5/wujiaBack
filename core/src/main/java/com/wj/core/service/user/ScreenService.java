@@ -5,8 +5,11 @@ import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.user.ScreenRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -38,8 +41,8 @@ public class ScreenService {
      * @param
      * @return SysScreen
      */
-    public List<SysScreen> findAll() {
-        return screenRepository.findAll();
+    public Page<SysScreen> findAll(Pageable pageable) {
+        return screenRepository.findAll(pageable);
     }
 
     public SysScreen getScreen() {
@@ -52,6 +55,7 @@ public class ScreenService {
      * @return void
      */
     public void saveScreen(SysScreen screen) {
+        screen.setCreateDate(new Date());
         screenRepository.save(screen);
     }
 
