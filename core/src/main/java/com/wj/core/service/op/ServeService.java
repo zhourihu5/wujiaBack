@@ -177,7 +177,7 @@ public class ServeService {
      */
     @Transactional
     public void updateType(Integer type, String service) {
-        if (type == null || service == null) {
+        if (service == null) {
             throw new ServiceException("参数异常", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         String[] strArray = service.split(",");
