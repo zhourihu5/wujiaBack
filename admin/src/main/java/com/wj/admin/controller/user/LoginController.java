@@ -63,6 +63,7 @@ public class LoginController {
         }
         AesUtils au = new AesUtils();
         String aesPwd = au.AESEncode(CommonUtils.AESKEY, password);
+        logger.info("AES密码aesPwd=", aesPwd);
         SysUserInfo userInfo = userInfoService.findByNameAndPwd(userName, aesPwd);
         if (userInfo == null) {
             throw new ServiceException("账号或密码错误", ErrorCode.INTERNAL_SERVER_ERROR);
