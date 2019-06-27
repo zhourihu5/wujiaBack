@@ -38,6 +38,8 @@ public class BaseDevice {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(value = "安装时间")
     private Date installDate;
+    @ApiModelProperty(value = "操作人")
+    private String operator;
 
     public Integer getId() {
         return id;
@@ -109,5 +111,13 @@ public class BaseDevice {
 
     public void setInstallDate(Date installDate) {
         this.installDate = installDate;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 }
