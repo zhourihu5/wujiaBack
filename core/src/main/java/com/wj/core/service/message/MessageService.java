@@ -120,7 +120,7 @@ public class MessageService {
                 messageUserRepository.addMessageUser(messageId, SysUserInfo.getId(), 0, new Date());
             });
             // 消息推送
-//            JPush.sendMsgPush(tagList);
+            JPush.sendMsgPush(tagList);
         }
     }
 

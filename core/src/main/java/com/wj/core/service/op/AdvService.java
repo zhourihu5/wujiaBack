@@ -116,15 +116,15 @@ public class AdvService {
             });
         }
         // 广告推送
-//        OpAdv adv = advRepository.getOne(advId);
-//        AdvertDTO advertDTO = new AdvertDTO();
-//        advertDTO.setUrl(adv.getCover());
-//        advertDTO.setHref(adv.getUrl());
-//        advertDTO.setId(adv.getId());
-//        advertDTO.setTitle(advertDTO.getTitle());
-//        advertDTO.setType("0");
-//        JsonMapper mapper = JsonMapper.defaultMapper();
-//        JPush.sendAdvSchedulePush(tagList, "adv_schedule_push_" + advId, formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getStartDate()), formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getEndDate()),adv.getDayTime(), mapper.toJson(adv));
+        OpAdv adv = advRepository.getOne(advId);
+        AdvertDTO advertDTO = new AdvertDTO();
+        advertDTO.setUrl(adv.getCover());
+        advertDTO.setHref(adv.getUrl());
+        advertDTO.setId(adv.getId());
+        advertDTO.setTitle(advertDTO.getTitle());
+        advertDTO.setType("0");
+        JsonMapper mapper = JsonMapper.defaultMapper();
+        JPush.sendAdvSchedulePush(tagList, "adv_schedule_push_" + advId, formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getStartDate()), formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getEndDate()),adv.getDayTime(), mapper.toJson(adv));
 
     }
 }

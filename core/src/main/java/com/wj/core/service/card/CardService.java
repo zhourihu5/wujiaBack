@@ -15,6 +15,7 @@ import com.wj.core.repository.card.CardRepository;
 import com.wj.core.repository.card.PadModuleRepository;
 import com.wj.core.repository.op.ServeRepository;
 import com.wj.core.service.user.UserFamilyService;
+import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.mapper.BeanMapper;
 import com.wj.core.util.time.ClockUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -135,7 +136,7 @@ public class CardService {
                 cardRepository.insertUserCard(userId, opCard.getId(), CardStatus.YES.ordinal());
             }
         });
-        //JPush.sendCardSchedulePush("card_schedule_push_" + opCard.getId(), opCard.getPushDate(), "add card message");
+        JPush.sendCardSchedulePush("card_schedule_push_" + opCard.getId(), opCard.getPushDate().toString(), "add card message");
     }
 
     @Transactional
