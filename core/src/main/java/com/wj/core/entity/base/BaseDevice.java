@@ -1,5 +1,6 @@
 package com.wj.core.entity.base;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
@@ -8,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Date;
 
 /*
  * 设备表
@@ -28,6 +30,14 @@ public class BaseDevice {
     private Integer type;
     @ApiModelProperty(value = "pad标号(01 02 03 04...)")
     private String buttonKey;
+    @ApiModelProperty(value = "0.未安装 1.已安装 2.淘汰")
+    private Integer status;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @ApiModelProperty(value = "出库时间")
+    private Date outDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @ApiModelProperty(value = "安装时间")
+    private Date installDate;
 
     public Integer getId() {
         return id;
@@ -75,5 +85,29 @@ public class BaseDevice {
 
     public void setButtonKey(String buttonKey) {
         this.buttonKey = buttonKey;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Date getOutDate() {
+        return outDate;
+    }
+
+    public void setOutDate(Date outDate) {
+        this.outDate = outDate;
+    }
+
+    public Date getInstallDate() {
+        return installDate;
+    }
+
+    public void setInstallDate(Date installDate) {
+        this.installDate = installDate;
     }
 }

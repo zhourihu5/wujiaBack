@@ -2,6 +2,9 @@ package com.wj.core.repository.base;
 
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDevice;
+import com.wj.core.entity.base.BaseFamily;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -24,5 +27,15 @@ public interface BaseDeviceRepository extends JpaRepository<BaseDevice, Integer>
      */
     @Query(value = "select * from base_device where family_id = ?1", nativeQuery = true)
     public List<BaseDevice> findByFamilyId(Integer fid);
+
+    /**
+     * 分页列表
+     * @param flag
+     * @returne Page<BaseDevice>
+     */
+    @Query(value = "select * from base_device where flag = ?1 and status = ?2", nativeQuery = true)
+    public Page<BaseDevice> findAll(Integer flag, Integer status, Pageable pageable);
+
+
 
 }

@@ -57,13 +57,13 @@ public class LoginController {
     public ResponseMessage checking(@RequestBody SysUserInfo sysUserInfo) {
         String userName = sysUserInfo.getUserName();
         String password = sysUserInfo.getPassword();
-        logger.info("登录接口:/login/checking userName=", userName);
+        logger.info("登录接口:/login/checking userName=" + userName);
         if (userName.isEmpty() || password.isEmpty()) {
             throw new ServiceException("请输入正确的参数", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         AesUtils au = new AesUtils();
         String aesPwd = au.AESEncode(CommonUtils.AESKEY, password);
-        logger.info("AES密码aesPwd=", aesPwd);
+        logger.info("AES密码aesPwd=" + aesPwd);
         SysUserInfo userInfo = userInfoService.findByNameAndPwd(userName, aesPwd);
         if (userInfo == null) {
             throw new ServiceException("账号或密码错误", ErrorCode.INTERNAL_SERVER_ERROR);
