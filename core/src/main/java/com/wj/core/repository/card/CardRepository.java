@@ -36,4 +36,8 @@ public interface CardRepository extends JpaRepository<OpCard, Integer>, JpaSpeci
     @Modifying
     @Query(value = "insert into op_user_card(user_id, card_id, is_show) values (?1, ?2, ?3)", nativeQuery = true)
     void insertUserCard(Integer userId, Integer cardId, Integer isShow);
+
+    @Query(value = "select * from op_card where id = ?1", nativeQuery = true)
+    OpCard findByCardId(Integer id);
+
 }

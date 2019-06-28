@@ -36,6 +36,10 @@ public class BaseFamily {
     @ApiModelProperty(value = "单元名称")
     @Transient
     private String unitName;
+    @Transient
+    private Integer communtityId;
+    @Transient
+    private SysUserInfo userInfo;
 
     public Integer getId() {
         return id;
@@ -92,6 +96,22 @@ public class BaseFamily {
 
     public void setUnitName(String unitName) {
         this.unitName = unitName;
+    }
+
+    public SysUserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(SysUserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public Integer getCommuntityId() {
+        return communtityId;
+    }
+
+    public void setCommuntityId(Integer communtityId) {
+        this.communtityId = communtityId;
     }
 
     @ManyToMany(mappedBy = "familyId")

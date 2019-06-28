@@ -5,6 +5,7 @@ import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDevice;
+import com.wj.core.entity.base.dto.BaseDeviceDTO;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.service.base.BaseDeviceService;
@@ -46,12 +47,12 @@ public class BaseDeviceController {
 
     @ApiOperation(value = "保存设备内容", notes = "保存设备内容")
     @PostMapping("saveDevice")
-    public ResponseMessage saveDevice(@RequestBody BaseDevice device) {
+    public ResponseMessage saveDevice(@RequestBody BaseDeviceDTO deviceDTO) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("保存设备内容 接口:/v1/device/saveDevice userId=" + claims.get("userId"));
-        device.setStatus(1);
-        baseDeviceService.saveDevice(device);
+        deviceDTO.setStatus(1);
+        baseDeviceService.saveDevice(deviceDTO);
         return ResponseMessage.ok();
     }
 

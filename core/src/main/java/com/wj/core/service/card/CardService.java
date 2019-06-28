@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -49,7 +50,7 @@ public class CardService {
 
     // 获取用户卡片
     public List<CardDTO> getUserCard(Integer userId) {
-        List<OpCard> list = cardRepository.findByUserCards_UserInfo_IdAndUserCards_IsShowAndStatusOrderByLocationAsc(1, CardStatus.YES, CardStatus.YES);
+        List<OpCard> list = cardRepository.findByUserCards_UserInfo_IdAndUserCards_IsShowAndStatusOrderByLocationAsc(userId, CardStatus.YES, CardStatus.YES);
         List<CardDTO> cardDTOS = Lists.newArrayList();
         for (OpCard op : list) {
             CardDTO cd = BeanMapper.map(op, CardDTO.class);
@@ -61,19 +62,19 @@ public class CardService {
 
     // 获取所有卡片
     public List<OpCard> getCardList(Integer userId) {
-        return cardRepository.findByUserCards_UserInfo_IdAndStatusOrderByLocationAsc(1, CardStatus.YES);
+        return cardRepository.findByUserCards_UserInfo_IdAndStatusOrderByLocationAsc(userId, CardStatus.YES);
     }
 
     // 保存用户卡片
     @Transactional
     public void saveUserCard(Integer userId, Integer id) {
-        cardRepository.modityCardStatus(CardStatus.YES.ordinal(), 1, id);
+        cardRepository.modityCardStatus(CardStatus.YES.ordinal(), userId, id);
     }
 
     // 删除用户卡片
     @Transactional
     public void removeUserCard(Integer userId, Integer cardId) {
-        cardRepository.modityCardStatus(CardStatus.NO.ordinal(), 1, cardId);
+        cardRepository.modityCardStatus(CardStatus.NO.ordinal(), userId, cardId);
     }
 
     public CardDetailDTO getCardDetail(Integer id) {
@@ -119,8 +120,8 @@ public class CardService {
         }
         // location 顺序
         if (card.getLocation() == 0) {
-            OpCard lastOpCard = cardRepository.findFirstByOrderByLocationDesc();
-            card.setLocation(lastOpCard.getLocation() + 1);
+//            OpCard lastOpCard = cardRepository.findFirstByOrderByLocationDesc();
+            card.setLocation(card.getLocation() + 1);
         } else {
             List<OpCard> opCardList = cardRepository.findByLocationIsGreaterThanEqual(card.getLocation());
             opCardList.forEach(opCard -> {
@@ -136,7 +137,8 @@ public class CardService {
                 cardRepository.insertUserCard(userId, opCard.getId(), CardStatus.YES.ordinal());
             }
         });
-        JPush.sendCardSchedulePush("card_schedule_push_" + opCard.getId(), opCard.getPushDate().toString(), "add card message");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        JPush.sendCardSchedulePush("card_schedule_push_" + opCard.getId(), formatter.format(opCard.getPushDate()), "add card message");
     }
 
     @Transactional

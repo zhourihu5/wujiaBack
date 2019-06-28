@@ -116,7 +116,7 @@ public class MessageService {
             messageCommuntityRepository.addMessageCommuntity(messageId, Integer.valueOf(strArray[i]), new Date());
             List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
             list.forEach(SysUserInfo -> {
-                // 保存消息和用户关系
+                // 保存消息和用户关系R
                 messageUserRepository.addMessageUser(messageId, SysUserInfo.getId(), 0, new Date());
             });
             // 消息推送

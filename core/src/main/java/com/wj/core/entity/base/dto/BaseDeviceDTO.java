@@ -1,11 +1,13 @@
-package com.wj.core.entity.base;
+package com.wj.core.entity.base.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 /*
@@ -13,7 +15,7 @@ import java.util.Date;
  */
 @ApiModel(description = "设备表")
 @Entity
-public class BaseDevice {
+public class BaseDeviceDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -29,16 +31,12 @@ public class BaseDevice {
     private String buttonKey;
     @ApiModelProperty(value = "0.未安装 1.已安装 2.淘汰")
     private Integer status;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(value = "出库时间")
     private Date outDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(value = "安装时间")
     private Date installDate;
     @ApiModelProperty(value = "操作人")
     private String operator;
-    @Transient
-    private String address;
 
     public Integer getId() {
         return id;
@@ -118,13 +116,5 @@ public class BaseDevice {
 
     public void setOperator(String operator) {
         this.operator = operator;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 }

@@ -3,10 +3,13 @@ package com.wj.core.service.base;
 import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.BaseDevice;
 import com.wj.core.entity.base.BaseFamily;
+import com.wj.core.entity.base.dto.BaseDeviceDTO;
+import com.wj.core.entity.card.OpCard;
 import com.wj.core.repository.base.BaseAreaRepository;
 import com.wj.core.repository.base.BaseDeviceRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.util.mapper.BeanMapper;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +23,9 @@ public class BaseDeviceService {
 
     @Autowired
     private BaseDeviceRepository baseDeviceRepository;
+
+    @Autowired
+    private BaseFamilyService baseFamilyService;
 
     /**
      * 根据key查询所属家庭ID
@@ -44,10 +50,11 @@ public class BaseDeviceService {
     /**
      * 保存设备
      *
-     * @param device
+     * @param deviceDTO
      * @return void
      */
-    public void saveDevice(BaseDevice device) {
+    public void saveDevice(BaseDeviceDTO deviceDTO) {
+        BaseDevice device = BeanMapper.map(deviceDTO, BaseDevice.class);
         baseDeviceRepository.save(device);
     }
 
@@ -63,6 +70,9 @@ public class BaseDeviceService {
         }
         Page<BaseDevice> page = null;
         page = baseDeviceRepository.findAll(flag, status, pageable);
+        for (BaseDevice baseDevice: page) {
+            baseDevice.setAddress(baseFamilyService.findAllByFamilyId(baseDevice.getFamilyId()));
+        }
         return page;
     }
 }

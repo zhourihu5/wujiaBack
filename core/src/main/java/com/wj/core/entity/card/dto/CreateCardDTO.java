@@ -21,7 +21,7 @@ public class CreateCardDTO {
     @ApiModelProperty(value = "0 默认排序 非0 传过来就好")
     private Integer location;
     @ApiModelProperty(value = "多个服务以把ID用逗号拼接")
-    private String service;
+    private String services;
     private String path;
 
 }

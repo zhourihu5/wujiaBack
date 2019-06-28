@@ -1,13 +1,7 @@
 package com.wj.core.service.base;
 
-import com.wj.core.entity.base.BaseCommuntity;
-import com.wj.core.entity.base.BaseFamily;
-import com.wj.core.entity.base.BaseFloor;
-import com.wj.core.entity.base.BaseUnit;
-import com.wj.core.repository.base.BaseCommuntityRepository;
-import com.wj.core.repository.base.BaseFamilyRepository;
-import com.wj.core.repository.base.BaseFloorRepository;
-import com.wj.core.repository.base.BaseUnitRepository;
+import com.wj.core.entity.base.*;
+import com.wj.core.repository.base.*;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +28,12 @@ public class BaseFamilyService {
     @Autowired
     private BaseCommuntityRepository baseCommuntityRepository;
 
+    @Autowired
+    private BaseAreaRepository baseAreaRepository;
+
+    @Autowired
+    private FamilyCommuntityRepository familyCommuntityRepository;
+
     /**
      * 保存家庭信息
      *
@@ -43,7 +43,11 @@ public class BaseFamilyService {
     @Transactional
     public BaseFamily saveFamily(BaseFamily family) {
         family.setCreateDate(new Date());
-        return baseFamilyRepository.save(family);
+        BaseFamily baseFamily = baseFamilyRepository.save(family);
+        if (baseFamily == null)
+            throw new ServiceException("家庭数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        familyCommuntityRepository.insert(family.getCommuntityId(), baseFamily.getId());
+        return baseFamily;
     }
 
     /**
@@ -69,6 +73,34 @@ public class BaseFamilyService {
     }
 
     /**
+     * 根据家庭id查询家庭-单元-楼-社区信息
+     *
+     * @param fid
+     * @return void
+     */
+    public String findAllByFamilyId(Integer fid) {
+        BaseFamily family = baseFamilyRepository.findByFamilyId(fid);
+        if (family == null || family.getUnitId() == null)
+            throw new ServiceException("家庭数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        BaseUnit unit = baseUnitRepository.findByUnitId(family.getUnitId());
+        if (unit == null || unit.getFloorId() == null)
+            throw new ServiceException("单元数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        BaseFloor floor = baseFloorRepository.findByFloorId(unit.getFloorId());
+        if (floor == null || floor.getCommuntityId() == null)
+            throw new ServiceException("楼数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(floor.getCommuntityId());
+        if (communtity == null) throw new ServiceException("社区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        BaseArea province = baseAreaRepository.findByCityId(communtity.getProvince());
+        if (province == null) throw new ServiceException("省数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        BaseArea city = baseAreaRepository.findByCityId(communtity.getCity());
+        if (city == null) throw new ServiceException("市数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        BaseArea area = baseAreaRepository.findByCityId(communtity.getArea());
+        if (area == null) throw new ServiceException("区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        String address = province.getAreaName() + city.getAreaName() + area.getAreaName() + communtity.getName() + floor.getName() + unit.getNum() + family.getNum();
+        return address;
+    }
+
+    /**
      * 获取家庭分页信息
      *
      * @param unitId
@@ -81,7 +113,7 @@ public class BaseFamilyService {
         } else {
             page = baseFamilyRepository.findAll(pageable);
         }
-        for (BaseFamily baseFamily: page) {
+        for (BaseFamily baseFamily : page) {
             BaseUnit baseUnit = baseUnitRepository.findByUnitId(baseFamily.getUnitId());
             if (baseUnit == null) {
                 throw new ServiceException("单元数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
