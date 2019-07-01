@@ -107,10 +107,10 @@ public class ServeService {
      */
     @Transactional
     public void saveService(OpService service) {
-        serviceRepository.save(service);
         if (StringUtils.isNotBlank(service.getCover())) {
             service.setCover(url + service.getCover());
         }
+        serviceRepository.save(service);
         JPush.sendPushAll("MARKET", "99");
     }
 
