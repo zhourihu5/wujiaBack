@@ -21,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @Api(value="/v1/message", tags="消息接口模块")
 @RestController
 @RequestMapping("/v1/message/")
@@ -50,6 +52,7 @@ public class MessageController {
     @ApiOperation(value="推送消息")
     @PostMapping("pushMessage")
     public ResponseMessage pushMessage(@RequestBody Message message) {
+        message.setCreateDate(new Date());
         Message messages = messageService.saveMessage(message);
         if (messages == null) throw new ServiceException("消息保存异常", ErrorCode.INTERNAL_SERVER_ERROR);
         messageService.pushMessage(messages.getId(), messages.getCommuntity());
