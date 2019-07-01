@@ -1,16 +1,11 @@
 package com.wj.core.service.op;
 
-import com.google.common.collect.Lists;
-import com.wj.core.entity.base.BaseFamily;
-import com.wj.core.entity.enums.*;
-import com.wj.core.entity.op.OpAdv;
+import com.wj.core.entity.enums.ServiceType;
 import com.wj.core.entity.op.OpBanner;
-import com.wj.core.entity.op.embeddable.FamilyService;
 import com.wj.core.entity.op.OpFamilyService;
 import com.wj.core.entity.op.OpService;
-import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.entity.op.embeddable.FamilyService;
 import com.wj.core.entity.user.dto.ServiceAllDTO;
-import com.wj.core.entity.user.dto.ServiceDTO;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.op.BannerRepository;
 import com.wj.core.repository.op.FamilyServeRepository;
@@ -19,14 +14,14 @@ import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.jiguang.JPush;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,16 +31,12 @@ public class ServeService {
     private ServeRepository serviceRepository;
 
     @Autowired
-    private BaseFamilyRepository baseFamilyRepository;
-
-    @Autowired
-    private UserInfoRepository userInfoRepository;
-
-    @Autowired
     private FamilyServeRepository familyServeRepository;
 
     @Autowired
     private BannerRepository bannerRepository;
+    @Value("${wj.oss.access}")
+    private String url;
 
 
     /**
@@ -117,6 +108,9 @@ public class ServeService {
     @Transactional
     public void saveService(OpService service) {
         serviceRepository.save(service);
+        if (StringUtils.isNotBlank(service.getCover())) {
+            service.setCover(url + service.getCover());
+        }
         JPush.sendPushAll("MARKET", "99");
     }
 

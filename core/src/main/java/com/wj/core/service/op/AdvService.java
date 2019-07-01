@@ -18,7 +18,9 @@ import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.mapper.JsonMapper;
 import com.wj.core.util.time.DateFormatUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,8 @@ public class AdvService {
 
     @Autowired
     private BaseCommuntityService baseCommuntityService;
+    @Value("${wj.oss.access}")
+    private String url;
 
 
     /**
@@ -67,6 +71,9 @@ public class AdvService {
     @Transactional
     public OpAdv saveAdv(OpAdv adv) {
         adv.setCreateDate(new Date());
+        if (StringUtils.isNotBlank(adv.getCover())) {
+            adv.setCover(url + adv.getCover());
+        }
         return advRepository.save(adv);
     }
 
