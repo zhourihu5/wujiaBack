@@ -145,7 +145,7 @@ public class CardService {
     public void removeCard(Integer id) {
         cardRepository.modityUserCardStatus(CardStatus.NO.ordinal(), id);
         cardRepository.modityCardStatus(CardStatus.NO.ordinal(), id);
-        //JPush.sendPushAll("CARD", "remove card message");
+        JPush.sendPushAll("CARD", "remove card message");
     }
 
 
