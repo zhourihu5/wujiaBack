@@ -4,7 +4,9 @@ import com.wj.core.entity.user.SysScreen;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.user.ScreenRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class ScreenService {
 
     @Autowired
     private ScreenRepository screenRepository;
+
+    @Value("${wj.oss.access}")
+    private String url;
 
     /**
      * 根据id查询屏保信息
@@ -56,6 +61,9 @@ public class ScreenService {
      */
     public void saveScreen(SysScreen screen) {
         screen.setCreateDate(new Date());
+        if (StringUtils.isNotBlank(screen.getCover())) {
+            screen.setCover(url + screen.getCover());
+        }
         screenRepository.save(screen);
     }
 

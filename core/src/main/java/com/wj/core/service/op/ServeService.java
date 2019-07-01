@@ -36,6 +36,7 @@ public class ServeService {
 
     @Autowired
     private BannerRepository bannerRepository;
+
     @Value("${wj.oss.access}")
     private String url;
 
