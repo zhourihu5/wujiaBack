@@ -120,8 +120,13 @@ public class CardService {
         }
         // location 顺序
         if (card.getLocation() == 0) {
-//            OpCard lastOpCard = cardRepository.findFirstByOrderByLocationDesc();
-            card.setLocation(card.getLocation() + 1);
+            OpCard lastOpCard = cardRepository.findFirstByOrderByLocationDesc();
+            if (lastOpCard == null) {
+                card.setLocation(1);
+            } else {
+                card.setLocation(lastOpCard.getLocation() + 1);
+            }
+
         } else {
             List<OpCard> opCardList = cardRepository.findByLocationIsGreaterThanEqual(card.getLocation());
             opCardList.forEach(opCard -> {
@@ -132,10 +137,7 @@ public class CardService {
         List<SysUserFamily> userFamilyList = userFamilyService.findByIdentity(1);
         userFamilyList.forEach(userFamily -> {
             Integer userId = userFamily.getUserFamily().getUserId();
-            int count = cardRepository.findUserCardCount(userId, opCard.getId());
-            if (count <= 0) {
-                cardRepository.insertUserCard(userId, opCard.getId(), CardStatus.YES.ordinal());
-            }
+            cardRepository.insertUserCard(userId, opCard.getId(), CardStatus.YES.ordinal());
         });
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         JPush.sendCardSchedulePush("card_schedule_push_" + opCard.getId(), formatter.format(opCard.getPushDate()), "add card message");
@@ -143,7 +145,7 @@ public class CardService {
 
     @Transactional
     public void removeCard(Integer id) {
-        cardRepository.modityUserCardStatus(CardStatus.NO.ordinal(), id);
+        cardRepository.removeUserCard(id);
         cardRepository.modityCardStatus(CardStatus.NO.ordinal(), id);
         JPush.sendPushAll("CARD", "remove card message");
     }

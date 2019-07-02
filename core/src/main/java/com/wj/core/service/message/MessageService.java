@@ -112,7 +112,7 @@ public class MessageService {
         List<String> tagList = Lists.newArrayList();
         for (int i = 0; i < strArray.length; i++) {
             // 保存消息和社区关系
-            tagList.add(strArray[i]);
+            tagList.add("community_" + strArray[i]);
             messageCommuntityRepository.addMessageCommuntity(messageId, Integer.valueOf(strArray[i]), new Date());
             List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
             list.forEach(SysUserInfo -> {

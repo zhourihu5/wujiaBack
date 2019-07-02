@@ -88,6 +88,10 @@ public class AdvService {
         advCommuntityRepository.delAdvCommuntityByAdvId(id);
         advUserRepository.delAdvUserByAdvId(id);
         advRepository.deleteById(id);
+        OpAdv adv = advRepository.getOne(id);
+        if (StringUtils.isNotBlank(adv.getScheduleId())) {
+            JPush.deleteSchedule(adv.getScheduleId());
+        }
     }
 
     /**
@@ -114,7 +118,7 @@ public class AdvService {
         String[] strArray = communtity.split(",");
         for (int i = 0; i < strArray.length; i++) {
             // 保存广告和社区关系
-            tagList.add(strArray[i]);
+            tagList.add("community_" + strArray[i]);
             advCommuntityRepository.addAdvCommuntity(advId, Integer.valueOf(strArray[i]), new Date());
             List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
             list.forEach(SysUserInfo -> {
@@ -131,7 +135,9 @@ public class AdvService {
         advertDTO.setTitle(advertDTO.getTitle());
         advertDTO.setType("0");
         JsonMapper mapper = JsonMapper.defaultMapper();
-        JPush.sendAdvSchedulePush(tagList, "adv_schedule_push_" + advId, formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getStartDate()), formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getEndDate()),adv.getDayTime(), mapper.toJson(adv));
-
+        String sId = JPush.sendAdvSchedulePush(tagList, "adv_schedule_push_" + advId, formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getStartDate()), formatDate(PATTERN_DEFAULT_ON_SECOND, adv.getEndDate()), adv.getDayTime(), mapper.toJson(adv));
+        if (StringUtils.isNotBlank(sId)) {
+            advRepository.modityScheduleId(sId, advId);
+        }
     }
 }

@@ -35,6 +35,7 @@ public class JPush {
 
     // 使用 NettyHttpClient 异步接口发送请求
     public static void sendMsgPush(List<String> tags) {
+        LOG.info("send user : " + tags.toString());
         ClientConfig clientConfig = ClientConfig.getInstance();
         String host = (String) clientConfig.get(ClientConfig.PUSH_HOST_NAME);
         final NettyHttpClient client = new NettyHttpClient(ServiceHelper.getBasicAuthorization(APP_KEY, MASTER_SECRET),
@@ -83,12 +84,32 @@ public class JPush {
         }
     }
 
-    public static void sendAdvSchedulePush(List<String> tags, String name, String start, String end,String time, String content) {
+    public static String sendAdvSchedulePush(List<String> tags, String name, String start, String end,String time, String content) {
+        LOG.info("schedule result is start time : " + start + " end time :" + end + " send time :"  + time + " content : " + content);
+        LOG.info("send user :" + tags.toString());
         JPushClient jPushClient = new JPushClient(MASTER_SECRET, APP_KEY);
         PushPayload push = buildPushMessageAsTag(tags, ADV_TYPE, content);
         try {
             ScheduleResult result = jPushClient.createDailySchedule(name, start, end, time, push);
             LOG.info("schedule result is " + result);
+            return result.getSchedule_id();
+        } catch (APIConnectionException e) {
+            LOG.error("Connection error. Should retry later. ", e);
+        } catch (APIRequestException e) {
+            LOG.error("Error response from JPush server. Should review and fix it. ", e);
+            LOG.info("HTTP Status: " + e.getStatus());
+            LOG.info("Error Code: " + e.getErrorCode());
+            LOG.info("Error Message: " + e.getErrorMessage());
+        }
+        return "";
+    }
+
+    public static void deleteSchedule(String scheduleId) {
+        //String scheduleId = "95bbd066-3a88-11e5-8e62-0021f652c102";
+        JPushClient jpushClient = new JPushClient(MASTER_SECRET, APP_KEY);
+
+        try {
+            jpushClient.deleteSchedule(scheduleId);
         } catch (APIConnectionException e) {
             LOG.error("Connection error. Should retry later. ", e);
         } catch (APIRequestException e) {

@@ -33,6 +33,7 @@ public class OpCard {
     private List<UserCard> userCards;
     private String services;
     private CardStatus status;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date pushDate;
 
 }

@@ -39,8 +39,8 @@ public class CardController {
     @ApiOperation(value="停止卡片推送")
     @ApiImplicitParam(name = "id", dataType = "Integer", value = "主键ID", required = true)
     @PostMapping("/card/remove")
-    public ResponseMessage remove(Integer id) {
-        cardService.removeCard(id);
+    public ResponseMessage remove(@RequestBody CreateCardDTO cardDTO) {
+        cardService.removeCard(cardDTO.getId());
         return ResponseMessage.ok();
     }
 

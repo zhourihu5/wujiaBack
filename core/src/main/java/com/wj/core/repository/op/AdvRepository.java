@@ -10,6 +10,9 @@ import java.util.Date;
 
 public interface AdvRepository extends JpaRepository<OpAdv, Integer> {
 
+    @Modifying
+    @Query(value = "update OpAdv o set o.scheduleId = ?1 where o.id = ?2")
+    void modityScheduleId(String scheduleId, Integer id);
 
 
 }

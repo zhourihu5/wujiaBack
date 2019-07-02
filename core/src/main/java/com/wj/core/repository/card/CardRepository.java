@@ -23,9 +23,7 @@ public interface CardRepository extends JpaRepository<OpCard, Integer>, JpaSpeci
     @Modifying
     @Query(value = "update OpCard o set o.location = ?1 where o.id = ?2")
     void modityLocation(Integer location, Integer id);
-    @Modifying
-    @Query(value = "update op_user_card o set o.is_show = ?1 where o.card_id = ?2", nativeQuery = true)
-    void modityUserCardStatus(Integer status, Integer cardId);
+
     @Modifying
     @Query(value = "update op_card o set o.status = ?1 where o.id = ?2", nativeQuery = true)
     void modityCardStatus(Integer status, Integer id);
@@ -39,5 +37,9 @@ public interface CardRepository extends JpaRepository<OpCard, Integer>, JpaSpeci
 
     @Query(value = "select * from op_card where id = ?1", nativeQuery = true)
     OpCard findByCardId(Integer id);
+
+    @Modifying
+    @Query(value = "delete from op_user_card where card_id = ?1", nativeQuery = true)
+    void removeUserCard(Integer cardId);
 
 }
