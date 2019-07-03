@@ -99,4 +99,12 @@ public interface ServeRepository extends JpaRepository<OpService, Integer> {
      */
     @Query(value = "select * from op_service where type is null", nativeQuery = true)
     public Page<OpService> findAll(Pageable pageable);
+
+    /**
+     * 后台服务分页列表
+     * @param
+     * @return Page<OpService>
+     */
+    @Query(value = "select * from op_service", nativeQuery = true)
+    public Page<OpService> findAppAll(Pageable pageable);
 }

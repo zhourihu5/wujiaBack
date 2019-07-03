@@ -1,4 +1,4 @@
-package com.wj.core.entity.op;
+package com.wj.core.entity.op.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -15,10 +15,7 @@ import java.util.Date;
  */
 @ApiModel(description = "广告表")
 @Data
-@Entity
-public class OpAdv {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class OpAdvDTO {
     private Integer id;
     @ApiModelProperty(value = "标题")
     private String title;
@@ -27,13 +24,10 @@ public class OpAdv {
     @ApiModelProperty(value = "地址")
     private String url;
     @ApiModelProperty(value = "开始时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startDate;
     @ApiModelProperty(value = "结束时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endDate;
     @ApiModelProperty(value = "开始时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     @Transient
     private String communtity;

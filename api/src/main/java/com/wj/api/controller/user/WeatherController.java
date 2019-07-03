@@ -52,15 +52,15 @@ public class WeatherController {
         Claims claims = JwtUtil.parseJwt(token);
         Integer communtityId = (Integer)claims.get("communtityId");
         WeatherDTO weatherDTO = new WeatherDTO();
+        BaseCommuntity baseCommuntity = baseCommuntityService.findById(communtityId);
+        if (null == baseCommuntity) {
+            return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
+        }
+        BaseArea baseArea = baseAreaService.findById(baseCommuntity.getCity());
+        if (null == baseArea) {
+            return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
+        }
         try {
-            BaseCommuntity baseCommuntity = baseCommuntityService.findById(communtityId);
-            if (null == baseCommuntity) {
-                return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
-            }
-            BaseArea baseArea = baseAreaService.findById(baseCommuntity.getCity());
-            if (null == baseArea) {
-                return ResultUtil.error(HttpServletResponse.SC_UNAUTHORIZED, "数据异常");
-            }
             Map<String, String> headers = new HashMap<String, String>();
             //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
             headers.put("Authorization", "APPCODE " + CommonUtils.APPCODE);
@@ -72,7 +72,7 @@ public class WeatherController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        SysRestrict restrict = restrictService.findByDate();
+        SysRestrict restrict = restrictService.findByDate(baseCommuntity.getCity());
         weatherDTO.setRestrict(restrict);
         SysUserInfo userInfo = new SysUserInfo();
         userInfo.setId((Integer) claims.get("userId"));

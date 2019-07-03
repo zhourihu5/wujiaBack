@@ -70,7 +70,7 @@ public class ServeService {
         } else if (type == ServiceType.THREE.toInt()) {
             page = serviceRepository.findByType(2, pageable);
         } else {
-            page = serviceRepository.findAll(pageable);
+            page = serviceRepository.findAppAll(pageable);
         }
         for (OpService service : page) {
             OpFamilyService familyService = familyServeRepository.findByServiceIdAndUserId(service.getId(), userId);
@@ -111,6 +111,11 @@ public class ServeService {
     public void saveService(OpService service) {
         if (StringUtils.isNotBlank(service.getCover())) {
             service.setCover(url + service.getCover());
+        }
+        if (service.getFlag() == 1) {
+            if (StringUtils.isNotBlank(service.getUrl())) {
+                service.setUrl(url + service.getUrl());
+            }
         }
         service.setCreateDate(new Date());
         serviceRepository.save(service);

@@ -2,13 +2,16 @@ package com.wj.admin.controller.op;
 
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
+import com.wj.core.entity.card.dto.CardServicesDTO;
 import com.wj.core.entity.message.Message;
 import com.wj.core.entity.message.SysMessageUser;
 import com.wj.core.entity.op.OpAdv;
+import com.wj.core.entity.op.dto.OpAdvDTO;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.message.MessageService;
 import com.wj.core.service.op.AdvService;
+import com.wj.core.util.mapper.BeanMapper;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -72,7 +75,8 @@ public class AdvController {
 
     @ApiOperation(value="保存并推送广告")
     @PostMapping("pushAdv")
-    public ResponseMessage pushAdv(@RequestBody OpAdv adv) {
+    public ResponseMessage pushAdv(@RequestBody OpAdvDTO advDTO) {
+        OpAdv adv = BeanMapper.map(advDTO, OpAdv.class);
         OpAdv opAdv = advService.saveAdv(adv);
         if (opAdv == null) throw new ServiceException("数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
         advService.pushAdv(opAdv.getId(), adv.getCommuntity());

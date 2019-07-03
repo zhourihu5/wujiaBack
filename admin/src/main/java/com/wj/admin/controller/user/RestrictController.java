@@ -1,12 +1,11 @@
 package com.wj.admin.controller.user;
 
 import com.wj.admin.filter.ResponseMessage;
-import com.wj.admin.utils.JwtUtil;
+import com.wj.core.entity.op.OpAdv;
 import com.wj.core.entity.user.SysRestrict;
-import com.wj.core.entity.user.SysRole;
-import com.wj.core.entity.user.SysScreen;
+import com.wj.core.entity.user.dto.RestrictDTO;
 import com.wj.core.service.user.RestrictService;
-import com.wj.core.service.user.ScreenService;
+import com.wj.core.util.mapper.BeanMapper;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,10 +26,9 @@ public class RestrictController {
 
     @ApiOperation(value = "新增/修改限行", notes = "新增/修改限行")
     @PostMapping("addRestrict")
-    public ResponseMessage addRestrict(@RequestBody SysRestrict restrict) {
-        String token = JwtUtil.getJwtToken();
-        Claims claims = JwtUtil.parseJwt(token);
-        logger.info("新增/修改限行接口:/v1/restrict/addRestrict userId=" + claims.get("userId"));
+    public ResponseMessage addRestrict(@RequestBody RestrictDTO restrictDTO) {
+        logger.info("新增/修改限行接口:/v1/restrict/addRestrict");
+        SysRestrict restrict = BeanMapper.map(restrictDTO, SysRestrict.class);
         restrictService.saveRestrict(restrict);
         return ResponseMessage.ok();
     }

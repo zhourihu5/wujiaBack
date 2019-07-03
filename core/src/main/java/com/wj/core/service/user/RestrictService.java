@@ -22,7 +22,7 @@ public class RestrictService {
      * 查询今天限行号码
      * @return SysRestrict
      */
-    public SysRestrict findByDate() {
+    public SysRestrict findByDate(Integer cityCode) {
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         // 当前日期
@@ -30,7 +30,7 @@ public class RestrictService {
         c.add(Calendar.DAY_OF_MONTH, 1);
         // 增加一天后日期
         String endDate = sf.format(c.getTime());
-        return restrictRepository.findByDate(startDate, endDate);
+        return restrictRepository.findByDate(startDate, endDate, cityCode);
     }
 
     /**

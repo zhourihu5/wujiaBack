@@ -45,13 +45,13 @@ public class BannerController {
 
     @ApiOperation(value = "轮播图分页列表", notes = "轮播图分页列表")
     @GetMapping("findAll")
-    public ResponseMessage findAll(Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResponseMessage<Page<OpBanner>> findAll(Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("轮播图分页列表 接口:/v1/banner/findAll userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<OpBanner> page = bannerService.findAll(type, pageable);
-        return ResponseMessage.ok();
+        return ResponseMessage.ok(page);
     }
 }

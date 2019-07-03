@@ -18,7 +18,7 @@ public interface AuthorityRepository extends JpaRepository<SysAuthority, Integer
      * @param
      * @return SysUserInfo
      */
-    @Query(value = "select * from sys_authority", nativeQuery = true)
+    @Query(value = "select * from sys_authority where status = 1", nativeQuery = true)
     public List<SysAuthority> findAll();
 
     /**

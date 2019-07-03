@@ -26,6 +26,7 @@ public class OssController {
     private static final String ADV_TYPE = "adv";
     private static final String SCREEN = "screen";
     private static final String BANNER = "banner";
+    private static final String APK = "apk";
     /**
      * @param
      * @MethodName ossUpload
@@ -52,6 +53,9 @@ public class OssController {
         }
         if (type.equals(BANNER)) {
             path = ossUploadService.ossUpload(file, "images/banner/icon");
+        }
+        if (type.equals(APK)) {
+            path = ossUploadService.ossUpload(file, "apk/package");
         }
         return ResponseMessage.ok(path);
     }
