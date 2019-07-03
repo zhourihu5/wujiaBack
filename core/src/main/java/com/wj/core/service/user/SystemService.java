@@ -5,6 +5,10 @@ import com.wj.core.repository.base.SysVersionRepository;
 import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.mapper.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,17 +21,28 @@ public class SystemService {
 
     public SysVersion getVer() {
         SysVersion v = sysVersionRepository.findFirstByOrderBySysVerDesc();
-//        JsonMapper mapper = JsonMapper.defaultMapper();
-//        JPush.sendPushAll("SYS", mapper.toJson(v));
+
         return v;
     }
+
+    public Page<SysVersion> getPage(Integer pageNo, Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 1;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        Pageable page = PageRequest.of(pageNo - 1, pageSize, Sort.Direction.DESC, "id");
+        return sysVersionRepository.findAll(page);
+    }
+
+
 
     @Transactional
     public void save(SysVersion version) {
         sysVersionRepository.save(version);
-        SysVersion v = getVer();
         JsonMapper mapper = JsonMapper.defaultMapper();
-        JPush.sendPushAll("SYS", mapper.toJson(v));
+        //JPush.sendPushAll("SYS", mapper.toJson(version));
     }
 
 }
