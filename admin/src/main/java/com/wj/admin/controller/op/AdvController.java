@@ -44,6 +44,9 @@ public class AdvController {
     })
     @PostMapping("saveAdv")
     public ResponseMessage saveAdv(@RequestBody OpAdv adv) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("保存广告 接口:/v1/adv/saveAdv userId=" + claims.get("userId"));
         advService.saveAdv(adv);
         return ResponseMessage.ok();
     }
@@ -54,6 +57,9 @@ public class AdvController {
     })
     @PostMapping("delAdv")
     public ResponseMessage delAdv(@RequestBody OpAdv adv) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("删除广告 接口:/v1/adv/delAdv userId=" + claims.get("userId"));
         advService.delAdv(adv.getId());
         return ResponseMessage.ok();
     }
@@ -76,6 +82,9 @@ public class AdvController {
     @ApiOperation(value="保存并推送广告")
     @PostMapping("pushAdv")
     public ResponseMessage pushAdv(@RequestBody OpAdvDTO advDTO) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("保存并推送广告 接口:/v1/adv/pushAdv userId=" + claims.get("userId"));
         OpAdv adv = BeanMapper.map(advDTO, OpAdv.class);
         OpAdv opAdv = advService.saveAdv(adv);
         if (opAdv == null) throw new ServiceException("数据异常", ErrorCode.INTERNAL_SERVER_ERROR);

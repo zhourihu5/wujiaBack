@@ -1,7 +1,9 @@
 package com.wj.core.service.op;
 
 import com.wj.core.entity.op.OpBanner;
+import com.wj.core.entity.op.OpBannerType;
 import com.wj.core.repository.op.BannerRepository;
+import com.wj.core.repository.op.BannerTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +19,17 @@ public class BannerService {
     @Autowired
     private BannerRepository bannerRepository;
 
+    @Autowired
+    private BannerTypeRepository bannerTypeRepository;
+
 
     public void saveBanner(OpBanner banner) {
         banner.setCreateDate(new Date());
         bannerRepository.save(banner);
+    }
+
+    public void delBanner(OpBanner banner) {
+        bannerRepository.delete(banner);
     }
 
 
@@ -36,6 +45,11 @@ public class BannerService {
             bannerRepository.findAll(pageable);
         }
         return page;
+    }
+
+
+    public List<OpBannerType> findBannerTypeList() {
+        return bannerTypeRepository.findAll();
     }
 
 }

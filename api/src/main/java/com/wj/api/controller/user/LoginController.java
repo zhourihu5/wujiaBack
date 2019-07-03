@@ -73,7 +73,7 @@ public class LoginController {
      */
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
     @GetMapping("sendMsg")
-    public ResponseMessage<String> sendMsg(HttpServletRequest request) {
+    public ResponseMessage sendMsg(HttpServletRequest request) {
         String userName = request.getParameter("userName");
         logger.info(userName + "发送验证码info");
         SysUserInfo userInfo = userInfoService.findByName(userName);
@@ -116,12 +116,12 @@ public class LoginController {
                     logger.info(userName + "的验证码已失效");
                 }
             }, 5 * 60 * 1000);
-            return ResponseMessage.ok(smsCode);
-//            return ResponseMessage.ok(message);
+//            return ResponseMessage.ok();
+            return ResponseMessage.ok(message);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseMessage.ok("");
+        return ResponseMessage.ok();
     }
 
     /**

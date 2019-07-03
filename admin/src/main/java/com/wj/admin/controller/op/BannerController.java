@@ -3,6 +3,7 @@ package com.wj.admin.controller.op;
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.op.OpBanner;
+import com.wj.core.entity.op.OpBannerType;
 import com.wj.core.entity.op.OpService;
 import com.wj.core.entity.op.dto.OpServiceDTO;
 import com.wj.core.service.op.BannerService;
@@ -43,15 +44,30 @@ public class BannerController {
         return ResponseMessage.ok();
     }
 
+    @ApiOperation(value = "删除轮播图", notes = "删除轮播图")
+    @PostMapping("delBanner")
+    public ResponseMessage delBanner(@RequestBody OpBanner banner) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("删除轮播图 接口:/v1/banner/delBanner userId=" + claims.get("userId"));
+        bannerService.delBanner(banner);
+        return ResponseMessage.ok();
+    }
+
     @ApiOperation(value = "轮播图分页列表", notes = "轮播图分页列表")
     @GetMapping("findAll")
     public ResponseMessage<Page<OpBanner>> findAll(Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
-        String token = JwtUtil.getJwtToken();
-        Claims claims = JwtUtil.parseJwt(token);
-        logger.info("轮播图分页列表 接口:/v1/banner/findAll userId=" + claims.get("userId"));
+        logger.info("轮播图分页列表 接口:/v1/banner/findAll type=", type);
         pageNum = pageNum - 1;
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<OpBanner> page = bannerService.findAll(type, pageable);
         return ResponseMessage.ok(page);
+    }
+
+    @ApiOperation(value = "轮播图类型列表", notes = "轮播图类型列表")
+    @GetMapping("findBannerTypeList")
+    public ResponseMessage<List<OpBannerType>> findBannerTypeList() {
+        logger.info("轮播图类型列表 接口:/v1/banner/findBannerTypeList");
+        return ResponseMessage.ok(bannerService.findBannerTypeList());
     }
 }
