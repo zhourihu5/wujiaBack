@@ -9,10 +9,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api(value="/v1/system", tags="系统接口模块")
 @RestController
@@ -36,6 +33,7 @@ public class SystemController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "version", dataType = "SysVersion", value = "升级实体")
     })
+    @PostMapping("/system/save")
     public ResponseMessage save(@RequestBody SysVersion version) {
         systemService.save(version);
         return ResponseMessage.ok();

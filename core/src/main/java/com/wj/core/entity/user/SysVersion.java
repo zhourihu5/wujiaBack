@@ -20,7 +20,7 @@ public class SysVersion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String sysVer;
+    private Integer sysVer;
     private String showVer;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
