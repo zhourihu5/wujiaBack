@@ -4,7 +4,9 @@ import com.wj.core.entity.op.OpBanner;
 import com.wj.core.entity.op.OpBannerType;
 import com.wj.core.repository.op.BannerRepository;
 import com.wj.core.repository.op.BannerTypeRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,9 +24,20 @@ public class BannerService {
     @Autowired
     private BannerTypeRepository bannerTypeRepository;
 
+    @Value("${wj.oss.access}")
+    private String url;
 
     public void saveBanner(OpBanner banner) {
         banner.setCreateDate(new Date());
+        if (banner.getId() != null) {
+            if (StringUtils.isNotBlank(banner.getCover()) && !banner.getCover().startsWith("http")) {
+                banner.setCover(url + banner.getCover());
+            }
+        } else {
+            if (StringUtils.isNotBlank(banner.getCover())) {
+                banner.setCover(url + banner.getCover());
+            }
+        }
         bannerRepository.save(banner);
     }
 
