@@ -114,9 +114,7 @@ public class CardService {
             card.setType(CardType.IMG);
         }
         if (StringUtils.isNotBlank(cardDTO.getPath())) {
-            if (!cardDTO.getCardType().equals("2")) {
-                card.setIcon(url + cardDTO.getPath());
-            }
+            card.setIcon(url + cardDTO.getPath());
         }
         // location 顺序
         if (card.getLocation() == 0) {

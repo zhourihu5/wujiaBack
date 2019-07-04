@@ -4,6 +4,7 @@ import com.wj.core.entity.user.SysVersion;
 import com.wj.core.repository.base.SysVersionRepository;
 import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.mapper.JsonMapper;
+import com.wj.core.util.time.ClockUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +22,6 @@ public class SystemService {
 
     public SysVersion getVer() {
         SysVersion v = sysVersionRepository.findFirstByOrderBySysVerDesc();
-
         return v;
     }
 
@@ -40,6 +40,9 @@ public class SystemService {
 
     @Transactional
     public void save(SysVersion version) {
+        if (version != null) {
+            version.setCreateDate(ClockUtil.currentDate());
+        }
         sysVersionRepository.save(version);
         JsonMapper mapper = JsonMapper.defaultMapper();
         //JPush.sendPushAll("SYS", mapper.toJson(version));
