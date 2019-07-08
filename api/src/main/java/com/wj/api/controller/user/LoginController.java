@@ -22,6 +22,7 @@ import com.wj.core.service.user.UserInfoService;
 import com.wj.core.util.mapper.BeanMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +102,7 @@ public class LoginController {
         String smsCode = String.valueOf(code);
         try {
             if (code == null) {
-                smsCode = CommonUtils.createRandomNum(6);// 生成随机数
+                smsCode = CommonUtils.createRandomNum(4);// 生成随机数
                 redisHelper.valuePut(userName, smsCode);
             }
             // 发送验证码
@@ -138,8 +139,11 @@ public class LoginController {
         String smsCode = request.getParameter("smsCode");
         LoginDTO loginDTO = new LoginDTO();
         Object data = redisHelper.getValue(userName);
-        if (!String.valueOf(data).equals(smsCode)) {
-            throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
+        // TODO 测试期间0000放行
+        if (!smsCode.equals("0000") && StringUtils.isNotBlank(smsCode)) {
+            if (!String.valueOf(data).equals(smsCode)) {
+                throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
         }
         String key = request.getParameter("key");
         if (key == null) {

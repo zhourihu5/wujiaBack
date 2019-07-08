@@ -45,7 +45,7 @@ public class SystemService {
         }
         sysVersionRepository.save(version);
         JsonMapper mapper = JsonMapper.defaultMapper();
-        //JPush.sendPushAll("SYS", mapper.toJson(version));
+        JPush.sendPushAll("SYS", mapper.toJson(version));
     }
 
 }
