@@ -51,10 +51,12 @@ public class SystemService {
         }
         sysVersionRepository.save(version);
         if (StringUtils.isNotBlank(version.getCommuntityId())) {
-        } else {
             List<String> tags = Arrays.asList(version.getCommuntityId().split(","));
             JsonMapper mapper = JsonMapper.defaultMapper();
             JPush.sendPushAll(tags, "SYS", mapper.toJson(version));
+        } else {
+            JsonMapper mapper = JsonMapper.defaultMapper();
+            JPush.sendPushAll("SYS", mapper.toJson(version));
         }
 
     }
