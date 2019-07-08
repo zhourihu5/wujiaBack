@@ -35,6 +35,10 @@ public class JPush {
 
     // 使用 NettyHttpClient 异步接口发送请求
     public static void sendMsgPush(List<String> tags) {
+        sendPushAll(tags, MSG_TYPE, MSG_CONTENT);
+    }
+
+    public static void sendPushAll(List<String> tags, String type, String content) {
         LOG.info("send user : " + tags.toString());
         ClientConfig clientConfig = ClientConfig.getInstance();
         String host = (String) clientConfig.get(ClientConfig.PUSH_HOST_NAME);
@@ -42,7 +46,7 @@ public class JPush {
                 null, clientConfig);
         try {
             URI uri = new URI(host + clientConfig.get(ClientConfig.PUSH_PATH));
-            PushPayload payload = buildPushMessageAsTag(tags, MSG_TYPE, MSG_CONTENT);
+            PushPayload payload = buildPushMessageAsTag(tags, type, content);
 
             client.sendRequest(HttpMethod.POST, payload.toString(), uri, responseWrapper -> LOG.info("Got result: " + responseWrapper.responseContent));
         } catch (URISyntaxException e) {

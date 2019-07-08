@@ -2,9 +2,12 @@ package com.wj.core.service.user;
 
 import com.wj.core.entity.user.SysVersion;
 import com.wj.core.repository.base.SysVersionRepository;
+import com.wj.core.util.collection.ArrayUtil;
 import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.mapper.JsonMapper;
 import com.wj.core.util.time.ClockUtil;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class SystemService {
@@ -44,8 +50,13 @@ public class SystemService {
             version.setCreateDate(ClockUtil.currentDate());
         }
         sysVersionRepository.save(version);
-        JsonMapper mapper = JsonMapper.defaultMapper();
-        JPush.sendPushAll("SYS", mapper.toJson(version));
+        if (StringUtils.isNotBlank(version.getCommuntityId())) {
+        } else {
+            List<String> tags = Arrays.asList(version.getCommuntityId().split(","));
+            JsonMapper mapper = JsonMapper.defaultMapper();
+            JPush.sendPushAll(tags, "SYS", mapper.toJson(version));
+        }
+
     }
 
 }

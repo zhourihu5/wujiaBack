@@ -3,10 +3,7 @@ package com.wj.core.entity.user;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -26,5 +23,7 @@ public class SysVersion {
     private Date createDate;
     private String versionDesc;
     private String url;
+    @Transient
+    private String communtityId;
 
 }
