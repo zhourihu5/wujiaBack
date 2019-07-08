@@ -133,12 +133,15 @@ public class CardService {
         }
         OpCard opCard = cardRepository.save(card);
         List<SysUserFamily> userFamilyList = userFamilyService.findByIdentity(1);
-        userFamilyList.forEach(userFamily -> {
-            Integer userId = userFamily.getUserFamily().getUserId();
-            cardRepository.insertUserCard(userId, opCard.getId(), CardStatus.YES.ordinal());
+        userFamilyList.forEach(SysUserFamily -> {
+            Integer userId = SysUserFamily.getUserFamily().getUserId();
+            Integer count = cardRepository.findUserCardCount(userId, opCard.getId());
+            if (count == 0) {
+                cardRepository.insertUserCard(userId, opCard.getId(), CardStatus.YES.ordinal());
+            }
         });
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        JPush.sendCardSchedulePush("card_schedule_push_" + opCard.getId(), formatter.format(opCard.getPushDate()), "add card message");
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        JPush.sendCardSchedulePush("card_schedule_push_" + opCard.getId(), formatter.format(opCard.getPushDate()), "add card message");
     }
 
     @Transactional

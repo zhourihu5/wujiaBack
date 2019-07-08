@@ -105,7 +105,7 @@ public class LoginController {
                 redisHelper.valuePut(userName, smsCode);
             }
             // 发送验证码
-            String message = sendSms.send(userName, smsCode);
+//            String message = sendSms.send(userName, smsCode);
             //TimerTask实现5分钟后从session中删除smsCode验证码
             final Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -117,7 +117,7 @@ public class LoginController {
                 }
             }, 5 * 60 * 1000);
 //            return ResponseMessage.ok();
-            return ResponseMessage.ok(message);
+            return ResponseMessage.ok(smsCode);
         } catch (Exception e) {
             e.printStackTrace();
         }

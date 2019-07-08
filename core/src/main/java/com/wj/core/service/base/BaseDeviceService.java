@@ -55,6 +55,10 @@ public class BaseDeviceService {
      */
     public void saveDevice(BaseDeviceDTO deviceDTO) {
         BaseDevice device = BeanMapper.map(deviceDTO, BaseDevice.class);
+        Integer count = baseDeviceRepository.findCountByKey(device.getDeviceKey());
+        if (count > 0) {
+            throw new ServiceException("此设备编码已经存在", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         baseDeviceRepository.save(device);
     }
 

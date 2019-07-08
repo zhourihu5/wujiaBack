@@ -49,7 +49,7 @@ public class ServeController {
     public ResponseMessage<List<OpService>> subscribeList() {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("用户订阅服务列表接口:/v1/service/subscribeList userId=" + claims.get("userId"));
+        logger.info("用户订阅服务列表排行榜 接口:/v1/service/subscribeList userId=" + claims.get("userId"));
         List<OpService> serviceList = serviceService.findAll();
         serviceList.forEach(OpService -> {
             OpService.setSubscribeNum(serviceService.findCountByServiceId(OpService.getId()));
@@ -69,10 +69,22 @@ public class ServeController {
         String token = JwtUtil.getJwtToken();
         // 通过token获取用户信息
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("广告分页信息 接口:/v1/service/findAll userId=" + claims.get("userId"));
+        logger.info("服务分页列表 接口:/v1/service/findAll userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<OpService> page = serviceService.findAllPage(type, status, pageable);
+        return ResponseMessage.ok(page);
+    }
+
+    @ApiOperation(value = "服务分页列表", notes = "服务分页列表")
+    @GetMapping("findAllByNull")
+    public ResponseMessage<Page<OpService>> findAllByNull(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("服务分页列表 接口:/v1/service/findAllByNull userId=" + claims.get("userId"));
+        pageNum = pageNum - 1;
+        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Page<OpService> page = serviceService.findAllByNull(pageable);
         return ResponseMessage.ok(page);
     }
 

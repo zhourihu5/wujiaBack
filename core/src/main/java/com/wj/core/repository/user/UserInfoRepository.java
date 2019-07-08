@@ -31,7 +31,7 @@ public interface UserInfoRepository extends JpaRepository<SysUserInfo, Integer> 
     public SysUserInfo findByName(String name);
 
     /**
-     * 根据名字查询用户信息
+     * 根据id查询用户信息
      *
      * @param uid
      * @return SysUserInfo

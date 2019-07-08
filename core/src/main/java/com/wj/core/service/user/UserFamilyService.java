@@ -1,10 +1,15 @@
 package com.wj.core.service.user;
 
+import com.wj.core.entity.card.OpCard;
+import com.wj.core.entity.card.PadModule;
+import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.entity.user.enums.UserIdentity;
 import com.wj.core.repository.base.BaseFamilyRepository;
+import com.wj.core.repository.card.CardRepository;
+import com.wj.core.repository.card.PadModuleRepository;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
@@ -13,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +33,13 @@ public class UserFamilyService {
 
     @Autowired
     private BaseFamilyRepository baseFamilyRepository;
+
+    @Autowired
+    private PadModuleRepository padModuleRepository;
+
+    @Autowired
+    private CardRepository cardRepository;
+
 
     /**
      * 根据用户ID查询所属家庭
@@ -91,6 +104,15 @@ public class UserFamilyService {
             if (count > 0)
                 throw new ServiceException("不能重复添加户主", ErrorCode.INTERNAL_SERVER_ERROR);
         }
+        // 查询所有卡片
+        List<OpCard> list = cardRepository.findAll();
+        list.forEach(OpCard -> {
+            // 绑定用户和卡片关系
+            Integer count = cardRepository.findUserCardCount(userFamily.getUserFamily().getUserId(), OpCard.getId());
+            if (count == 0) {
+                cardRepository.insertUserCard(userFamily.getUserFamily().getUserId(), OpCard.getId(), CardStatus.YES.ordinal());
+            }
+        });
         userFamilyRepository.save(userFamily);
     }
 

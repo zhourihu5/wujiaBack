@@ -36,6 +36,7 @@ public interface BaseDeviceRepository extends JpaRepository<BaseDevice, Integer>
     @Query(value = "select * from base_device where flag = ?1 and status = ?2", nativeQuery = true)
     public Page<BaseDevice> findAll(Integer flag, Integer status, Pageable pageable);
 
-
+    @Query(value = "select count(*) from base_device where device_key = ?1", nativeQuery = true)
+    public Integer findCountByKey(String key);
 
 }

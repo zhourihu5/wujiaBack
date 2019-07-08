@@ -166,9 +166,13 @@ public class ServeService {
         } else if (status != null) {
             page = serviceRepository.findByStatus(status, pageable);
         } else {
-            page = serviceRepository.findAll(pageable);
+            page = serviceRepository.findAppAll(pageable);
         }
         return page;
+    }
+
+    public Page<OpService> findAllByNull(Pageable pageable) {
+        return serviceRepository.findAll(pageable);
     }
 
     /**

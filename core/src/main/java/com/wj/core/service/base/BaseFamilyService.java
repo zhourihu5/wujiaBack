@@ -2,6 +2,8 @@ package com.wj.core.service.base;
 
 import com.wj.core.entity.base.*;
 import com.wj.core.repository.base.*;
+import com.wj.core.repository.user.UserFamilyRepository;
+import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,12 @@ public class BaseFamilyService {
 
     @Autowired
     private FamilyCommuntityRepository familyCommuntityRepository;
+
+    @Autowired
+    private UserFamilyRepository userFamilyRepository;
+
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     /**
      * 保存家庭信息
@@ -129,6 +137,10 @@ public class BaseFamilyService {
                 throw new ServiceException("社区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
             }
             baseFamily.setCommuntityName(communtity.getName());
+            Integer userId = userFamilyRepository.getUserId(baseFamily.getId(), 1);
+            if (userId != null && userId > 0) {
+                baseFamily.setUserInfo(userInfoRepository.findByUserId(userId));
+            }
         }
         return page;
     }

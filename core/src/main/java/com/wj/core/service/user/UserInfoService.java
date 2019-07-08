@@ -130,15 +130,19 @@ public class UserInfoService {
      * @return void
      */
     public Page<SysUserInfo> findAll(String userName, String nickName, Pageable pageable) {
+        Page<SysUserInfo> page = null;
         if (!CommonUtils.isNull(userName) && !CommonUtils.isNull(nickName)) {
-            return userInfoRepository.findByUserNameAndNickName(userName, nickName, pageable);
+            page = userInfoRepository.findByUserNameAndNickName(userName, nickName, pageable);
         } else if (!CommonUtils.isNull(userName) && CommonUtils.isNull(nickName)) {
-            return userInfoRepository.findByUserName(userName, pageable);
+            page = userInfoRepository.findByUserName(userName, pageable);
         } else if (CommonUtils.isNull(userName) && !CommonUtils.isNull(nickName)) {
-            return userInfoRepository.findByNickName(nickName, pageable);
+            page = userInfoRepository.findByNickName(nickName, pageable);
         } else {
-            return userInfoRepository.findAll(pageable);
+            page = userInfoRepository.findAll(pageable);
         }
+        //根据用户id查询家庭
+        //根据家庭id查询社区
+        return page;
     }
 
     /**
