@@ -1,6 +1,8 @@
 package com.wj.admin.utils;
 
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -36,7 +38,7 @@ public class JwtUtil {
      */
     public static String createJwt(Map<String, Object> claims) {
         return "Bearer " + Jwts.builder().setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 120 * 1000L))  //过期时间
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 1 * 1000L))  //过期时间
                 .signWith(SignatureAlgorithm.HS512, base64Secret).compact();  //加密方式
     }
 
@@ -52,7 +54,7 @@ public class JwtUtil {
                     .parseClaimsJws(jwtToken).getBody();
             return claims;
         } catch (Exception ex) {
-            return null;
+            throw new ServiceException("token失效", ErrorCode.FORBIDDEN);
         }
     }
 
