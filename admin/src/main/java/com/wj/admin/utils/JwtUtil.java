@@ -1,6 +1,8 @@
 package com.wj.admin.utils;
 
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -52,7 +54,7 @@ public class JwtUtil {
                     .parseClaimsJws(jwtToken).getBody();
             return claims;
         } catch (Exception ex) {
-            return null;
+            throw new ServiceException("token失效", ErrorCode.FORBIDDEN);
         }
     }
 

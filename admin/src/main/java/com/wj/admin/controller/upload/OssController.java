@@ -27,6 +27,9 @@ public class OssController {
     private static final String SCREEN = "screen";
     private static final String BANNER = "banner";
     private static final String APK = "apk";
+    private static final String CARD_CONTENT = "card_content";
+    @Value("${wj.oss.access}")
+    private String url;
     /**
      * @param
      * @MethodName ossUpload
@@ -56,6 +59,21 @@ public class OssController {
         }
         if (type.equals(APK)) {
             path = ossUploadService.ossUpload(file, "apk/package");
+        }
+        if (type.equals(CARD_CONTENT)) {
+            path = ossUploadService.ossUpload(file, "images/card/content");
+        }
+        return ResponseMessage.ok(path);
+    }
+
+    @PostMapping("/uploadMult")
+    public ResponseMessage<String> uploadMult(@RequestParam("file") MultipartFile[] file, String type) {
+        String path = "";
+        if (type.equals(CARD_CONTENT)) {
+            for (MultipartFile f : file) {
+                path = ossUploadService.ossUpload(f, "images/card/content");
+                path = url + path;
+            }
         }
         return ResponseMessage.ok(path);
     }
