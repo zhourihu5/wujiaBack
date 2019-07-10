@@ -1,6 +1,7 @@
 package com.wj.core.entity.message;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wj.core.util.time.DateJsonSerializer;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class Message {
     private String content;
     private Integer type;
     private Integer status;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonSerialize(using = DateJsonSerializer.class)
     private Date createDate;
     @Transient
     private Integer isRead;
