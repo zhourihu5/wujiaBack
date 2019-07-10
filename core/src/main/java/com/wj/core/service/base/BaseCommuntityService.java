@@ -8,6 +8,7 @@ import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.base.BaseAreaRepository;
 import com.wj.core.repository.base.BaseCommuntityRepository;
+import com.wj.core.repository.base.BaseIssueRepository;
 import com.wj.core.repository.base.FamilyCommuntityRepository;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
@@ -39,6 +40,9 @@ public class BaseCommuntityService {
 
     @Autowired
     private UserInfoRepository userInfoRepository;
+
+    @Autowired
+    private BaseIssueRepository baseIssueRepository;
 
 
     /**
@@ -100,7 +104,14 @@ public class BaseCommuntityService {
      * @return List<BaseCommuntity>
      */
     public List<BaseCommuntity> findByAreaCode(Integer areaCode) {
-        return baseCommuntityRepository.findByAreaCode(areaCode);
+        List<BaseCommuntity> communtityList = baseCommuntityRepository.findByAreaCode(areaCode);
+        communtityList.forEach(BaseCommuntity -> {
+            Integer count = baseIssueRepository.findCountByCommuntityId(BaseCommuntity.getId());
+            if (count > 0) {
+
+            }
+        });
+        return communtityList;
     }
 
     /**

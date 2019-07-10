@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,8 +13,10 @@ import java.util.Date;
  * 设备表
  */
 @ApiModel(description = "设备表")
+@Data
 @Entity
 public class BaseDevice {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -40,91 +43,4 @@ public class BaseDevice {
     @Transient
     private String address;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getFlag() {
-        return flag;
-    }
-
-    public void setFlag(Integer flag) {
-        this.flag = flag;
-    }
-
-    public String getDeviceKey() {
-        return deviceKey;
-    }
-
-    public void setDeviceKey(String deviceKey) {
-        this.deviceKey = deviceKey;
-    }
-
-    public Integer getFamilyId() {
-        return familyId;
-    }
-
-    public void setFamilyId(Integer familyId) {
-        this.familyId = familyId;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public String getButtonKey() {
-        return buttonKey;
-    }
-
-    public void setButtonKey(String buttonKey) {
-        this.buttonKey = buttonKey;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Date getOutDate() {
-        return outDate;
-    }
-
-    public void setOutDate(Date outDate) {
-        this.outDate = outDate;
-    }
-
-    public Date getInstallDate() {
-        return installDate;
-    }
-
-    public void setInstallDate(Date installDate) {
-        this.installDate = installDate;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 }

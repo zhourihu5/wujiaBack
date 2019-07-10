@@ -28,6 +28,10 @@ public class BaseFamily {
     private Integer unitId;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
+    @ApiModelProperty(value = "节点")
+    private String directory;
+    @ApiModelProperty(value = "节点名称")
+    private String structureName;
     @Transient
     private String communtityName;
     @ApiModelProperty(value = "楼名称")

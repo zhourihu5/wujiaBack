@@ -5,26 +5,24 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
-/*
- * 单元表
- */
-@ApiModel(description = "单元表")
+@ApiModel(description = "期")
 @Data
 @Entity
-public class BaseUnit {
-
+public class BaseIssue {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ApiModelProperty(value = "单元号")
+    @ApiModelProperty(value = "期的名称")
     private String num;
-    @ApiModelProperty(value = "每个单元共有多少楼层")
-    private Integer storey;
-    @ApiModelProperty(value = "楼ID")
-    private Integer floorId;
+    @ApiModelProperty(value = "所属社区id")
+    private Integer communtityId;
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
@@ -32,11 +30,5 @@ public class BaseUnit {
     private String directory;
     @ApiModelProperty(value = "节点名称")
     private String structureName;
-    @ApiModelProperty(value = "社区名称")
-    @Transient
-    private String communtityName;
-    @ApiModelProperty(value = "楼名称")
-    @Transient
-    private String floorName;
 
 }
