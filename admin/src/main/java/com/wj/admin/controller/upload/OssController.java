@@ -62,15 +62,17 @@ public class OssController {
         }
         if (type.equals(CARD_CONTENT)) {
             path = ossUploadService.ossUpload(file, "images/card/content");
+            path = url + path;
         }
         return ResponseMessage.ok(path);
     }
 
+
     @PostMapping("/uploadMult")
-    public ResponseMessage<String> uploadMult(@RequestParam("file") MultipartFile[] file, String type) {
+    public ResponseMessage<String> uploadMult(@RequestParam("file") MultipartFile[] files, String type) {
         String path = "";
         if (type.equals(CARD_CONTENT)) {
-            for (MultipartFile f : file) {
+            for (MultipartFile f : files) {
                 path = ossUploadService.ossUpload(f, "images/card/content");
                 path = url + path;
             }

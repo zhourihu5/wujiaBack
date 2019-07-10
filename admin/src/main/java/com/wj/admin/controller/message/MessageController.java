@@ -55,7 +55,6 @@ public class MessageController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("推送消息 接口:/v1/message/pushMessage userId=" + claims.get("userId"));
-        message.setCreateDate(new Date());
         Message messages = messageService.saveMessage(message);
         if (messages == null) throw new ServiceException("消息保存异常", ErrorCode.INTERNAL_SERVER_ERROR);
         messageService.pushMessage(messages.getId(), messages.getCommuntity());

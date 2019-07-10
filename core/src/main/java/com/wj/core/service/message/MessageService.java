@@ -9,6 +9,7 @@ import com.wj.core.repository.message.MessageRepository;
 import com.wj.core.repository.message.MessageUserRepository;
 import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.util.jiguang.JPush;
+import com.wj.core.util.time.ClockUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ public class MessageService {
 
     @Transactional
     public Message saveMessage(Message message) {
+        message.setCreateDate(ClockUtil.currentDate());
         return messageRepository.save(message);
     }
 
