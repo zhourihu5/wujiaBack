@@ -4,9 +4,11 @@ import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.message.Message;
 import com.wj.core.entity.message.SysMessageUser;
+import com.wj.core.entity.message.dto.MessageDTO;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.message.MessageService;
+import com.wj.core.util.mapper.BeanMapper;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -51,11 +53,12 @@ public class MessageController {
 
     @ApiOperation(value="推送消息")
     @PostMapping("pushMessage")
-    public ResponseMessage pushMessage(@RequestBody Message message) {
+    public ResponseMessage pushMessage(@RequestBody MessageDTO message) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("推送消息 接口:/v1/message/pushMessage userId=" + claims.get("userId"));
-        Message messages = messageService.saveMessage(message);
+        Message m = BeanMapper.map(message, Message.class);
+        Message messages = messageService.saveMessage(m);
         if (messages == null) throw new ServiceException("消息保存异常", ErrorCode.INTERNAL_SERVER_ERROR);
         messageService.pushMessage(messages.getId(), messages.getCommuntity());
         return ResponseMessage.ok();
