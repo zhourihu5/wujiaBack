@@ -18,13 +18,13 @@ public interface MessageUserRepository extends JpaRepository<SysMessageUser, Int
     @Query(value = "update sys_message_user set is_read = ?3 where message_id = ?1 and user_id = ?2", nativeQuery = true)
     public Integer updateIsRead(Integer messageId, Integer userId, Integer isRead);
 
-    @Query(value = "select is_read from sys_message_user where message_id = ?1 and user_id = ?2", nativeQuery = true)
-    public Integer findByMessageAndUser(Integer messageId, Integer userId);
+    @Query(value = "select is_read from sys_message_user where message_id = ?1 and user_id = ?2 and family_id = ?3", nativeQuery = true)
+    public Integer findByMessageAndUser(Integer messageId, Integer userId, Integer familyId);
 
     @Query(value = "select count(*) from sys_message_user where user_id = ?1 and is_read = ?2", nativeQuery = true)
     public Integer isUnReadMessage(Integer userId, Integer isRead);
 
     @Modifying
-    @Query(value = "insert into sys_message_user(message_id, user_id, is_read, create_date) values(?1,?2,?3,?4)", nativeQuery = true)
-    public Integer addMessageUser(Integer messageId, Integer userId, Integer isRead, Date date);
+    @Query(value = "insert into sys_message_user(message_id, user_id, family_id, is_read, create_date) values(?1,?2,?3,?4,?5)", nativeQuery = true)
+    public Integer addMessageUser(Integer messageId, Integer userId, Integer familyId, Integer isRead, Date date);
 }

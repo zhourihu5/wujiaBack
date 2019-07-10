@@ -4,12 +4,12 @@ import com.google.common.collect.Lists;
 import com.wj.core.entity.message.Message;
 import com.wj.core.entity.message.SysMessageUser;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.entity.user.dto.SysUserInfoDTO;
 import com.wj.core.repository.message.MessageCommuntityRepository;
 import com.wj.core.repository.message.MessageRepository;
 import com.wj.core.repository.message.MessageUserRepository;
 import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.util.jiguang.JPush;
-import com.wj.core.util.time.ClockUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +36,6 @@ public class MessageService {
 
     @Transactional
     public Message saveMessage(Message message) {
-        message.setCreateDate(ClockUtil.currentDate());
         return messageRepository.save(message);
     }
 
@@ -45,19 +44,19 @@ public class MessageService {
         messageUserRepository.save(messageUser);
     }
 
-    public Page<Message> findListByUserId(Integer userId, Integer isRead, Integer type, Pageable pageable) {
+    public Page<Message> findListByUserId(Integer userId, Integer familyId, Integer isRead, Integer type, Pageable pageable) {
         Page<Message> page = null;
         if (type != null && isRead != null) {
-            page = messageRepository.findByUserIdAndIsRead(userId, isRead, type, pageable);
+            page = messageRepository.findByUserIdAndIsRead(userId, familyId, isRead, type, pageable);
         } else if (type != null && isRead == null) {
-            page = messageRepository.findByUserId(userId, type, pageable);
+            page = messageRepository.findByUserId(userId, familyId, type, pageable);
         } else if (type == null && isRead != null) {
-            page = messageRepository.findByUserIdAndIsRead(userId, isRead, pageable);
+            page = messageRepository.findByUserIdAndIsRead(userId, familyId, isRead, pageable);
         } else {
-            page = messageRepository.findByUserId(userId, pageable);
+            page = messageRepository.findByUserId(userId, familyId, pageable);
         }
         for (Message message : page) {
-            Integer status = messageUserRepository.findByMessageAndUser(message.getId(), userId);
+            Integer status = messageUserRepository.findByMessageAndUser(message.getId(), userId, familyId);
             if (status == null) {
                 message.setIsRead(0);
             } else {
@@ -67,8 +66,8 @@ public class MessageService {
         return page;
     }
 
-    public List<Message> findTopThreeByUserId(Integer userId, Integer isRead) {
-        return messageRepository.findTopThreeByUserId(userId, isRead);
+    public List<Message> findTopThreeByUserId(Integer userId, Integer familyId, Integer isRead) {
+        return messageRepository.findTopThreeByUserId(userId, familyId, isRead);
     }
 
     @Transactional
@@ -116,10 +115,10 @@ public class MessageService {
             // 保存消息和社区关系
             tagList.add("community_" + strArray[i]);
             messageCommuntityRepository.addMessageCommuntity(messageId, Integer.valueOf(strArray[i]), new Date());
-            List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
+            List<SysUserInfoDTO> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
             list.forEach(SysUserInfo -> {
                 // 保存消息和用户关系R
-                messageUserRepository.addMessageUser(messageId, SysUserInfo.getId(), 0, new Date());
+                messageUserRepository.addMessageUser(messageId, SysUserInfo.getId(), SysUserInfo.getFid(), 0, new Date());
             });
             // 消息推送
             JPush.sendMsgPush(tagList);
