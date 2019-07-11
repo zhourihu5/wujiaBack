@@ -19,8 +19,10 @@ public class BaseStorey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ApiModelProperty(value = "单元名称")
-    private String num;
+    @ApiModelProperty(value = "层数名称")
+    private String name;
+    @ApiModelProperty(value = "层数")
+    private Integer num;
     @ApiModelProperty(value = "所属单元id")
     private Integer unitId;
     @ApiModelProperty(value = "创建时间")
@@ -30,5 +32,7 @@ public class BaseStorey {
     private String directory;
     @ApiModelProperty(value = "节点名称")
     private String structureName;
+    @ApiModelProperty(value = "每层楼的家庭数量")
+    private Integer familyCount;
 
 }

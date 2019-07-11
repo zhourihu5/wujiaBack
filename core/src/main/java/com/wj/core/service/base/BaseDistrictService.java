@@ -3,6 +3,7 @@ package com.wj.core.service.base;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDistrict;
 import com.wj.core.entity.base.BaseFloor;
+import com.wj.core.entity.base.BaseIssue;
 import com.wj.core.repository.base.BaseCommuntityRepository;
 import com.wj.core.repository.base.BaseDistrictRepository;
 import com.wj.core.repository.base.BaseFloorRepository;
@@ -32,23 +33,24 @@ public class BaseDistrictService {
         baseDistrictRepository.save(district);
     }
 
-    public Page<BaseDistrict> findAll(Integer issueId, Pageable pageable) {
+    public Page<BaseDistrict> findAll(Integer communtityId, Integer issueId, Pageable pageable) {
         Page<BaseDistrict> page = null;
-        if (issueId != null) {
+        if (communtityId != null) {
+            page = baseDistrictRepository.findByCommuntityId(communtityId, pageable);
+        } else if (issueId != null) {
             page = baseDistrictRepository.findByIssueId(issueId, pageable);
         } else {
             page = baseDistrictRepository.findAll(pageable);
         }
-//        for (BaseDistrict baseDistrict : page) {
-//            BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(baseFloor.getCommuntityId());
-//            if (communtity == null)
-//                throw new ServiceException("社区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
-//            baseFloor.setCommuntityName(communtity.getName());
-//        }
         return page;
+    }
+
+    public List<BaseDistrict> findByCommuntityId(Integer communtityId) {
+        return baseDistrictRepository.findByCommuntityId(communtityId);
     }
 
     public List<BaseDistrict> findByIssueId(Integer issueId) {
         return baseDistrictRepository.findByIssueId(issueId);
     }
+
 }

@@ -17,6 +17,9 @@ public interface BaseStoreyRepository extends JpaRepository<BaseStorey, Integer>
     @Query(value = "select * from base_storey where unit_id = ?1", nativeQuery = true)
     public List<BaseStorey> findByUnitId(Integer unitId);
 
+    @Query(value = "select * from base_storey where unit_id = ?1", nativeQuery = true)
+    public Page<BaseStorey> findByUnitId(Integer unitId, Pageable pageable);
+
     @Query(value = "select count(*) from base_storey where unit_id = ?1", nativeQuery = true)
     public Integer findCountByUnitId(Integer unitId);
 

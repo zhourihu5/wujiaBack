@@ -5,10 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @ApiModel(description = "区")
@@ -20,7 +17,9 @@ public class BaseDistrict {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "区的名称")
-    private String num;
+    private String name;
+    @ApiModelProperty(value = "所属社区的id")
+    private Integer communtityId;
     @ApiModelProperty(value = "所属期的id")
     private Integer issueId;
     @ApiModelProperty(value = "创建时间")
@@ -30,5 +29,7 @@ public class BaseDistrict {
     private String directory;
     @ApiModelProperty(value = "节点名称")
     private String structureName;
+    @Transient
+    private String NodeDisplay;
 
 }

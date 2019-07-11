@@ -5,6 +5,7 @@ import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseFloor;
 import com.wj.core.repository.base.BaseCommuntityRepository;
 import com.wj.core.repository.base.BaseFloorRepository;
+import com.wj.core.repository.base.BaseUnitRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.CommonUtils;
@@ -22,6 +23,9 @@ public class BaseFloorService {
 
     @Autowired
     private BaseFloorRepository baseFloorRepository;
+
+    @Autowired
+    private BaseUnitRepository baseUnitRepository;
 
     @Autowired
     private BaseCommuntityRepository baseCommuntityRepository;

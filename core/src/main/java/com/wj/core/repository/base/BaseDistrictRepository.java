@@ -17,4 +17,15 @@ public interface BaseDistrictRepository extends JpaRepository<BaseDistrict, Inte
     @Query(value = "select * from base_district where issue_id = ?1", nativeQuery = true)
     public Page<BaseDistrict> findByIssueId(Integer issueId, Pageable pageable);
 
+    @Query(value = "select count(*) from base_district where issue_id = ?1", nativeQuery = true)
+    public Integer findCountByIssueId(Integer issueId);
+
+    @Query(value = "select * from base_district where communtity_id = ?1", nativeQuery = true)
+    public List<BaseDistrict> findByCommuntityId(Integer communtityId);
+
+    @Query(value = "select * from base_district where communtity_id = ?1", nativeQuery = true)
+    public Page<BaseDistrict> findByCommuntityId(Integer communtityId, Pageable pageable);
+
+    @Query(value = "select count(*) from base_district where communtity_id = ?1", nativeQuery = true)
+    public Integer findCountByCommuntityId(Integer communtityId);
 }

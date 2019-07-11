@@ -1,5 +1,6 @@
 package com.wj.core.service.base;
 
+import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDistrict;
 import com.wj.core.entity.base.BaseIssue;
 import com.wj.core.repository.base.BaseCommuntityRepository;
@@ -19,6 +20,9 @@ public class BaseIssueService {
 
     @Autowired
     private BaseIssueRepository baseIssueRepository;
+
+    @Autowired
+    private BaseDistrictRepository baseDistrictRepository;
 
     @Autowired
     private BaseCommuntityRepository baseCommuntityRepository;
@@ -46,6 +50,18 @@ public class BaseIssueService {
     }
 
     public List<BaseIssue> findByCommuntityId(Integer communtityId) {
+        List<BaseIssue> issueList = baseIssueRepository.findByCommuntityId(communtityId);
+        for (BaseIssue baseIssue: issueList) {
+            Integer districtCount = baseDistrictRepository.findCountByIssueId(baseIssue.getId());
+            if (districtCount != null && districtCount > 0) {
+                //有区
+                baseIssue.setNodeDisplay("区");
+                break;
+            }
+            // 没有区就是楼了
+            baseIssue.setNodeDisplay("楼");
+        }
         return baseIssueRepository.findByCommuntityId(communtityId);
     }
+
 }

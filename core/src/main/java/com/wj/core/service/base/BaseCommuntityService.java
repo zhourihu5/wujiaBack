@@ -7,10 +7,7 @@ import com.wj.core.entity.base.embeddable.FamilyCommuntity;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.SysUserInfoDTO;
-import com.wj.core.repository.base.BaseAreaRepository;
-import com.wj.core.repository.base.BaseCommuntityRepository;
-import com.wj.core.repository.base.BaseIssueRepository;
-import com.wj.core.repository.base.FamilyCommuntityRepository;
+import com.wj.core.repository.base.*;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.util.CommonUtils;
@@ -42,6 +39,9 @@ public class BaseCommuntityService {
 
     @Autowired
     private BaseIssueRepository baseIssueRepository;
+
+    @Autowired
+    private BaseDistrictRepository baseDistrictRepository;
 
 
     /**
@@ -100,19 +100,52 @@ public class BaseCommuntityService {
      * 根据市code查询当前所有社区
      *
      * @param areaCode
-     * @return List<BaseCommuntity>
+     * @return List<Map<String, BaseCommuntity>>
      */
+    public List<Map<String, BaseCommuntity>> findByAreaCodeV2(Integer areaCode) {
+        List<BaseCommuntity> communtityList = baseCommuntityRepository.findByAreaCode(areaCode);
+        List<Map<String, BaseCommuntity>> list = new ArrayList<Map<String, BaseCommuntity>>();
+        for (BaseCommuntity baseCommuntity: communtityList) {
+            Map<String, BaseCommuntity> map = new HashMap<>();
+            Integer issueCount = baseIssueRepository.findCountByCommuntityId(baseCommuntity.getId());
+            if (issueCount > 0) {
+                map.put("期", baseCommuntity);
+                //有期
+                break;
+            }
+            // 没有期
+            Integer districtCount = baseDistrictRepository.findCountByCommuntityId(baseCommuntity.getId());
+            if (districtCount > 0) {
+                map.put("区", baseCommuntity);
+                //有区
+                break;
+            }
+            // 没有期和区就是楼了
+            map.put("楼", baseCommuntity);
+        }
+        return list;
+    }
     public List<BaseCommuntity> findByAreaCode(Integer areaCode) {
         List<BaseCommuntity> communtityList = baseCommuntityRepository.findByAreaCode(areaCode);
-        communtityList.forEach(BaseCommuntity -> {
-            Integer count = baseIssueRepository.findCountByCommuntityId(BaseCommuntity.getId());
-            if (count > 0) {
-
+        for (BaseCommuntity baseCommuntity: communtityList) {
+            Integer issueCount = baseIssueRepository.findCountByCommuntityId(baseCommuntity.getId());
+            if (issueCount != null && issueCount > 0) {
+                //有期
+                baseCommuntity.setNodeDisplay("期");
+                break;
             }
-        });
+            // 没有期
+            Integer districtCount = baseDistrictRepository.findCountByCommuntityId(baseCommuntity.getId());
+            if (districtCount != null && districtCount > 0) {
+                //有区
+                baseCommuntity.setNodeDisplay("区");
+                break;
+            }
+            // 没有期和区就是楼了
+            baseCommuntity.setNodeDisplay("楼");
+        }
         return communtityList;
     }
-
     /**
      * 根据社区ID查询当前社区所有用户
      *

@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Api(value = "/v1/communtity", tags = "社区接口模块")
 @RestController
@@ -73,6 +74,16 @@ public class BaseCommuntityController {
         List<BaseCommuntity> list = baseCommuntityService.findByAreaCode(areaCode);
         return ResponseMessage.ok(list);
     }
+
+//    @ApiOperation(value = "查询区下所属社区", notes = "查询区下所属社区")
+//    @GetMapping("findByArea")
+//    public ResponseMessage<List<Map<String, BaseCommuntity>>> findByArea(Integer areaCode) {
+//        String token = JwtUtil.getJwtToken();
+//        Claims claims = JwtUtil.parseJwt(token);
+//        logger.info("查询区下所属社区接口:/v1/communtity/findByArea userId=" + claims.get("userId"));
+//        List<Map<String, BaseCommuntity>> list = baseCommuntityService.findByAreaCodeV2(areaCode);
+//        return ResponseMessage.ok(list);
+//    }
 
     @ApiOperation(value = "根据社区查询所有用户", notes = "根据社区查询所有用户")
     @GetMapping("findUserListByCid")
