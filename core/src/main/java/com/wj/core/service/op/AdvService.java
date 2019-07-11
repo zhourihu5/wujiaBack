@@ -11,6 +11,7 @@ import com.wj.core.entity.op.dto.AdvertDTO;
 import com.wj.core.entity.op.embeddable.FamilyService;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.ServiceAllDTO;
+import com.wj.core.entity.user.dto.SysUserInfoDTO;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.op.*;
 import com.wj.core.repository.user.UserInfoRepository;
@@ -120,7 +121,7 @@ public class AdvService {
             // 保存广告和社区关系
             tagList.add("community_" + strArray[i]);
             advCommuntityRepository.addAdvCommuntity(advId, Integer.valueOf(strArray[i]), new Date());
-            List<SysUserInfo> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
+            List<SysUserInfoDTO> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
             list.forEach(SysUserInfo -> {
                 // 保存广告和用户关系
                 advUserRepository.addAdvUser(advId, SysUserInfo.getId(), new Date());

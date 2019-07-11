@@ -6,6 +6,7 @@ import com.wj.core.entity.base.SysFamilyCommuntity;
 import com.wj.core.entity.base.embeddable.FamilyCommuntity;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.entity.user.dto.SysUserInfoDTO;
 import com.wj.core.repository.base.BaseAreaRepository;
 import com.wj.core.repository.base.BaseCommuntityRepository;
 import com.wj.core.repository.base.BaseIssueRepository;
@@ -19,9 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class BaseCommuntityService {
@@ -120,14 +119,30 @@ public class BaseCommuntityService {
      * @param communtityId
      * @return List<SysUserInfo>
      */
-    public List<SysUserInfo> findUserListByCid(Integer communtityId) {
-        List<SysUserInfo> list = new ArrayList<>();
+//    public List<SysUserInfo> findUserListByCid(Integer communtityId) {
+//        List<SysUserInfo> list = new ArrayList<SysUserInfo>();
+//        List<SysFamilyCommuntity> familyCommuntityList = familyCommuntityRepository.findByCommuntityId(communtityId);
+//        familyCommuntityList.forEach(SysFamilyCommuntity -> {
+//            List<SysUserFamily> userFamilyList = userFamilyRepository.findByFamilyId(SysFamilyCommuntity.getFamilyCommuntity().getFamilyId());
+//            userFamilyList.forEach(SysUserFamily -> {
+//                SysUserInfo sysUserInfo = userInfoRepository.findByUserId(SysUserFamily.getUserFamily().getUserId());
+//                list.add(sysUserInfo);
+//            });
+//        });
+//        return list;
+//    }
+    public List<SysUserInfoDTO> findUserListByCid(Integer communtityId) {
+        List<SysUserInfoDTO> list = new ArrayList<SysUserInfoDTO>();
         List<SysFamilyCommuntity> familyCommuntityList = familyCommuntityRepository.findByCommuntityId(communtityId);
         familyCommuntityList.forEach(SysFamilyCommuntity -> {
             List<SysUserFamily> userFamilyList = userFamilyRepository.findByFamilyId(SysFamilyCommuntity.getFamilyCommuntity().getFamilyId());
             userFamilyList.forEach(SysUserFamily -> {
+                SysUserInfoDTO sysUserInfoDTO = new SysUserInfoDTO();
                 SysUserInfo sysUserInfo = userInfoRepository.findByUserId(SysUserFamily.getUserFamily().getUserId());
-                list.add(sysUserInfo);
+                sysUserInfo.setFid(SysUserFamily.getUserFamily().getFamilyId());
+                sysUserInfoDTO.setId(sysUserInfo.getId());
+                sysUserInfoDTO.setFid(SysUserFamily.getUserFamily().getFamilyId());
+                list.add(sysUserInfoDTO);
             });
         });
         return list;

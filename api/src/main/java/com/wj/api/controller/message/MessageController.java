@@ -32,23 +32,23 @@ public class MessageController {
         @ApiImplicitParam(name = "status", dataType = "Integer", value = "消息状态0、未读 1、已读")
     })
     @GetMapping("/findListByUserId")
-    public ResponseMessage<Page<Message>> findListByUserId(Integer status, Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResponseMessage<Page<Message>> findListByUserId(Integer familyId, Integer status, Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
         pageNum = pageNum - 1;
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.ASC, "id");
-        Page<Message> page = messageService.findListByUserId(userId, status, type, pageable);
+        Page<Message> page = messageService.findListByUserId(userId, familyId, status, type, pageable);
         return ResponseMessage.ok(page);
     }
 
     @ApiOperation(value="获取3条未读消息")
     @GetMapping("/findTopThreeByUserId")
-    public ResponseMessage<List<Message>> findTopThreeByUserId() {
+    public ResponseMessage<List<Message>> findTopThreeByUserId(Integer familyId) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
-        return ResponseMessage.ok(messageService.findTopThreeByUserId(userId, 0));
+        return ResponseMessage.ok(messageService.findTopThreeByUserId(userId, familyId, 0));
     }
 
     @ApiOperation(value="修改是否已读")
