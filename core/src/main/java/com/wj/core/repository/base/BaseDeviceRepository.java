@@ -6,6 +6,7 @@ import com.wj.core.entity.base.BaseFamily;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -38,5 +39,9 @@ public interface BaseDeviceRepository extends JpaRepository<BaseDevice, Integer>
 
     @Query(value = "select count(*) from base_device where device_key = ?1", nativeQuery = true)
     public Integer findCountByKey(String key);
+
+    @Modifying
+    @Query(value = "update BaseDevice b set b.versionCode = ?1, b.versionName = ?2 where b.deviceKey = ?3")
+    public void updateVer(String versionCode, String versionName, String key);
 
 }

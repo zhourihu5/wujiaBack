@@ -1,7 +1,12 @@
 package com.wj.core.service.user;
 
+import com.wj.core.entity.base.BaseDevice;
+import com.wj.core.entity.base.dto.DeviceVersionDTO;
 import com.wj.core.entity.user.SysVersion;
+import com.wj.core.repository.base.BaseDeviceRepository;
 import com.wj.core.repository.base.SysVersionRepository;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.collection.ArrayUtil;
 import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.mapper.JsonMapper;
@@ -25,6 +30,8 @@ public class SystemService {
 
     @Autowired
     private SysVersionRepository sysVersionRepository;
+    @Autowired
+    private BaseDeviceRepository baseDeviceRepository;
 
     public SysVersion getVer() {
         SysVersion v = sysVersionRepository.findFirstByOrderBySysVerDesc();
@@ -43,6 +50,16 @@ public class SystemService {
     }
 
 
+    @Transactional
+    public void updateVer(DeviceVersionDTO d) {
+        BaseDevice b = baseDeviceRepository.findByKey(d.getKey());
+        if (b == null) {
+            throw new ServiceException("PAD SN 不存在", ErrorCode.DEVICE_KEY_NOTEXSTS);
+        }
+        baseDeviceRepository.updateVer(d.getVersionCode(), d.getVersionName(), d.getKey());
+    }
+
+
 
     @Transactional
     public void save(SysVersion version) {
@@ -58,7 +75,6 @@ public class SystemService {
             JsonMapper mapper = JsonMapper.defaultMapper();
             JPush.sendPushAll("SYS", mapper.toJson(version));
         }
-
     }
 
 }

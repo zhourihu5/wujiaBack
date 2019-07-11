@@ -1,6 +1,7 @@
 package com.wj.admin.controller.sys;
 
 import com.wj.admin.filter.ResponseMessage;
+import com.wj.core.entity.base.dto.DeviceVersionDTO;
 import com.wj.core.entity.user.SysVersion;
 import com.wj.core.service.user.SystemService;
 import io.swagger.annotations.Api;
