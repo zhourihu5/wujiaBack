@@ -36,6 +36,9 @@ public class MessageController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
+        if (pageNum == null) {
+            pageNum = 1;
+        }
         pageNum = pageNum - 1;
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "createDate");
         Page<Message> page = messageService.findListByUserId(userId, familyId, status, type, pageable);
