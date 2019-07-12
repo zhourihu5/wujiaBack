@@ -61,8 +61,7 @@ public class BaseCommuntityController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("保存社区内容接口:/v1/communtity/addCommuntity userId=" + claims.get("userId"));
-        baseCommuntityService.saveCommuntity(communtity);
-        return ResponseMessage.ok();
+        return ResponseMessage.ok(baseCommuntityService.saveCommuntity(communtity));
     }
 
     @ApiOperation(value = "查询区下所属社区", notes = "查询区下所属社区")

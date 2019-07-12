@@ -29,6 +29,29 @@ public class BaseDistrictService {
 
     @Transactional
     public void saveDistrict(BaseDistrict district) {
+        if (district.getId() == null) {
+            StringBuffer sBuffer = new StringBuffer();
+            sBuffer.append(district.getCode().substring(0, 14));
+            System.out.println("---------" + district.getCode().substring(0, 14));
+            Integer count = 0;
+            if (district.getCommuntityId() != null) {
+                count = baseDistrictRepository.findCountByCommuntityId(district.getCommuntityId());
+            } else if (district.getIssueId() != null){
+                count = baseDistrictRepository.findCountByIssueId(district.getIssueId());
+            }
+            String number = "";
+            if (count == null || count == 0) {
+                number = "01";
+            } else if (count > 0 && count < 10) {
+                number = "0" + (count + 1);
+            } else if (count > 10) {
+                number = "" + (count + 1);
+            }
+            sBuffer.append(number);
+            sBuffer.append("0000000000");
+            System.out.println("sBuffer++++++++++++++" + sBuffer);
+            district.setCode(sBuffer.toString());
+        }
         district.setCreateDate(new Date());
         baseDistrictRepository.save(district);
     }

@@ -42,15 +42,53 @@ public class BaseUnitService {
      */
     @Transactional
     public void saveUnit(BaseUnit unit) {
+        if (unit.getId() == null) {
+            StringBuffer sBuffer = new StringBuffer();
+            sBuffer.append(unit.getCode().substring(0, 18));
+            System.out.println("---------" + unit.getCode().substring(0, 18));
+            Integer count = baseUnitRepository.findCountByFloorId(unit.getFloorId());
+            String number = "";
+            if (count == null || count == 0) {
+                number = "01";
+            } else if (count > 0 && count < 10) {
+                number = "0" + (count + 1);
+            } else if (count > 10) {
+                number = "" + (count + 1);
+            }
+            sBuffer.append(number);
+            sBuffer.append("000000");
+            System.out.println("sBuffer++++++++++++++" + sBuffer);
+            unit.setCode(sBuffer.toString());
+        }
         unit.setCreateDate(new Date());
         BaseUnit baseUnit = baseUnitRepository.save(unit);
-        for (int i = 1; i <= Integer.valueOf(baseUnit.getStorey()); i++) {
-            BaseStorey baseStorey = new BaseStorey();
-            baseStorey.setNum(i);
-            baseStorey.setName(i+"层");
-            baseStorey.setUnitId(baseUnit.getId());
-            baseStorey.setCreateDate(new Date());
-            baseStoreyRepository.save(baseStorey);
+        if (unit.getId() == null) {
+            for (int i = 1; i <= Integer.valueOf(baseUnit.getStorey()); i++) {
+                BaseStorey baseStorey = new BaseStorey();
+                baseStorey.setNum(i);
+                baseStorey.setName(i + "层");
+                baseStorey.setUnitId(baseUnit.getId());
+                baseStorey.setCreateDate(new Date());
+                if (unit.getId() == null) {
+                    StringBuffer sBuffer = new StringBuffer();
+                    sBuffer.append(baseUnit.getCode().substring(0, 20));
+                    System.out.println("---------" + baseUnit.getCode().substring(0, 20));
+                    Integer count = baseStoreyRepository.findCountByUnitId(baseUnit.getId());
+                    String number = "";
+                    if (count == null || count == 0) {
+                        number = "01";
+                    } else if (count > 0 && count < 10) {
+                        number = "0" + (count + 1);
+                    } else if (count > 10) {
+                        number = "" + (count + 1);
+                    }
+                    sBuffer.append(number);
+                    sBuffer.append("0000");
+                    System.out.println("sBuffer1111++++++++++++++" + sBuffer);
+                    baseStorey.setCode(sBuffer.toString());
+                }
+                baseStoreyRepository.save(baseStorey);
+            }
         }
     }
 

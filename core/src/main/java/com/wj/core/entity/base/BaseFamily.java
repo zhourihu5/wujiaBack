@@ -36,6 +36,8 @@ public class BaseFamily {
     private String directory;
     @ApiModelProperty(value = "节点名称")
     private String structureName;
+    @ApiModelProperty(value = "编码")
+    private String code;
     @Transient
     private String communtityName;
     @ApiModelProperty(value = "楼名称")

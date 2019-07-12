@@ -29,7 +29,9 @@ public class BaseDistrict {
     private String directory;
     @ApiModelProperty(value = "节点名称")
     private String structureName;
-    @Transient
-    private String NodeDisplay;
+    @ApiModelProperty(value = "社区或者期")
+    private String nodeDisplay;
+    @ApiModelProperty(value = "编码")
+    private String code;
 
 }

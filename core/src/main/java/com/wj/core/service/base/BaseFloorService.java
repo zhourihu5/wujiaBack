@@ -38,6 +38,31 @@ public class BaseFloorService {
      */
     @Transactional
     public void saveFloor(BaseFloor floor) {
+        if (floor.getId() == null) {
+            StringBuffer sBuffer = new StringBuffer();
+            sBuffer.append(floor.getCode().substring(0, 16));
+            System.out.println("---------" + floor.getCode().substring(0, 16));
+            Integer count = 0;
+            if (floor.getCommuntityId() != null) {
+                count = baseFloorRepository.findCountByCommuntityId(floor.getCommuntityId());
+            } else if (floor.getIssueId() != null){
+                count = baseFloorRepository.findCountByIssueId(floor.getIssueId());
+            } else if (floor.getDirectory() != null){
+                count = baseFloorRepository.findCountByDistrictId(floor.getDistrictId());
+            }
+            String number = "";
+            if (count == null || count == 0) {
+                number = "01";
+            } else if (count > 0 && count < 10) {
+                number = "0" + (count + 1);
+            } else if (count > 10) {
+                number = "" + (count + 1);
+            }
+            sBuffer.append(number);
+            sBuffer.append("0000000000");
+            System.out.println("sBuffer++++++++++++++" + sBuffer);
+            floor.setCode(sBuffer.toString());
+        }
         floor.setCreateDate(new Date());
         baseFloorRepository.save(floor);
     }

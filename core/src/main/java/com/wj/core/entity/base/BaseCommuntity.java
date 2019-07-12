@@ -33,6 +33,8 @@ public class BaseCommuntity {
     private Integer city;
     @ApiModelProperty(value = "区编号")
     private Integer area;
+    @ApiModelProperty(value = "编码")
+    private String code;
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;

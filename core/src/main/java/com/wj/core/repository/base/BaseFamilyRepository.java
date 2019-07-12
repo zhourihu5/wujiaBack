@@ -28,4 +28,8 @@ public interface BaseFamilyRepository extends JpaRepository<BaseFamily, Integer>
      */
     @Query(value = "select * from base_family where unit_id = ?1", nativeQuery = true)
     public Page<BaseFamily> findByUnitId(Integer unitId, Pageable pageable);
+
+
+    @Query(value = "select count(*) from base_family where storey_id = ?1", nativeQuery = true)
+    public Integer findByStoreyId(Integer storeyId);
 }

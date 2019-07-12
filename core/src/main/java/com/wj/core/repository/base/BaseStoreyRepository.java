@@ -12,7 +12,7 @@ import java.util.List;
 public interface BaseStoreyRepository extends JpaRepository<BaseStorey, Integer> {
 
     @Query(value = "select * from base_storey where id = ?1", nativeQuery = true)
-    public BaseStorey findBySid(Integer id);
+    public BaseStorey findByStoreyid(Integer id);
 
     @Query(value = "select * from base_storey where unit_id = ?1", nativeQuery = true)
     public List<BaseStorey> findByUnitId(Integer unitId);

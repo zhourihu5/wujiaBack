@@ -32,6 +32,8 @@ public class BaseUnit {
     private String directory;
     @ApiModelProperty(value = "节点名称")
     private String structureName;
+    @ApiModelProperty(value = "编码")
+    private String code;
     @ApiModelProperty(value = "社区名称")
     @Transient
     private String communtityName;

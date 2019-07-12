@@ -29,4 +29,12 @@ public interface BaseFloorRepository extends JpaRepository<BaseFloor, Integer> {
     @Query(value = "select * from base_floor where communtity_id = ?1", nativeQuery = true)
     public List<BaseFloor> findByCommuntityId(Integer communtityId);
 
+    @Query(value = "select count(*) from base_floor where communtity_id = ?1", nativeQuery = true)
+    public Integer findCountByCommuntityId(Integer communtityId);
+
+    @Query(value = "select count(*) from base_floor where issue_id = ?1", nativeQuery = true)
+    public Integer findCountByIssueId(Integer getIssueId);
+
+    @Query(value = "select count(*) from base_floor where district_id = ?1", nativeQuery = true)
+    public Integer findCountByDistrictId(Integer districtId);
 }

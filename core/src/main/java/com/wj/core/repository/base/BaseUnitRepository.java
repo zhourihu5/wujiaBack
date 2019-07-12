@@ -32,4 +32,7 @@ public interface BaseUnitRepository extends JpaRepository<BaseUnit, Integer> {
     @Query(value = "select * from base_unit where floor_id = ?1", nativeQuery = true)
     public List<BaseUnit> findByFloorId(Integer floorId);
 
+    @Query(value = "select count(*) from base_unit where floor_id = ?1", nativeQuery = true)
+    public Integer findCountByFloorId(Integer floorId);
+
 }

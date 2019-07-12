@@ -34,5 +34,7 @@ public class BaseStorey {
     private String structureName;
     @ApiModelProperty(value = "每层楼的家庭数量")
     private Integer familyCount;
+    @ApiModelProperty(value = "编码")
+    private String code;
 
 }
