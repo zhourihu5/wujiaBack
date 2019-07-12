@@ -40,7 +40,7 @@ public class MessageController {
             pageNum = 1;
         }
         pageNum = pageNum - 1;
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "createDate");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "create_date");
         Page<Message> page = messageService.findListByUserId(userId, familyId, status, type, pageable);
         return ResponseMessage.ok(page);
     }
