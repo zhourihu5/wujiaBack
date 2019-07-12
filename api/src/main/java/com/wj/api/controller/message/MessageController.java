@@ -37,7 +37,7 @@ public class MessageController {
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
         pageNum = pageNum - 1;
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.ASC, "id");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "createDate");
         Page<Message> page = messageService.findListByUserId(userId, familyId, status, type, pageable);
         return ResponseMessage.ok(page);
     }
