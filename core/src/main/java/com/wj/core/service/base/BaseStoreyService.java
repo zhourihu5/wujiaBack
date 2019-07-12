@@ -30,16 +30,6 @@ public class BaseStoreyService {
         } else {
             page = baseStoreyRepository.findAll(pageable);
         }
-//        for (BaseUnit baseUnit: page) {
-//            BaseFloor baseFloor = baseFloorRepository.findByFloorId(baseUnit.getFloorId());
-//            if (baseFloor == null)
-//                throw new ServiceException("楼数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
-//            baseUnit.setFloorName(baseFloor.getName());
-//            BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(baseFloor.getCommuntityId());
-//            if (communtity == null)
-//                throw new ServiceException("社区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
-//            baseUnit.setCommuntityName(communtity.getName());
-//        }
         return page;
     }
 
@@ -48,13 +38,13 @@ public class BaseStoreyService {
     }
 
     /**
-     * 保存层和户信息
+     * 保存每层拥有多少住户
      *
      * @param storey
      * @return void
      */
     @Transactional
-    public void saveStorey(BaseStorey storey) {
+    public void saveStoreyAndFamily(BaseStorey storey) {
         BaseStorey baseStorey = baseStoreyRepository.findByStoreyid(storey.getId());
         for (int i = 1; i <= Integer.valueOf(storey.getFamilyCount()); i++) {
             BaseFamily baseFamily = new BaseFamily();

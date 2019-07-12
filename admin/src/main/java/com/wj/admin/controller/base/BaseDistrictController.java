@@ -31,12 +31,11 @@ public class BaseDistrictController {
 
     @ApiOperation(value = "保存区的内容", notes = "保存区的内容")
     @PostMapping("addDistrict")
-    public ResponseMessage addDistrict(@RequestBody BaseDistrict district) {
+    public ResponseMessage<BaseDistrict> addDistrict(@RequestBody BaseDistrict district) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("保存楼内容 接口:/v1/district/addDistrict userId=" + claims.get("userId"));
-        baseDistrictService.saveDistrict(district);
-        return ResponseMessage.ok();
+        return ResponseMessage.ok(baseDistrictService.saveDistrict(district));
     }
 
     @ApiOperation(value = "获取区分页信息", notes = "获取区分页信息")

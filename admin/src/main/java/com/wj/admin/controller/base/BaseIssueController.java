@@ -35,12 +35,11 @@ public class BaseIssueController {
 
     @ApiOperation(value = "保存楼期内容", notes = "保存楼期内容")
     @PostMapping("addIssue")
-    public ResponseMessage addIssue(@RequestBody BaseIssue issue) {
+    public ResponseMessage<BaseIssue> addIssue(@RequestBody BaseIssue issue) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("保存楼内容 接口:/v1/issue/addIssue userId=" + claims.get("userId"));
-        baseIssueService.saveIssue(issue);
-        return ResponseMessage.ok();
+        return ResponseMessage.ok(baseIssueService.saveIssue(issue));
     }
 
     @ApiOperation(value = "获取期分页信息", notes = "获取期分页信息")

@@ -37,4 +37,7 @@ public interface BaseFloorRepository extends JpaRepository<BaseFloor, Integer> {
 
     @Query(value = "select count(*) from base_floor where district_id = ?1", nativeQuery = true)
     public Integer findCountByDistrictId(Integer districtId);
+
+    @Query(value = "select * from base_floor where code like CONCAT('%',?1,'%')", nativeQuery = true)
+    public List<BaseFloor> findByCode(String code);
 }

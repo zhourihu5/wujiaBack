@@ -35,7 +35,7 @@ public class BaseIssueService {
     private BaseFloorRepository baseFloorRepository;
 
     @Transactional
-    public void saveIssue(BaseIssue issue) {
+    public BaseIssue saveIssue(BaseIssue issue) {
         if (issue.getId() == null) {
             StringBuffer sBuffer = new StringBuffer();
             sBuffer.append(issue.getCode().substring(0, 6));
@@ -55,7 +55,7 @@ public class BaseIssueService {
             issue.setCode(sBuffer.toString());
         }
         issue.setCreateDate(new Date());
-        baseIssueRepository.save(issue);
+        return baseIssueRepository.save(issue);
     }
 
     public Page<BaseIssue> findAll(Integer communtityId, Pageable pageable) {

@@ -37,7 +37,7 @@ public class BaseFloorService {
      * @return void
      */
     @Transactional
-    public void saveFloor(BaseFloor floor) {
+    public BaseFloor saveFloor(BaseFloor floor) {
         if (floor.getId() == null) {
             StringBuffer sBuffer = new StringBuffer();
             sBuffer.append(floor.getCode().substring(0, 10));
@@ -64,7 +64,7 @@ public class BaseFloorService {
             floor.setCode(sBuffer.toString());
         }
         floor.setCreateDate(new Date());
-        baseFloorRepository.save(floor);
+        return baseFloorRepository.save(floor);
     }
 
     /**

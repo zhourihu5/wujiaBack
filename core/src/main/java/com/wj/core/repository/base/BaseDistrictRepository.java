@@ -28,4 +28,7 @@ public interface BaseDistrictRepository extends JpaRepository<BaseDistrict, Inte
 
     @Query(value = "select count(*) from base_district where communtity_id = ?1", nativeQuery = true)
     public Integer findCountByCommuntityId(Integer communtityId);
+
+    @Query(value = "select * from base_district where code like CONCAT('%',?1,'%')", nativeQuery = true)
+    public List<BaseDistrict> findByCode(String code);
 }

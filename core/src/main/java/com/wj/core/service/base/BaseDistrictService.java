@@ -28,7 +28,7 @@ public class BaseDistrictService {
     private BaseCommuntityRepository baseCommuntityRepository;
 
     @Transactional
-    public void saveDistrict(BaseDistrict district) {
+    public BaseDistrict saveDistrict(BaseDistrict district) {
         if (district.getId() == null) {
             StringBuffer sBuffer = new StringBuffer();
             sBuffer.append(district.getCode().substring(0, 8));
@@ -53,7 +53,7 @@ public class BaseDistrictService {
             district.setCode(sBuffer.toString());
         }
         district.setCreateDate(new Date());
-        baseDistrictRepository.save(district);
+        return baseDistrictRepository.save(district);
     }
 
     public Page<BaseDistrict> findAll(Integer communtityId, Integer issueId, Pageable pageable) {

@@ -40,15 +40,15 @@ public class BaseFamilyController {
     private UserFamilyService userFamilyService;
 
 
-    @ApiOperation(value = "保存家庭内容", notes = "保存家庭内容")
-    @PostMapping("addFamily")
-    public ResponseMessage<BaseFamily> addFamily(@RequestBody BaseFamily family) {
-        String token = JwtUtil.getJwtToken();
-        Claims claims = JwtUtil.parseJwt(token);
-        logger.info("保存家庭内容接口:/v1/family/addFamily userId=" + claims.get("userId"));
-        family = baseFamilyService.saveFamily(family);
-        return ResponseMessage.ok(family);
-    }
+//    @ApiOperation(value = "保存家庭内容", notes = "保存家庭内容")
+//    @PostMapping("addFamily")
+//    public ResponseMessage<BaseFamily> addFamily(@RequestBody BaseFamily family) {
+//        String token = JwtUtil.getJwtToken();
+//        Claims claims = JwtUtil.parseJwt(token);
+//        logger.info("保存家庭内容接口:/v1/family/addFamily userId=" + claims.get("userId"));
+//        family = baseFamilyService.saveFamily(family);
+//        return ResponseMessage.ok(family);
+//    }
 
     @ApiOperation(value = "获取家庭分页信息", notes = "获取家庭分页信息")
     @GetMapping("findAll")

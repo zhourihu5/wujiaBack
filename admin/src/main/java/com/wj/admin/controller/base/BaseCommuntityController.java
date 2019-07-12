@@ -5,6 +5,7 @@ import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.dto.BaseCommuntityDTO;
+import com.wj.core.entity.base.dto.BaseFamilyDTO;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.SysUserInfoDTO;
 import com.wj.core.service.base.BaseCommuntityService;
@@ -74,23 +75,23 @@ public class BaseCommuntityController {
         return ResponseMessage.ok(list);
     }
 
-//    @ApiOperation(value = "查询区下所属社区", notes = "查询区下所属社区")
-//    @GetMapping("findByArea")
-//    public ResponseMessage<List<Map<String, BaseCommuntity>>> findByArea(Integer areaCode) {
-//        String token = JwtUtil.getJwtToken();
-//        Claims claims = JwtUtil.parseJwt(token);
-//        logger.info("查询区下所属社区接口:/v1/communtity/findByArea userId=" + claims.get("userId"));
-//        List<Map<String, BaseCommuntity>> list = baseCommuntityService.findByAreaCodeV2(areaCode);
-//        return ResponseMessage.ok(list);
-//    }
-
     @ApiOperation(value = "根据社区查询所有用户", notes = "根据社区查询所有用户")
     @GetMapping("findUserListByCid")
     public ResponseMessage<List<SysUserInfoDTO>> findUserListByCid(Integer communtityId) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("根据社区查询所有用户接口:/v1/communtity/findUserListByCid userId=" + claims.get("userId"));
+        logger.info("根据社区查询所有用户 接口:/v1/communtity/findUserListByCid userId=" + claims.get("userId"));
         List<SysUserInfoDTO> list = baseCommuntityService.findUserListByCid(communtityId);
+        return ResponseMessage.ok(list);
+    }
+
+    @ApiOperation(value = "根据社区查询所有家庭", notes = "根据社区查询所有家庭")
+    @GetMapping("findFamilyListByCode")
+    public ResponseMessage<List<BaseFamilyDTO>> findFamilyListByCode(String communtityCode) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("根据社区查询所有家庭 接口:/v1/communtity/findFamilyListByCode userId=" + claims.get("userId"));
+        List<BaseFamilyDTO> list = baseCommuntityService.findFamilyListByCode(communtityCode);
         return ResponseMessage.ok(list);
     }
 }
