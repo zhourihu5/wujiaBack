@@ -31,8 +31,8 @@ public class BaseDistrictService {
     public void saveDistrict(BaseDistrict district) {
         if (district.getId() == null) {
             StringBuffer sBuffer = new StringBuffer();
-            sBuffer.append(district.getCode().substring(0, 14));
-            System.out.println("---------" + district.getCode().substring(0, 14));
+            sBuffer.append(district.getCode().substring(0, 8));
+            System.out.println("---------" + district.getCode().substring(0, 8));
             Integer count = 0;
             if (district.getCommuntityId() != null) {
                 count = baseDistrictRepository.findCountByCommuntityId(district.getCommuntityId());

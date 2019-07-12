@@ -69,8 +69,8 @@ public class BaseStoreyService {
             baseFamily.setStoreyId(baseStorey.getId());
 
             StringBuffer sBuffer1 = new StringBuffer();
-            sBuffer1.append(baseStorey.getCode().substring(0, 22));
-            System.out.println("---------" + baseStorey.getCode().substring(0, 22));
+            sBuffer1.append(baseStorey.getCode().substring(0, 16));
+            System.out.println("---------" + baseStorey.getCode().substring(0, 16));
             Integer count = baseFamilyRepository.findByStoreyId(baseStorey.getId());
             String number = "";
             if (count == null || count == 0) {

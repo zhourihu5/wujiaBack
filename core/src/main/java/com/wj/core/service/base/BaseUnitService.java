@@ -44,8 +44,8 @@ public class BaseUnitService {
     public void saveUnit(BaseUnit unit) {
         if (unit.getId() == null) {
             StringBuffer sBuffer = new StringBuffer();
-            sBuffer.append(unit.getCode().substring(0, 18));
-            System.out.println("---------" + unit.getCode().substring(0, 18));
+            sBuffer.append(unit.getCode().substring(0, 12));
+            System.out.println("---------" + unit.getCode().substring(0, 12));
             Integer count = baseUnitRepository.findCountByFloorId(unit.getFloorId());
             String number = "";
             if (count == null || count == 0) {
@@ -71,8 +71,8 @@ public class BaseUnitService {
                 baseStorey.setCreateDate(new Date());
                 if (unit.getId() == null) {
                     StringBuffer sBuffer = new StringBuffer();
-                    sBuffer.append(baseUnit.getCode().substring(0, 20));
-                    System.out.println("---------" + baseUnit.getCode().substring(0, 20));
+                    sBuffer.append(baseUnit.getCode().substring(0, 14));
+                    System.out.println("---------" + baseUnit.getCode().substring(0, 14));
                     Integer count = baseStoreyRepository.findCountByUnitId(baseUnit.getId());
                     String number = "";
                     if (count == null || count == 0) {

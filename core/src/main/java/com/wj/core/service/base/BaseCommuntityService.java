@@ -54,7 +54,27 @@ public class BaseCommuntityService {
      * @return BaseCommuntity
      */
     public BaseCommuntity findById(Integer id) {
-        return baseCommuntityRepository.findByCommuntityId(id);
+        BaseCommuntity baseCommuntity = baseCommuntityRepository.findByCommuntityId(id);
+        Integer issueCount = baseIssueRepository.findCountByCommuntityId(baseCommuntity.getId());
+        if (issueCount != null && issueCount > 0) {
+            //有期
+            baseCommuntity.setNodeDisplay("期");
+            return baseCommuntity;
+        }
+        Integer districtCount = baseDistrictRepository.findCountByCommuntityId(baseCommuntity.getId());
+        if (districtCount != null && districtCount > 0) {
+            //有区
+            baseCommuntity.setNodeDisplay("区");
+            return baseCommuntity;
+        }
+        Integer floorCount = baseFloorRepository.findCountByCommuntityId(baseCommuntity.getId());
+        if (floorCount != null && floorCount > 0) {
+            //有楼
+            baseCommuntity.setNodeDisplay("楼");
+            return baseCommuntity;
+        }
+        baseCommuntity.setNodeDisplay("无");
+        return baseCommuntity;
     }
 
     /**
@@ -65,9 +85,8 @@ public class BaseCommuntityService {
      */
     @Transactional
     public BaseCommuntity saveCommuntity(BaseCommuntity communtity) {
-        if (communtity.getId() != null) {
+        if (communtity.getId() == null) {
             StringBuffer sBuffer = new StringBuffer();
-            sBuffer.append(communtity.getArea());
             sBuffer.append(CommonUtils.randomCode());
             sBuffer.append("00000000000000");
             System.out.println("sBuffer++++++++++++++" + sBuffer);

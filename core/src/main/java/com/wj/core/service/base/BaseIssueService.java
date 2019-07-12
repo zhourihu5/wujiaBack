@@ -38,8 +38,8 @@ public class BaseIssueService {
     public void saveIssue(BaseIssue issue) {
         if (issue.getId() == null) {
             StringBuffer sBuffer = new StringBuffer();
-            sBuffer.append(issue.getCode().substring(0, 12));
-            System.out.println("---------" + issue.getCode().substring(0, 12));
+            sBuffer.append(issue.getCode().substring(0, 6));
+            System.out.println("---------" + issue.getCode().substring(0, 6));
             Integer count = baseIssueRepository.findCountByCommuntityId(issue.getCommuntityId());
             String number = "";
             if (count == null || count == 0) {
@@ -91,7 +91,24 @@ public class BaseIssueService {
             }
             baseIssue.setNodeDisplay("无");
         }
-        return baseIssueRepository.findByCommuntityId(communtityId);
+        return issueList;
     }
 
+    public BaseIssue findById(Integer id) {
+        BaseIssue baseIssue = baseIssueRepository.findByIssueId(id);
+        Integer districtCount = baseDistrictRepository.findCountByIssueId(baseIssue.getId());
+        if (districtCount != null && districtCount > 0) {
+            //有区
+            baseIssue.setNodeDisplay("区");
+            return baseIssue;
+        }
+        Integer floorCount = baseFloorRepository.findCountByIssueId(baseIssue.getId());
+        if (floorCount != null && floorCount > 0) {
+            //有楼
+            baseIssue.setNodeDisplay("楼");
+            return baseIssue;
+        }
+        baseIssue.setNodeDisplay("无");
+        return baseIssue;
+    }
 }

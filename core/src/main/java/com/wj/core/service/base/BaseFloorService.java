@@ -40,8 +40,8 @@ public class BaseFloorService {
     public void saveFloor(BaseFloor floor) {
         if (floor.getId() == null) {
             StringBuffer sBuffer = new StringBuffer();
-            sBuffer.append(floor.getCode().substring(0, 16));
-            System.out.println("---------" + floor.getCode().substring(0, 16));
+            sBuffer.append(floor.getCode().substring(0, 10));
+            System.out.println("---------" + floor.getCode().substring(0, 10));
             Integer count = 0;
             if (floor.getCommuntityId() != null) {
                 count = baseFloorRepository.findCountByCommuntityId(floor.getCommuntityId());

@@ -12,7 +12,7 @@ import java.util.List;
 public interface BaseIssueRepository extends JpaRepository<BaseIssue, Integer> {
 
     @Query(value = "select * from base_issue where id = ?1", nativeQuery = true)
-    public BaseIssue findByFloorId(Integer issueId);
+    public BaseIssue findByIssueId(Integer issueId);
 
     @Query(value = "select * from base_issue where communtity_id = ?1", nativeQuery = true)
     public Page<BaseIssue> findByCommuntityId(Integer communtityId, Pageable pageable);

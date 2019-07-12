@@ -65,6 +65,16 @@ public class BaseIssueController {
         return ResponseMessage.ok(list);
     }
 
+    @ApiOperation(value = "根据ID查询期信息", notes = "根据ID查询期信息")
+    @GetMapping("findById")
+    public ResponseMessage<BaseIssue> findById(Integer id) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("根据ID查询期信息 接口:/v1/issue/findById userId=" + claims.get("userId"));
+        BaseIssue baseIssue = baseIssueService.findById(id);
+        return ResponseMessage.ok(baseIssue);
+    }
+
 
 
 }
