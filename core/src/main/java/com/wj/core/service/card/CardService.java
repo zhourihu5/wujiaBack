@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -103,13 +102,13 @@ public class CardService {
         card.setStatus(CardStatus.YES);
         if (cardDTO.getCardType().equals("0")) {
             card.setType(CardType.OP);
-        }
+        }else
         if (cardDTO.getCardType().equals("1")) {
             card.setType(CardType.WU);
-        }
+        }else
         if (cardDTO.getCardType().equals("2")) {
             card.setType(CardType.IU);
-        }
+        }else
         if (cardDTO.getCardType().equals("3")) {
             card.setType(CardType.IMG);
         }
@@ -133,10 +132,10 @@ public class CardService {
         }
         OpCard opCard = cardRepository.save(card);
         List<SysUserFamily> userFamilyList = userFamilyService.findByIdentity(1);
-        userFamilyList.forEach(SysUserFamily -> {
-            Integer userId = SysUserFamily.getUserFamily().getUserId();
-            Integer count = cardRepository.findUserCardCount(userId, opCard.getId());
-            if (count == 0) {
+        userFamilyList.forEach(sysUserFamily -> {
+            Integer userId = sysUserFamily.getUserFamily().getUserId();
+            Integer count = cardRepository.exists(userId, opCard.getId());//todo optimize
+            if (count == null) {
                 cardRepository.insertUserCard(userId, opCard.getId(), CardStatus.YES.ordinal());
             }
         });

@@ -1,7 +1,6 @@
 package com.wj.core.service.user;
 
 import com.wj.core.entity.card.OpCard;
-import com.wj.core.entity.card.PadModule;
 import com.wj.core.entity.card.enums.CardStatus;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,8 +106,8 @@ public class UserFamilyService {
         List<OpCard> list = cardRepository.findAll();
         list.forEach(OpCard -> {
             // 绑定用户和卡片关系
-            Integer count = cardRepository.findUserCardCount(userFamily.getUserFamily().getUserId(), OpCard.getId());
-            if (count == 0) {
+            Integer count = cardRepository.exists(userFamily.getUserFamily().getUserId(), OpCard.getId());
+            if (count == null) {
                 cardRepository.insertUserCard(userFamily.getUserFamily().getUserId(), OpCard.getId(), CardStatus.YES.ordinal());
             }
         });

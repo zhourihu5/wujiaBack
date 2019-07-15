@@ -28,8 +28,8 @@ public interface CardRepository extends JpaRepository<OpCard, Integer>, JpaSpeci
     @Query(value = "update op_card o set o.status = ?1 where o.id = ?2", nativeQuery = true)
     void modityCardStatus(Integer status, Integer id);
 
-    @Query(value = "select count(1) from op_user_card where user_id = ?1 and card_id = ?2", nativeQuery = true)
-    int findUserCardCount(Integer userId, Integer cardId);
+    @Query(value = "select 1 from op_user_card where user_id = ?1 and card_id = ?2 limit 1", nativeQuery = true)
+    Integer exists(Integer userId, Integer cardId);
 
     @Modifying
     @Query(value = "insert into op_user_card(user_id, card_id, is_show) values (?1, ?2, ?3)", nativeQuery = true)

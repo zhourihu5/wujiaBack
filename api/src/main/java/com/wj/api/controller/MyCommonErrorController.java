@@ -4,6 +4,10 @@ import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.user.SysUserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import jdk.nashorn.internal.runtime.logging.Logger;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -20,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Log4j2
 @RestController
 public class MyCommonErrorController extends BasicErrorController {
     // 统一处理filter抛出的token相关的异常 返回给前端标准格式的json和装填码
@@ -39,6 +44,7 @@ public class MyCommonErrorController extends BasicErrorController {
     @Override
     @RequestMapping(produces = {"application/json"})
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
+        log.error("MyCommonErrorController error");
         //加入跨域相关内容
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         response.setHeader("Access-Control-Allow-Origin", "*");
