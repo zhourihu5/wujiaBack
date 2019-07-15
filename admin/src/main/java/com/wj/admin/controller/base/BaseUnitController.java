@@ -8,6 +8,8 @@ import com.wj.core.entity.base.BaseFloor;
 import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.service.base.BaseUnitService;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +40,7 @@ public class BaseUnitController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("保存单元内容接口:/v1/unit/addUnit userId=" + claims.get("userId"));
+        if (unit.getStorey() == null) throw new ServiceException("层数不能为空", ErrorCode.INTERNAL_SERVER_ERROR);
         baseUnitService.saveUnit(unit);
         return ResponseMessage.ok();
     }
@@ -49,7 +52,7 @@ public class BaseUnitController {
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("获取单元分页信息接口:/v1/unit/findAll userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
-        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<BaseUnit> page = baseUnitService.findAll(floorId, pageable);
         return ResponseMessage.ok(page);
     }

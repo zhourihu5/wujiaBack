@@ -35,12 +35,11 @@ public class BaseFloorController {
 
     @ApiOperation(value = "保存楼内容", notes = "保存楼内容")
     @PostMapping("addFloor")
-    public ResponseMessage addFloor(@RequestBody BaseFloor floor) {
+    public ResponseMessage<BaseFloor> addFloor(@RequestBody BaseFloor floor) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("保存楼内容接口:/v1/floor/addFloor userId=" + claims.get("userId"));
-        baseFloorService.saveFloor(floor);
-        return ResponseMessage.ok();
+        return ResponseMessage.ok(baseFloorService.saveFloor(floor));
     }
 
     @ApiOperation(value = "获取楼分页信息", notes = "获取楼分页信息")

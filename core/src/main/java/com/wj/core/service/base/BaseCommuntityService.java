@@ -1,15 +1,12 @@
 package com.wj.core.service.base;
 
-import com.wj.core.entity.base.BaseArea;
-import com.wj.core.entity.base.BaseCommuntity;
-import com.wj.core.entity.base.SysFamilyCommuntity;
+import com.wj.core.entity.base.*;
+import com.wj.core.entity.base.dto.BaseFamilyDTO;
 import com.wj.core.entity.base.embeddable.FamilyCommuntity;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.SysUserInfoDTO;
-import com.wj.core.repository.base.BaseAreaRepository;
-import com.wj.core.repository.base.BaseCommuntityRepository;
-import com.wj.core.repository.base.FamilyCommuntityRepository;
+import com.wj.core.repository.base.*;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.util.CommonUtils;
@@ -39,6 +36,19 @@ public class BaseCommuntityService {
     @Autowired
     private UserInfoRepository userInfoRepository;
 
+    @Autowired
+    private BaseIssueRepository baseIssueRepository;
+
+    @Autowired
+    private BaseDistrictRepository baseDistrictRepository;
+
+    @Autowired
+    private BaseFloorRepository baseFloorRepository;
+
+    @Autowired
+    private BaseUnitRepository baseUnitRepository;
+
+
 
     /**
      * 根据id查询社区信息
@@ -47,7 +57,27 @@ public class BaseCommuntityService {
      * @return BaseCommuntity
      */
     public BaseCommuntity findById(Integer id) {
-        return baseCommuntityRepository.findByCommuntityId(id);
+        BaseCommuntity baseCommuntity = baseCommuntityRepository.findByCommuntityId(id);
+        Integer issueCount = baseIssueRepository.findCountByCommuntityId(baseCommuntity.getId());
+        if (issueCount != null && issueCount > 0) {
+            //有期
+            baseCommuntity.setNodeDisplay("期");
+            return baseCommuntity;
+        }
+        Integer districtCount = baseDistrictRepository.findCountByCommuntityId(baseCommuntity.getId());
+        if (districtCount != null && districtCount > 0) {
+            //有区
+            baseCommuntity.setNodeDisplay("区");
+            return baseCommuntity;
+        }
+        Integer floorCount = baseFloorRepository.findCountByCommuntityId(baseCommuntity.getId());
+        if (floorCount != null && floorCount > 0) {
+            //有楼
+            baseCommuntity.setNodeDisplay("楼");
+            return baseCommuntity;
+        }
+        baseCommuntity.setNodeDisplay("无");
+        return baseCommuntity;
     }
 
     /**
@@ -57,9 +87,16 @@ public class BaseCommuntityService {
      * @return void
      */
     @Transactional
-    public void saveCommuntity(BaseCommuntity communtity) {
+    public BaseCommuntity saveCommuntity(BaseCommuntity communtity) {
+        if (communtity.getId() == null) {
+            StringBuffer sBuffer = new StringBuffer();
+            sBuffer.append(CommonUtils.randomCode());
+            sBuffer.append("00000000000000");
+            System.out.println("sBuffer++++++++++++++" + sBuffer);
+            communtity.setCode(sBuffer.toString());
+        }
         communtity.setCreateDate(new Date());
-        baseCommuntityRepository.save(communtity);
+        return baseCommuntityRepository.save(communtity);
     }
 
     /**
@@ -96,10 +133,32 @@ public class BaseCommuntityService {
      * 根据市code查询当前所有社区
      *
      * @param areaCode
-     * @return List<BaseCommuntity>
+     * @return List<Map < String, BaseCommuntity>>
      */
     public List<BaseCommuntity> findByAreaCode(Integer areaCode) {
-        return baseCommuntityRepository.findByAreaCode(areaCode);
+        List<BaseCommuntity> communtityList = baseCommuntityRepository.findByAreaCode(areaCode);
+        for (BaseCommuntity baseCommuntity : communtityList) {
+            Integer issueCount = baseIssueRepository.findCountByCommuntityId(baseCommuntity.getId());
+            if (issueCount != null && issueCount > 0) {
+                //有期
+                baseCommuntity.setNodeDisplay("期");
+                continue;
+            }
+            Integer districtCount = baseDistrictRepository.findCountByCommuntityId(baseCommuntity.getId());
+            if (districtCount != null && districtCount > 0) {
+                //有区
+                baseCommuntity.setNodeDisplay("区");
+                continue;
+            }
+            Integer floorCount = baseFloorRepository.findCountByCommuntityId(baseCommuntity.getId());
+            if (floorCount != null && floorCount > 0) {
+                //有楼
+                baseCommuntity.setNodeDisplay("楼");
+                continue;
+            }
+            baseCommuntity.setNodeDisplay("无");
+        }
+        return communtityList;
     }
 
     /**
@@ -134,6 +193,81 @@ public class BaseCommuntityService {
                 list.add(sysUserInfoDTO);
             });
         });
+        return list;
+    }
+
+    /**
+     * 根据社区查询当前社区所有家庭
+     *
+     * @param communtityCode
+     * @return List
+     */
+    public List<BaseFamilyDTO> findFamilyListByCode(String communtityCode) {
+        // 根据社区查询所有期
+        List<BaseFamilyDTO> list = new ArrayList<>();
+        List<BaseIssue> issueList = baseIssueRepository.findByCode(communtityCode.substring(0, 6));
+        if (issueList.size() > 0) {
+            for (BaseIssue baseIssue: issueList) {
+                BaseFamilyDTO baseFamilyDTO = new BaseFamilyDTO();
+                String name = baseIssue.getName();
+                List<BaseDistrict> districtList = baseDistrictRepository.findByCode(baseIssue.getCode().substring(0, 8));
+                if (districtList.size() > 0) {
+                    for (BaseDistrict baseDistrict : districtList) {
+                        name += baseDistrict.getName();
+                        List<BaseFloor> floorList = baseFloorRepository.findByCode(baseDistrict.getCode().substring(0, 10));
+                        for (BaseFloor baseFloor : floorList) {
+                            name += baseFloor.getName();
+                            List<BaseUnit> unitList = baseUnitRepository.findByCode(baseFloor.getCode().substring(0, 12));
+                            for (BaseUnit baseUnit : unitList) {
+                                name += baseUnit.getNum();
+                                baseFamilyDTO.setName(name);
+                            }
+                        }
+                    }
+                } else {
+                    List<BaseFloor> floorList = baseFloorRepository.findByCode(baseIssue.getCode().substring(0, 10));
+                    for (BaseFloor baseFloor : floorList) {
+                        name += baseFloor.getName();
+                        List<BaseUnit> unitList = baseUnitRepository.findByCode(baseFloor.getCode().substring(0, 12));
+                        for (BaseUnit baseUnit : unitList) {
+                            name += baseUnit.getNum();
+                            baseFamilyDTO.setName(name);
+                        }
+                    }
+                }
+                list.add(baseFamilyDTO);
+            }
+        } else {
+            List<BaseDistrict> districtList = baseDistrictRepository.findByCode(communtityCode.substring(0, 8));
+            if (districtList.size() > 0) {
+                for (BaseDistrict baseDistrict : districtList) {
+                    BaseFamilyDTO baseFamilyDTO = new BaseFamilyDTO();
+                    String name = baseDistrict.getName();
+                    List<BaseFloor> floorList = baseFloorRepository.findByCode(baseDistrict.getCode().substring(0, 10));
+                    for (BaseFloor baseFloor : floorList) {
+                        name += baseFloor.getName();
+                        List<BaseUnit> unitList = baseUnitRepository.findByCode(baseFloor.getCode().substring(0, 12));
+                        for (BaseUnit baseUnit : unitList) {
+                            name += baseUnit.getNum();
+                            baseFamilyDTO.setName(name);
+                        }
+                    }
+                    list.add(baseFamilyDTO);
+                }
+            } else {
+                List<BaseFloor> floorList = baseFloorRepository.findByCode(communtityCode.substring(0, 10));
+                for (BaseFloor baseFloor : floorList) {
+                    BaseFamilyDTO baseFamilyDTO = new BaseFamilyDTO();
+                    String name = baseFloor.getName();
+                    List<BaseUnit> unitList = baseUnitRepository.findByCode(baseFloor.getCode().substring(0, 12));
+                    for (BaseUnit baseUnit : unitList) {
+                        name += baseUnit.getNum();
+                        baseFamilyDTO.setName(name);
+                    }
+                }
+            }
+
+        }
         return list;
     }
 

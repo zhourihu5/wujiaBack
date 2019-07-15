@@ -5,6 +5,7 @@ import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.dto.BaseCommuntityDTO;
+import com.wj.core.entity.base.dto.BaseFamilyDTO;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.SysUserInfoDTO;
 import com.wj.core.service.base.BaseCommuntityService;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Api(value = "/v1/communtity", tags = "社区接口模块")
 @RestController
@@ -60,8 +62,7 @@ public class BaseCommuntityController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("保存社区内容接口:/v1/communtity/addCommuntity userId=" + claims.get("userId"));
-        baseCommuntityService.saveCommuntity(communtity);
-        return ResponseMessage.ok();
+        return ResponseMessage.ok(baseCommuntityService.saveCommuntity(communtity));
     }
 
     @ApiOperation(value = "查询区下所属社区", notes = "查询区下所属社区")
@@ -79,8 +80,18 @@ public class BaseCommuntityController {
     public ResponseMessage<List<SysUserInfoDTO>> findUserListByCid(Integer communtityId) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        logger.info("根据社区查询所有用户接口:/v1/communtity/findUserListByCid userId=" + claims.get("userId"));
+        logger.info("根据社区查询所有用户 接口:/v1/communtity/findUserListByCid userId=" + claims.get("userId"));
         List<SysUserInfoDTO> list = baseCommuntityService.findUserListByCid(communtityId);
+        return ResponseMessage.ok(list);
+    }
+
+    @ApiOperation(value = "根据社区查询所有家庭", notes = "根据社区查询所有家庭")
+    @GetMapping("findFamilyListByCode")
+    public ResponseMessage<List<BaseFamilyDTO>> findFamilyListByCode(String communtityCode) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("根据社区查询所有家庭 接口:/v1/communtity/findFamilyListByCode userId=" + claims.get("userId"));
+        List<BaseFamilyDTO> list = baseCommuntityService.findFamilyListByCode(communtityCode);
         return ResponseMessage.ok(list);
     }
 }

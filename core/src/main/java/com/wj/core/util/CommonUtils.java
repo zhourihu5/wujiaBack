@@ -29,6 +29,27 @@ public class CommonUtils {
         }
     }
 
+    /**
+     * 判断是否为空
+     *
+     * @author thz
+     */
+    public static String randomCode() {
+        String randomCode = "";
+        String model = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        char[] m = model.toCharArray();
+        for (int i = 0; i < 6; i++) {
+            char c = m[(int) (Math.random() * 62)];
+            // 保证六位随机数之间没有重复的
+//            if (randomCode.contains(String.valueOf(c))) {
+//                i--;
+//                continue;
+//            }
+            randomCode = randomCode + c;
+        }
+        return randomCode;
+    }
+
     // 阿里天气预报接口地址
     public static String HOST = "https://ali-weather.showapi.com";
     // 阿里天气预报接口名称

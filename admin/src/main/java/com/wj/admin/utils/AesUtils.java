@@ -16,6 +16,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.wj.core.util.CommonUtils;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 

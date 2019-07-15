@@ -7,6 +7,7 @@ import com.wj.core.entity.op.OpService;
 import com.wj.core.entity.user.SysUserInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.Set;
  * 家庭表
  */
 @ApiModel(description = "家庭表")
+@Data
 @Entity
 public class BaseFamily {
     @Id
@@ -26,8 +28,16 @@ public class BaseFamily {
     private String num;
     @ApiModelProperty(value = "所属单元id")
     private Integer unitId;
+    @ApiModelProperty(value = "所属层id")
+    private Integer storeyId;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
+    @ApiModelProperty(value = "节点")
+    private String directory;
+    @ApiModelProperty(value = "节点名称")
+    private String structureName;
+    @ApiModelProperty(value = "编码")
+    private String code;
     @Transient
     private String communtityName;
     @ApiModelProperty(value = "楼名称")

@@ -8,23 +8,20 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Date;
 
-/*
- * 单元表
- */
-@ApiModel(description = "单元表")
+@ApiModel(description = "区")
 @Data
 @Entity
-public class BaseUnit {
-
+public class BaseDistrict {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ApiModelProperty(value = "单元号")
-    private String num;
-    @ApiModelProperty(value = "每个单元共有多少楼层")
-    private Integer storey;
-    @ApiModelProperty(value = "楼ID")
-    private Integer floorId;
+    @ApiModelProperty(value = "区的名称")
+    private String name;
+    @ApiModelProperty(value = "所属社区的id")
+    private Integer communtityId;
+    @ApiModelProperty(value = "所属期的id")
+    private Integer issueId;
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
@@ -32,13 +29,9 @@ public class BaseUnit {
     private String directory;
     @ApiModelProperty(value = "节点名称")
     private String structureName;
+    @ApiModelProperty(value = "社区或者期")
+    private String nodeDisplay;
     @ApiModelProperty(value = "编码")
     private String code;
-    @ApiModelProperty(value = "社区名称")
-    @Transient
-    private String communtityName;
-    @ApiModelProperty(value = "楼名称")
-    @Transient
-    private String floorName;
 
 }

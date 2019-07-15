@@ -3,24 +3,16 @@ package com.wj.admin.controller.user;
 import com.alibaba.fastjson.JSONArray;
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.AesUtils;
-import com.wj.admin.utils.CommonUtils;
 import com.wj.admin.utils.JwtUtil;
-import com.wj.core.entity.base.BaseDevice;
 import com.wj.core.entity.user.SysAuthority;
-import com.wj.core.entity.user.SysRoleAuthority;
-import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.AuthorityDTO;
 import com.wj.core.entity.user.dto.LoginDTO;
 import com.wj.core.service.auth.AuthorityService;
-import com.wj.core.service.auth.RoleAuthorityService;
-import com.wj.core.service.base.BaseDeviceService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
-import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
-import com.wj.core.service.user.UserRoleService;
-import com.wj.core.util.mapper.BeanMapper;
+import com.wj.core.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -28,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Api(value = "/login", tags = "用户接口模块")
