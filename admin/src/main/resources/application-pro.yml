@@ -9,9 +9,6 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     show-sql: true
-  #  data:
-#    mongodb:
-#      uri: mongodb://39.97.186.122:27017/wj
   redis:
     database: 0
     timeout: 1000

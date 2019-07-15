@@ -15,7 +15,6 @@ import java.util.Date;
 @ApiModel(description = "设备表")
 @Data
 @Entity
-@Data
 public class BaseDevice {
 
     @Id
