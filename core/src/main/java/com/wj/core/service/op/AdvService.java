@@ -140,5 +140,6 @@ public class AdvService {
         if (StringUtils.isNotBlank(sId)) {
             advRepository.modityScheduleId(sId, advId);
         }
+
     }
 }
