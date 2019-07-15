@@ -135,7 +135,7 @@ public class CardService {
         userFamilyList.forEach(sysUserFamily -> {
             Integer userId = sysUserFamily.getUserFamily().getUserId();
             Integer count = cardRepository.exists(userId, opCard.getId());
-            if (count == null) {
+            if (count == null) {//no data
                 cardRepository.insertUserCard(userId, opCard.getId(), CardStatus.YES.ordinal());
             }
         });
