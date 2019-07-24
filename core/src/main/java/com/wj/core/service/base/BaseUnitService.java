@@ -10,6 +10,9 @@ import com.wj.core.repository.base.BaseStoreyRepository;
 import com.wj.core.repository.base.BaseUnitRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.util.base.CommunityUtil;
+import com.wj.core.util.time.ClockUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,61 +38,50 @@ public class BaseUnitService {
     private BaseCommuntityRepository baseCommuntityRepository;
 
     /**
-     * 保存单元信息
+     * 保存单元信息-层
      *
      * @param unit
      * @return void
      */
     @Transactional
     public void saveUnit(BaseUnit unit) {
+        BaseFloor bf = baseFloorRepository.getOne(unit.getFloorId());
         if (unit.getId() == null) {
-            StringBuffer sBuffer = new StringBuffer();
-            sBuffer.append(unit.getCode().substring(0, 12));
-            System.out.println("---------" + unit.getCode().substring(0, 12));
             Integer count = baseUnitRepository.findCountByFloorId(unit.getFloorId());
-            String number = "";
-            if (count == null || count == 0) {
-                number = "01";
-            } else if (count > 0 && count < 10) {
-                number = "0" + (count + 1);
-            } else if (count > 10) {
-                number = "" + (count + 1);
-            }
-            sBuffer.append(number);
-            sBuffer.append("000000");
-            System.out.println("sBuffer++++++++++++++" + sBuffer);
-            unit.setCode(sBuffer.toString());
+            unit.setCode(CommunityUtil.genCode(bf.getCode(), ++ count));
+            unit.setCreateDate(ClockUtil.currentDate());
+            baseUnitRepository.save(unit);
+        } else {
+            baseUnitRepository.modityStorey(unit.getStorey(), unit.getId());
         }
-        unit.setCreateDate(new Date());
-        BaseUnit baseUnit = baseUnitRepository.save(unit);
-        if (unit.getId() == null) {
-            for (int i = 1; i <= Integer.valueOf(baseUnit.getStorey()); i++) {
-                BaseStorey baseStorey = new BaseStorey();
-                baseStorey.setNum(i);
-                baseStorey.setName(i + "层");
-                baseStorey.setUnitId(baseUnit.getId());
-                baseStorey.setCreateDate(new Date());
-                if (unit.getId() == null) {
-                    StringBuffer sBuffer = new StringBuffer();
-                    sBuffer.append(baseUnit.getCode().substring(0, 14));
-                    System.out.println("---------" + baseUnit.getCode().substring(0, 14));
-                    Integer count = baseStoreyRepository.findCountByUnitId(baseUnit.getId());
-                    String number = "";
-                    if (count == null || count == 0) {
-                        number = "01";
-                    } else if (count > 0 && count < 10) {
-                        number = "0" + (count + 1);
-                    } else if (count > 10) {
-                        number = "" + (count + 1);
-                    }
-                    sBuffer.append(number);
-                    sBuffer.append("0000");
-                    System.out.println("sBuffer1111++++++++++++++" + sBuffer);
-                    baseStorey.setCode(sBuffer.toString());
-                }
-                baseStoreyRepository.save(baseStorey);
-            }
+        //baseStoreyRepository.deleteByUnitId(unit.getId());
+        Long existsNum = baseStoreyRepository.countByUnitId(unit.getId());
+        Integer storeyNum = unit.getStorey();
+        int num = 0;
+        if (existsNum > 0) {
+            num = existsNum.intValue() + 1;
+        } else  {
+            num += 1;
         }
+        for (int i = num; i <= storeyNum; i++) {
+            BaseStorey baseStorey = new BaseStorey();
+            baseStorey.setNum(i);
+            baseStorey.setFamilyCount(0);
+            baseStorey.setName(i + "层");
+            baseStorey.setUnitId(unit.getId());
+            baseStorey.setCreateDate(new Date());
+            baseStorey.setCode(CommunityUtil.genCode(unit.getCode(), i));
+            baseStorey.setIssueId(bf.getIssueId());
+            baseStorey.setDistrictId(bf.getDistrictId());
+            baseStorey.setFloorId(bf.getId());
+            baseStoreyRepository.save(baseStorey);
+        }
+        String commCode = unit.getCode().substring(0, 8);
+        BaseCommuntity bc = baseCommuntityRepository.findByCode(commCode);
+        if (!StringUtils.contains(bc.getFlag(), "层")) {
+            baseCommuntityRepository.modityFlag(bc.getFlag() + "-层", bc.getId());
+        }
+
     }
 
     /**
@@ -123,4 +115,20 @@ public class BaseUnitService {
         return baseUnitRepository.findByFloorId(floorId);
     }
 
+
+    public List<BaseUnit> getUnits(String commCode, String issuCode, String disCode, String floorCode) {
+        if (StringUtils.isNotBlank(floorCode)) {
+            return  baseUnitRepository.findByCodeLike(floorCode + "%");
+        }
+        if (StringUtils.isNotBlank(disCode) && StringUtils.isNotBlank(issuCode)) {
+            return  baseUnitRepository.findByCodeLike(disCode + "%");
+        }
+        if (StringUtils.isNotBlank(disCode)) {
+            return  baseUnitRepository.findByCodeLike(disCode + "%");
+        }
+        if (StringUtils.isNotBlank(issuCode)) {
+            return  baseUnitRepository.findByCodeLike(issuCode + "%");
+        }
+        return  baseUnitRepository.findByCodeLike(commCode + "%");
+    }
 }

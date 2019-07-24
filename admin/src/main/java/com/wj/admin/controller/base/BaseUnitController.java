@@ -12,6 +12,8 @@ import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,12 +60,18 @@ public class BaseUnitController {
     }
 
     @ApiOperation(value = "查询楼所属单元", notes = "查询楼所属单元")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "commCode", dataType = "String", value = "社区Code"),
+            @ApiImplicitParam(name = "issuCode", dataType = "String", value = "期Code"),
+            @ApiImplicitParam(name = "disCode", dataType = "String", value = " 区Code"),
+            @ApiImplicitParam(name = "floorCode", dataType = "String", value = " 楼Code")
+    })
     @GetMapping("findByUnit")
-    public ResponseMessage<List<BaseUnit>> findByUnit(Integer floorId) {
+    public ResponseMessage<List<BaseUnit>> findByUnit(String commCode, String issuCode, String disCode, String floorCode) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("查询楼所属单元接口:/v1/unit/findByUnit userId=" + claims.get("userId"));
-        List<BaseUnit> list = baseUnitService.findByFloorId(floorId);
+        List<BaseUnit> list = baseUnitService.getUnits(commCode, issuCode, disCode, floorCode);
         return ResponseMessage.ok(list);
     }
 }

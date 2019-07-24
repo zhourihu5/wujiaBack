@@ -20,7 +20,7 @@ public class BaseUnit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "单元号")
-    private String num;
+    private String unitNo;
     @ApiModelProperty(value = "每个单元共有多少楼层")
     private Integer storey;
     @ApiModelProperty(value = "楼ID")
@@ -40,5 +40,7 @@ public class BaseUnit {
     @ApiModelProperty(value = "楼名称")
     @Transient
     private String floorName;
+    private Integer issueId;
+    private Integer districtId;
 
 }

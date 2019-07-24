@@ -2,6 +2,10 @@ server:
   port: 8082
 
 spring:
+  data:
+    redis:
+      repositories:
+        enabled: false
   datasource:
     username: wujia_dev
     password: Wujia!@#
@@ -11,13 +15,18 @@ spring:
     show-sql: true
   redis:
     database: 0
-    timeout: 1000
+    timeout: 5000
     # Redis服务器地址
     host: 39.97.186.122
     # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码（默认为空）
     password:
+    lettuce:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
   pool:
     # 连接池最大连接数（使用负值表示没有限制）
     max-active: 10
@@ -27,6 +36,7 @@ spring:
     max-idle: 20
     # 连接池中的最小空闲连接
     min-idle: 10
+
   servlet:
     multipart:
       enabled: true

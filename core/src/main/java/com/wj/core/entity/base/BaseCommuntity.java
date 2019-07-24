@@ -46,6 +46,7 @@ public class BaseCommuntity {
     private String provinceName;
     @Transient
     private String NodeDisplay;
+    private String flag;
 
 
 }

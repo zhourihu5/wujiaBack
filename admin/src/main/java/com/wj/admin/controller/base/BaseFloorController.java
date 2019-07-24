@@ -10,6 +10,8 @@ import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.service.base.BaseFloorService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import org.slf4j.Logger;
@@ -55,12 +57,17 @@ public class BaseFloorController {
     }
 
     @ApiOperation(value = "查询社区下所属楼", notes = "查询社区下所属楼")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "commCode", dataType = "String", value = "社区Code"),
+            @ApiImplicitParam(name = "issuCode", dataType = "String", value = "期Code"),
+            @ApiImplicitParam(name = "disCode", dataType = "String", value = " 区Code")
+    })
     @GetMapping("findByFloor")
-    public ResponseMessage<List<BaseFloor>> findByFloor(Integer communtityId) {
+    public ResponseMessage<List<BaseFloor>> findByFloor(String commCode, String issuCode, String disCode) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("查询社区下所属楼接口:/v1/floor/findByFloor userId=" + claims.get("userId"));
-        List<BaseFloor> list = baseFloorService.findByCommuntityId(communtityId);
+        List<BaseFloor> list = baseFloorService.getFloors(commCode, issuCode, disCode);
         return ResponseMessage.ok(list);
     }
 

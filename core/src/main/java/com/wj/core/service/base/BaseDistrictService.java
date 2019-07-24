@@ -7,8 +7,11 @@ import com.wj.core.entity.base.BaseIssue;
 import com.wj.core.repository.base.BaseCommuntityRepository;
 import com.wj.core.repository.base.BaseDistrictRepository;
 import com.wj.core.repository.base.BaseFloorRepository;
+import com.wj.core.repository.base.BaseIssueRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.util.base.CommunityUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,31 +29,25 @@ public class BaseDistrictService {
 
     @Autowired
     private BaseCommuntityRepository baseCommuntityRepository;
+    @Autowired
+    private BaseIssueRepository baseIssueRepository;
 
+
+    // 保存区
     @Transactional
     public BaseDistrict saveDistrict(BaseDistrict district) {
         if (district.getId() == null) {
-            StringBuffer sBuffer = new StringBuffer();
-            sBuffer.append(district.getCode().substring(0, 8));
-            System.out.println("---------" + district.getCode().substring(0, 8));
-            Integer count = 0;
-            if (district.getCommuntityId() != null) {
-                count = baseDistrictRepository.findCountByCommuntityId(district.getCommuntityId());
-            } else if (district.getIssueId() != null){
-                count = baseDistrictRepository.findCountByIssueId(district.getIssueId());
+            if (district.getIssueId() != null) {
+                Integer count = baseDistrictRepository.findCountByCommuntityId(district.getCommuntityId());
+                BaseIssue bi = baseIssueRepository.getOne(district.getIssueId());
+                district.setCode(CommunityUtil.genCode(bi.getCode(), ++count));
+                baseCommuntityRepository.modityFlag("期-区", district.getCommuntityId());
+            } else {
+                BaseCommuntity bc = baseCommuntityRepository.getOne(district.getCommuntityId());
+                Integer count = baseDistrictRepository.findCountByCommuntityId(district.getCommuntityId());
+                district.setCode(CommunityUtil.genCode(bc.getCode().concat("00"), ++ count));
+                baseCommuntityRepository.modityFlag("区", district.getCommuntityId());
             }
-            String number = "";
-            if (count == null || count == 0) {
-                number = "01";
-            } else if (count > 0 && count < 10) {
-                number = "0" + (count + 1);
-            } else if (count > 10) {
-                number = "" + (count + 1);
-            }
-            sBuffer.append(number);
-            sBuffer.append("0000000000");
-            System.out.println("sBuffer++++++++++++++" + sBuffer);
-            district.setCode(sBuffer.toString());
         }
         district.setCreateDate(new Date());
         return baseDistrictRepository.save(district);
@@ -68,9 +65,14 @@ public class BaseDistrictService {
         return page;
     }
 
-    public List<BaseDistrict> findByCommuntityId(Integer communtityId) {
-        return baseDistrictRepository.findByCommuntityId(communtityId);
+    public List<BaseDistrict> findByCommuntityId(String commCode, String issuCode) {
+        if (StringUtils.isNotBlank(issuCode)) {
+            return baseDistrictRepository.findByCodeLike(issuCode + "%");
+        }
+        return baseDistrictRepository.findByCodeLike(commCode + "%");
+
     }
+
 
     public List<BaseDistrict> findByIssueId(Integer issueId) {
         return baseDistrictRepository.findByIssueId(issueId);

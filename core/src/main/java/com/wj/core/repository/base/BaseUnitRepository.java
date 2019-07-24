@@ -5,11 +5,13 @@ import com.wj.core.entity.base.BaseUnit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface BaseUnitRepository extends JpaRepository<BaseUnit, Integer> {
+
 
     /**
      * 根据单元ID查询信息
@@ -37,5 +39,18 @@ public interface BaseUnitRepository extends JpaRepository<BaseUnit, Integer> {
 
     @Query(value = "select * from base_unit where code like CONCAT('%',?1,'%')", nativeQuery = true)
     public List<BaseUnit> findByCode(String code);
+
+    @Modifying
+    @Query(value = "update BaseUnit b set b.storey = ?1 where b.id = ?2")
+    void modityStorey(Integer num, Integer id);
+
+    List<BaseUnit> findByCodeLike(String code);
+
+    @Modifying
+    @Query(value = "delete from BaseUnit b where b.floorId = ?1")
+    void deleteByUnitFloorId(Integer floorId);
+
+    Long countByFloorId(Integer floorId);
+
 
 }

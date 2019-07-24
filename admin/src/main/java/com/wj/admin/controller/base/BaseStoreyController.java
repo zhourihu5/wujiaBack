@@ -11,6 +11,8 @@ import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,24 @@ public class BaseStoreyController {
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<BaseStorey> page = baseStoreyService.findAll(unitId, pageable);
         return ResponseMessage.ok(page);
+    }
+
+
+    @ApiOperation(value = "查询楼所属单元的每层", notes = "查询楼所属单元的每层")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "commCode", dataType = "String", value = "社区Code"),
+            @ApiImplicitParam(name = "issuCode", dataType = "String", value = "期Code"),
+            @ApiImplicitParam(name = "disCode", dataType = "String", value = " 区Code"),
+            @ApiImplicitParam(name = "floorCode", dataType = "String", value = "楼Code"),
+            @ApiImplicitParam(name = "unitCode", dataType = "String", value = "单元Code")
+    })
+    @GetMapping("list")
+    public ResponseMessage<List<BaseStorey>> getStoreys(String commCode, String issuCode, String disCode, String floorCode, String unitCode) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        logger.info("查询楼所属楼层接口:/v1/unit/findByUnit userId=" + claims.get("userId"));
+        List<BaseStorey> list = baseStoreyService.getStoreys(commCode, issuCode, disCode, floorCode, unitCode);
+        return ResponseMessage.ok(list);
     }
 
 }

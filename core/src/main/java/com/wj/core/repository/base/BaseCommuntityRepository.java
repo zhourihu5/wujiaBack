@@ -5,6 +5,7 @@ import com.wj.core.entity.user.SysUserInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -37,6 +38,17 @@ public interface BaseCommuntityRepository extends JpaRepository<BaseCommuntity, 
      */
     @Query(value = "select * from base_communtity where area = ?1", nativeQuery = true)
     public List<BaseCommuntity> findByAreaCode(Integer areaCode);
+
+    @Modifying
+    @Query(value = "update BaseCommuntity b set b.code = ?1 where b.id = ?2")
+    void modityCode(String code, Integer id);
+
+    @Modifying
+    @Query(value = "update BaseCommuntity b set b.flag = ?1 where b.id = ?2")
+    void modityFlag(String flag, Integer id);
+
+
+    BaseCommuntity findByCode(String code);
 
 
 }

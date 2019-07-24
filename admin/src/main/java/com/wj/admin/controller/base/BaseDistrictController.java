@@ -7,6 +7,8 @@ import com.wj.core.entity.base.BaseDistrict;
 import com.wj.core.service.base.BaseDistrictService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,13 +52,17 @@ public class BaseDistrictController {
         return ResponseMessage.ok(page);
     }
 
-    @ApiOperation(value = "查询社区下所属期", notes = "查询社区下所属期")
+    @ApiOperation(value = "查询社区下所属区", notes = "查询社区下所属期")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "commCode", dataType = "String", value = "社区Code"),
+            @ApiImplicitParam(name = "issuCode", dataType = "String", value = "期Code")
+    })
     @GetMapping("findByCommuntity")
-    public ResponseMessage<List<BaseDistrict>> findByCommuntity(Integer communtityId) {
+    public ResponseMessage<List<BaseDistrict>> findByCommuntity(String commCode, String issuCode) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("查询社区下所属期 接口:/v1/district/findByCommuntity userId=" + claims.get("userId"));
-        List<BaseDistrict> list = baseDistrictService.findByCommuntityId(communtityId);
+        List<BaseDistrict> list = baseDistrictService.findByCommuntityId(commCode, issuCode);
         return ResponseMessage.ok(list);
     }
 

@@ -32,4 +32,5 @@ public interface FamilyCommuntityRepository extends JpaRepository<SysFamilyCommu
     @Modifying
     @Query(value = "insert into sys_family_communtity(communtity_id, family_id) values(?1, ?2)", nativeQuery = true)
     public Integer insert(Integer communtityId, Integer familyId);
+
 }

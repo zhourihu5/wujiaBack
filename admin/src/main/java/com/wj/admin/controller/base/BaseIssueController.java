@@ -11,6 +11,7 @@ import com.wj.core.service.base.BaseIssueService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,12 +56,13 @@ public class BaseIssueController {
     }
 
     @ApiOperation(value = "查询社区下所属期", notes = "查询社区下所属期")
+    @ApiParam(name = "commCode", type = "String", value = "社区Code")
     @GetMapping("findByCommuntity")
-    public ResponseMessage<List<BaseIssue>> findByCommuntity(Integer communtityId) {
+    public ResponseMessage<List<BaseIssue>> findByCommuntity(String commCode) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("查询社区下所属期 接口:/v1/issue/findByCommuntity userId=" + claims.get("userId"));
-        List<BaseIssue> list = baseIssueService.findByCommuntityId(communtityId);
+        List<BaseIssue> list = baseIssueService.findByCommuntityId(commCode);
         return ResponseMessage.ok(list);
     }
 

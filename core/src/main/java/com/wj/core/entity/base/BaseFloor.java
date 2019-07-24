@@ -27,7 +27,7 @@ public class BaseFloor {
     @ApiModelProperty(value = "楼号")
     private Integer num;
     @ApiModelProperty(value = "共有多少个单元")
-    private String unit;
+    private Integer unit;
     @ApiModelProperty(value = "社区id")
     private Integer communtityId;
     @ApiModelProperty(value = "期id")

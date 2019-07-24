@@ -76,7 +76,7 @@ public class BaseFamilyService {
             throw new ServiceException("楼数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
         BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(floor.getCommuntityId());
         if (communtity == null) throw new ServiceException("社区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
-        communtity.setName(communtity.getName() + floor.getName() + unit.getNum() + family.getNum());
+        communtity.setName(communtity.getName() + floor.getName() + unit.getUnitNo() + family.getNum());
         return communtity;
     }
 
@@ -104,7 +104,7 @@ public class BaseFamilyService {
         if (city == null) throw new ServiceException("市数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
         BaseArea area = baseAreaRepository.findByCityId(communtity.getArea());
         if (area == null) throw new ServiceException("区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
-        String address = province.getAreaName() + city.getAreaName() + area.getAreaName() + communtity.getName() + floor.getName() + unit.getNum() + family.getNum();
+        String address = province.getAreaName() + city.getAreaName() + area.getAreaName() + communtity.getName() + floor.getName() + unit.getUnitNo() + family.getNum();
         return address;
     }
 
@@ -126,7 +126,7 @@ public class BaseFamilyService {
             if (baseUnit == null) {
                 throw new ServiceException("单元数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
             }
-            baseFamily.setUnitName(baseUnit.getNum());
+            baseFamily.setUnitName(baseUnit.getUnitNo());
             BaseFloor baseFloor = baseFloorRepository.findByFloorId(baseUnit.getFloorId());
             if (baseFloor == null) {
                 throw new ServiceException("楼数据异常", ErrorCode.INTERNAL_SERVER_ERROR);

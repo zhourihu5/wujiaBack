@@ -36,5 +36,8 @@ public class BaseStorey {
     private Integer familyCount;
     @ApiModelProperty(value = "编码")
     private String code;
+    private Integer floorId;
+    private Integer districtId;
+    private Integer issueId;
 
 }
