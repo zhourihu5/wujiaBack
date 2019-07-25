@@ -1,5 +1,6 @@
 package com.wj.core.entity.activity;
 
+import com.wj.core.entity.commodity.Commodity;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,5 +24,7 @@ public class Activity {
     private String memo;
     private String status;
     private String cover;
+    @Transient
+    private Commodity commodity;
 
 }
