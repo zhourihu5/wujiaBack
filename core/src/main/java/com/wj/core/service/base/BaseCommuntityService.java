@@ -52,6 +52,8 @@ public class BaseCommuntityService {
     private BaseUnitRepository baseUnitRepository;
     @Autowired
     private BaseFamilyRepository baseFamilyRepository;
+    @Autowired
+    private BaseDeviceRepository baseDeviceRepository;
 
 
 

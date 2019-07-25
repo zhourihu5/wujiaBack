@@ -26,5 +26,6 @@ public class Activity {
     private String cover;
     @Transient
     private Commodity commodity;
+    private String isShow;
 
 }

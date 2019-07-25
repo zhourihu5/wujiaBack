@@ -54,6 +54,7 @@ public class BaseDeviceService {
      * @return void
      */
     public void saveDevice(BaseDeviceDTO deviceDTO) {
+        baseDeviceRepository.deleteByFamilyId(deviceDTO.getFamilyId());
         BaseDevice device = BeanMapper.map(deviceDTO, BaseDevice.class);
         Integer count = baseDeviceRepository.findCountByKey(device.getDeviceKey());
         if (count > 0) {
@@ -74,9 +75,9 @@ public class BaseDeviceService {
         }
         Page<BaseDevice> page = null;
         page = baseDeviceRepository.findAll(flag, status, pageable);
-        for (BaseDevice baseDevice: page) {
-            baseDevice.setAddress(baseFamilyService.findAllByFamilyId(baseDevice.getFamilyId()));
-        }
+//        for (BaseDevice baseDevice: page) {
+//            baseDevice.setAddress(baseFamilyService.findAllByFamilyId(baseDevice.getFamilyId()));
+//        }
         return page;
     }
 }

@@ -7,6 +7,7 @@ import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.base.BaseFloor;
 import com.wj.core.entity.base.BaseUnit;
+import com.wj.core.entity.base.dto.FamilyBindInfoDTO;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.service.base.BaseCommuntityService;
@@ -14,6 +15,7 @@ import com.wj.core.service.base.BaseFamilyService;
 import com.wj.core.service.user.UserFamilyService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +82,13 @@ public class BaseFamilyController {
         logger.info("保存家庭内容接口:/v1/family/delUserAndFamily userId=" + claims.get("userId"));
         userFamilyService.delUserAndFamily(userFamily);
         return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value = "获取家庭的绑定信息", notes = "获取家庭的绑定信息")
+    @ApiImplicitParam(name = "familyId", dataType = "Integer", value = "家庭ID", required = true)
+    @GetMapping("bindInfo")
+    public ResponseMessage<FamilyBindInfoDTO> bindInfo(Integer familyId) {
+        return ResponseMessage.ok(userFamilyService.getFamilyBindInfo(familyId));
     }
 
 

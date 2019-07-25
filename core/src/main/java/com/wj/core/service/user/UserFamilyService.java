@@ -1,5 +1,7 @@
 package com.wj.core.service.user;
 
+import com.wj.core.entity.base.BaseDevice;
+import com.wj.core.entity.base.dto.FamilyBindInfoDTO;
 import com.wj.core.entity.card.OpCard;
 import com.wj.core.entity.card.PadModule;
 import com.wj.core.entity.card.enums.CardStatus;
@@ -7,6 +9,7 @@ import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.entity.user.enums.UserIdentity;
+import com.wj.core.repository.base.BaseDeviceRepository;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.card.CardRepository;
 import com.wj.core.repository.card.PadModuleRepository;
@@ -32,13 +35,10 @@ public class UserFamilyService {
     private UserInfoRepository userInfoRepository;
 
     @Autowired
-    private BaseFamilyRepository baseFamilyRepository;
-
-    @Autowired
-    private PadModuleRepository padModuleRepository;
-
-    @Autowired
     private CardRepository cardRepository;
+
+    @Autowired
+    private BaseDeviceRepository baseDeviceRepository;
 
 
     /**
@@ -99,6 +99,7 @@ public class UserFamilyService {
      */
     @Transactional
     public void addUserAndFamily(SysUserFamily userFamily) {
+        userFamilyRepository.deleteByUserFamily_FamilyIdAndIdentity(userFamily.getUserFamily().getFamilyId(), 1);
         if (UserIdentity.Owner.equals(userFamily.getIdentity())) {
             Integer count = userFamilyRepository.findByFamilyIdAndIdentity(userFamily.getUserFamily().getFamilyId(), userFamily.getIdentity());
             if (count > 0)
@@ -134,6 +135,23 @@ public class UserFamilyService {
      */
     public List<SysUserFamily> findByIdentity(Integer identity) {
         return userFamilyRepository.findByIdentity(identity);
+    }
+
+    public FamilyBindInfoDTO getFamilyBindInfo(Integer familyId) {
+        List<BaseDevice> list = baseDeviceRepository.findByFamilyId(familyId);
+        FamilyBindInfoDTO fbd = new FamilyBindInfoDTO();
+        for (BaseDevice bd : list) {
+            if (bd.getFlag().intValue() == 1) {
+                fbd.setPedestalDevice(bd);
+            }
+            if (bd.getFlag().intValue() == 2) {
+                fbd.setPadDevice(bd);
+            }
+        }
+        Integer userId = userFamilyRepository.getUserId(familyId, 1);
+        SysUserInfo userInfo = userInfoRepository.findByUserId(userId);
+        fbd.setUser(userInfo);
+        return fbd;
     }
 
 
