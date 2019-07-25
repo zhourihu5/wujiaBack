@@ -2,13 +2,9 @@ package com.wj.core.service.activity;
 
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
-import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.repository.activity.ActivityRepository;
-<<<<<<< Updated upstream
 import com.wj.core.repository.commodity.CommodityRepository;
-=======
 import org.apache.commons.lang3.StringUtils;
->>>>>>> Stashed changes
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
