@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Table(name = "ebiz_comm_format")
 @Data
 @Entity
-public class CommFormat {
+public class CommodityFormat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
