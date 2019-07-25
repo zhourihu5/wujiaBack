@@ -4,9 +4,10 @@ import lombok.Data;
 
 import javax.persistence.*;
 
+@Table(name = "ebiz_comm_format")
 @Data
 @Entity
-public class EbizCommFormat {
+public class CommFormat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

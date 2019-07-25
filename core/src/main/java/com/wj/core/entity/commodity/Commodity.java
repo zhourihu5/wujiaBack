@@ -6,9 +6,10 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Date;
 
+@Table(name = "ebiz_commodity")
 @Data
 @Entity
-public class EbizCommodity {
+public class Commodity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

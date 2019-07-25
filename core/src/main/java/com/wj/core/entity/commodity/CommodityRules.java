@@ -4,9 +4,10 @@ import lombok.Data;
 
 import javax.persistence.*;
 
+@Table(name = "ebiz_commodity_rules")
 @Data
 @Entity
-public class EbizCommodityRules {
+public class CommodityRules {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
