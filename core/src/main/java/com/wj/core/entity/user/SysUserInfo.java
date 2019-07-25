@@ -8,6 +8,7 @@ import com.wj.core.entity.card.UserCard;
 import com.wj.core.entity.op.OpService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,6 +24,7 @@ import java.util.Set;
  */
 @ApiModel(description = "用户表")
 @Entity
+@Data
 @Table(name = "sys_user_info")
 public class SysUserInfo implements Serializable {
     @Id
@@ -52,6 +54,19 @@ public class SysUserInfo implements Serializable {
     @ApiModelProperty(value = "1、房产所有人 2、使用人")
     @Transient
     private Integer identity;
+    @ApiModelProperty(value = "生日")
+    @Transient
+    private String birthday;
+    @ApiModelProperty(value = "性别")
+    @Transient
+    private String sex;
+    @ApiModelProperty(value = "真实姓名")
+    @Transient
+    private String realName;
+    @ApiModelProperty(value = "微信id")
+    @Transient
+    private String wxOpenId;
+
 
     public List<UserCard> getUserCards() {
         return userCards;
