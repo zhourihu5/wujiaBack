@@ -21,4 +21,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer>, Jp
     @Query("update Activity a set a.isShow = ?1 where a.id = ?2")
     void modityIsShow(String isShow, Integer id);
 
+    @Query(value = "select * from ebiz_activity where id = ?1", nativeQuery = true)
+    public Activity findByActivityId(Integer id);
 }

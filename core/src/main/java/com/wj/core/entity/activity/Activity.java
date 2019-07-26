@@ -1,5 +1,6 @@
 package com.wj.core.entity.activity;
 
+import com.wj.core.entity.address.Address;
 import com.wj.core.entity.commodity.Commodity;
 import lombok.Data;
 
@@ -24,8 +25,10 @@ public class Activity {
     private String memo;
     private String status;
     private String cover;
+    private String isShow;
     @Transient
     private Commodity commodity;
-    private String isShow;
+    @Transient
+    private Address address;
 
 }

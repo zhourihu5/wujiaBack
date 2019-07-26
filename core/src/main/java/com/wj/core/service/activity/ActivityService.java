@@ -81,5 +81,8 @@ public class ActivityService {
         Page<Activity> pageCard = activityRepository.findAll(specification, page);
         return pageCard;
     }
+    public Activity findByActivityId(Integer activityId) {
+        return activityRepository.findByActivityId(activityId);
+    }
 
 }
