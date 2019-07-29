@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ActivityService {
@@ -81,8 +80,24 @@ public class ActivityService {
         Page<Activity> pageCard = activityRepository.findAll(specification, page);
         return pageCard;
     }
+
     public Activity findByActivityId(Integer activityId) {
         return activityRepository.findByActivityId(activityId);
     }
 
+    public List<Activity> findOtherList() {
+        List<Activity> activityList = activityRepository.findByStatus("1");
+        Scanner sc = new Scanner(System.in);
+        Iterator it = activityList.iterator();
+        while (it.hasNext()) {
+            Activity ac = (Activity) it.next();
+            if (ac.getId() == 1) {
+                activityList.remove(ac);
+            }
+        }
+        activityList.forEach(Activity -> {
+            Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
+        });
+        return activityList;
+    }
 }

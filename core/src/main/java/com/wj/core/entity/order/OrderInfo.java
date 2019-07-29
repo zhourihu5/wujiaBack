@@ -1,5 +1,6 @@
 package com.wj.core.entity.order;
 
+import com.wj.core.entity.commodity.Commodity;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -37,5 +38,7 @@ public class OrderInfo {
     private String shopName;
     private String platForm;
     private Date updateDate;
-
+    private Integer commodityId;
+    @Transient
+    private Commodity commodity;
 }

@@ -5,7 +5,7 @@ spring:
   datasource:
     username: wujia_dev
     password: Wujia!@#
-    url: jdbc:mysql://rm-2ze9f44ol605d099mro.mysql.rds.aliyuncs.com:3306/wujia_dev?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    url: jdbc:mysql://rm-2ze9f44ol605d099mro.mysql.rds.aliyuncs.com:3306/wujia_pro?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     show-sql: true
@@ -52,5 +52,8 @@ wj:
     version: 2017-05-25
     SignName: 吾家智工
     TemplateCode: SMS_166655952
+  wx:
+    appid:
+    secret:
 
 
