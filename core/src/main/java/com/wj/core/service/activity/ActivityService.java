@@ -2,8 +2,11 @@ package com.wj.core.service.activity;
 
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
+import com.wj.core.entity.base.BaseArea;
+import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
+import com.wj.core.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +35,10 @@ public class ActivityService {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
         });
         return activityList;
+    }
+
+    public Page<Activity> findAll(Pageable pageable) {
+        return activityRepository.findAll(pageable);
     }
 
     public void saveActivity(@NotNull(message = "实体未空") Activity activity) {
@@ -87,14 +94,14 @@ public class ActivityService {
 
     public List<Activity> findOtherList() {
         List<Activity> activityList = activityRepository.findByStatus("1");
-        Scanner sc = new Scanner(System.in);
-        Iterator it = activityList.iterator();
-        while (it.hasNext()) {
-            Activity ac = (Activity) it.next();
-            if (ac.getId() == 1) {
-                activityList.remove(ac);
-            }
-        }
+//        Scanner sc = new Scanner(System.in);
+//        Iterator it = activityList.iterator();
+//        while (it.hasNext()) {
+//            Activity ac = (Activity) it.next();
+//            if (ac.getId() == 1) {
+//                activityList.remove(ac);
+//            }
+//        }
         activityList.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
         });

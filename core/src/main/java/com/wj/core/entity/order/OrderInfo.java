@@ -1,5 +1,6 @@
 package com.wj.core.entity.order;
 
+import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.commodity.Commodity;
 import lombok.Data;
 
@@ -39,6 +40,11 @@ public class OrderInfo {
     private String platForm;
     private Date updateDate;
     private Integer commodityId;
+    private String commodityCode;
+    private Integer activityId;
+    private String activityCode;
     @Transient
     private Commodity commodity;
+    @Transient
+    private Activity activity;
 }

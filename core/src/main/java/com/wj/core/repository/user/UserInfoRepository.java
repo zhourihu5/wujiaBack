@@ -56,15 +56,16 @@ public interface UserInfoRepository extends JpaRepository<SysUserInfo, Integer> 
      * @param wxOpenId
      * @return void
      */
-    @Query(value = "update sys_user_info set wx_open_id = ?2 where user_name = ?1", nativeQuery = true)
-    public void bindingUser(String userName, String wxOpenId);
+    @Modifying
+    @Query(value = "update sys_user_info set wx_cover = ?2, wx_nick_name = ?3, wx_open_id = ?4 where user_name = ?1", nativeQuery = true)
+    public void bindingUser(String userName, String cover, String nickName, String wxOpenId);
 
     /**
      * 查询微信是否已经绑定用户
      *
-     * @param wxOpenId
+     * @param openid
      * @return void
      */
-    @Query(value = "select count(*) from sys_user_info where wx_open_id = ?1", nativeQuery = true)
-    public Integer getWxOpenId(String wxOpenId);
+    @Query(value = "select * from sys_user_info where wx_open_id = ?1", nativeQuery = true)
+    public SysUserInfo findByOpenId(String openid);
 }

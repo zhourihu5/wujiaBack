@@ -11,4 +11,5 @@ public interface CommodityRepository extends JpaRepository<Commodity, Integer> {
 
     @Query(value = "select * from ebiz_commodity where id = ?1", nativeQuery = true)
     public Commodity findByCommodityId(Integer id);
+
 }

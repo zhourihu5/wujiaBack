@@ -66,6 +66,10 @@ public class SysUserInfo implements Serializable {
     @ApiModelProperty(value = "微信id")
     @Transient
     private String wxOpenId;
+    @Transient
+    private String wxCover;
+    @Transient
+    private String wxNickName;
 
 
     public List<UserCard> getUserCards() {

@@ -34,16 +34,16 @@ public class BindingService {
      * @return void
      */
     @Transactional
-    public void bindingUser(String userName, String wxOpenId) {
+    public void bindingUser(String userName, String cover, String nickName, String openid) {
         SysUserInfo userInfo = userInfoRepository.findByName(userName);
         if (userInfo == null) {
             throw new ServiceException("此账号不是平台账号", ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        userInfoRepository.bindingUser(userName, wxOpenId);
+        userInfoRepository.bindingUser(userName, cover, nickName, openid);
     }
 
-    public Integer getWxOpenId(String wxOpenId) {
-        return userInfoRepository.getWxOpenId(wxOpenId);
+    public SysUserInfo findByOpenId(String openid) {
+        return userInfoRepository.findByOpenId(openid);
     }
 
 

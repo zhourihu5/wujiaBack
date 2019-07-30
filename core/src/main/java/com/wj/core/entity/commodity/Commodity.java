@@ -27,6 +27,8 @@ public class Commodity {
     private String isSafe;
     private String labelsCode;
     private Integer repertoryNum;
+    private Double initPrice;
+    private Double price;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

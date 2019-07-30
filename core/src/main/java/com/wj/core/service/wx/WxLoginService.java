@@ -24,6 +24,7 @@ public class WxLoginService {
      * @return Object
      */
     public Object wxLogin(String code) {
+        System.out.println(appid);
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appid +
                 "&secret=" + secret +
                 "&js_code=" + code +
