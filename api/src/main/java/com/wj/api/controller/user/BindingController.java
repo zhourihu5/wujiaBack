@@ -29,6 +29,7 @@ import com.wj.core.service.wx.WxLoginService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +88,7 @@ public class BindingController {
         }
         bindingService.bindingUser(bindingDTO.getUserName(), bindingDTO.getCover(), bindingDTO.getNickName(), bindingDTO.getOpenid());
         SysUserInfo userInfo = userInfoService.findByName(bindingDTO.getUserName());
-        List<Activity> activityList = activityService.findList();
+        List<Activity> activityList = activityService.findList(userInfo.getId());
         String jwtToken = JwtUtil.generateToken(userInfo);
         XcxLoginDTO loginDTO = new XcxLoginDTO();
         loginDTO.setToken(jwtToken);
@@ -113,6 +114,7 @@ public class BindingController {
         String session_key = json.getString("session_key");
         SysUserInfo userInfo = new SysUserInfo();
         XcxLoginDTO loginDTO = new XcxLoginDTO();
+        Integer userId = 0;
         if (openid != null) {
             userInfo = bindingService.findByOpenId(openid);
             if (userInfo != null) {
@@ -120,10 +122,11 @@ public class BindingController {
                 loginDTO.setToken(jwtToken);
                 loginDTO.setUserInfo(userInfo);
                 loginDTO.setCommuntityName(addressService.findCommuntityNameByUserId(userInfo.getId()));
+                userId = userInfo.getId();
             }
             loginDTO.setOpenid(openid);
         }
-        List<Activity> activityList = activityService.findList();
+        List<Activity> activityList = activityService.findList(userId);
         loginDTO.setActivityList(activityList);
 
         return ResponseMessage.ok(loginDTO);

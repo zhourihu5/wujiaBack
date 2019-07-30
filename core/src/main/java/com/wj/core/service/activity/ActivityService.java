@@ -2,12 +2,19 @@ package com.wj.core.service.activity;
 
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
+import com.wj.core.entity.activity.dto.ActivityUserDTO;
 import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.BaseCommuntity;
+import com.wj.core.entity.order.OrderInfo;
+import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
+import com.wj.core.repository.order.OrderInfoRepository;
+import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.util.CommonUtils;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +35,28 @@ public class ActivityService {
 
     @Autowired
     private CommodityRepository commodityRepository;
+
+    @Autowired
+    private OrderInfoRepository orderInfoRepository;
+
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+
+    public List<Activity> findList(Integer userId) {
+        List<Activity> activityList = activityRepository.findByStatus("1");
+        activityList.forEach(Activity -> {
+            Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
+            if (userId != 0 || userId != null) {
+                OrderInfo orderInfo = orderInfoRepository.findByUserIdAndActivityId(userId, Activity.getId());
+                if (orderInfo != null) {
+                    Activity.setIsJoin(1);
+                } else {
+                    Activity.setIsJoin(0);
+                }
+            }
+        });
+        return activityList;
+    }
 
     public List<Activity> findList() {
         List<Activity> activityList = activityRepository.findByStatus("1");
@@ -88,20 +117,35 @@ public class ActivityService {
         return pageCard;
     }
 
-    public Activity findByActivityId(Integer activityId) {
-        return activityRepository.findByActivityId(activityId);
+    public ActivityUserDTO findByActivityId(Integer activityId) {
+        ActivityUserDTO activityUserDTO = new ActivityUserDTO();
+        Activity activity = activityRepository.findByActivityId(activityId);
+        activity.setCommodity(commodityRepository.findByCommodityId(activity.getCommodityId()));
+        List<OrderInfo> orderInfoList = orderInfoRepository.findByActivityId(activityId);
+        List<SysUserInfo> userInfoList = new ArrayList<>();
+        orderInfoList.forEach(OrderInfo -> {
+            SysUserInfo userInfo = userInfoRepository.findByUserId(OrderInfo.getUserId());
+            userInfoList.add(userInfo);
+        });
+        activityUserDTO.setActivity(activity);
+        activityUserDTO.setUserInfoList(userInfoList);
+        return activityUserDTO;
     }
 
-    public List<Activity> findOtherList() {
+    public List<Activity> findOtherList(Integer userId) {
         List<Activity> activityList = activityRepository.findByStatus("1");
-//        Scanner sc = new Scanner(System.in);
-//        Iterator it = activityList.iterator();
-//        while (it.hasNext()) {
-//            Activity ac = (Activity) it.next();
-//            if (ac.getId() == 1) {
-//                activityList.remove(ac);
-//            }
-//        }
+        Scanner sc = new Scanner(System.in);
+        Iterator it = activityList.iterator();
+        while (it.hasNext()) {
+            Activity ac = (Activity) it.next();
+            // 根据用户id查询订单表活动id
+            List<OrderInfo> orderInfoList = orderInfoRepository.findByUserId(userId);
+            orderInfoList.forEach(OrderInfo -> {
+                if (ac.getId() == OrderInfo.getActivityId()) {
+                    activityList.remove(ac);
+                }
+            });
+        }
         activityList.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
         });

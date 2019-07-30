@@ -31,9 +31,12 @@ public class Activity {
     private String saleType;
     private Integer deliveryHour;
     private BigDecimal price;
+    private String declare;
     @Transient
     private Commodity commodity;
     @Transient
     private Address address;
+    @Transient
+    private Integer isJoin;
 
 }

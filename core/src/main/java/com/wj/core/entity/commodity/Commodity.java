@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Table(name = "ebiz_commodity")
@@ -27,8 +28,8 @@ public class Commodity {
     private String isSafe;
     private String labelsCode;
     private Integer repertoryNum;
-    private Double initPrice;
-    private Double price;
+    private BigDecimal initPrice;
+    private BigDecimal price;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
