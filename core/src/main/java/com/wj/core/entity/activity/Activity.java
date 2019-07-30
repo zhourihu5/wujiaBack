@@ -5,6 +5,7 @@ import com.wj.core.entity.commodity.Commodity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -26,6 +27,10 @@ public class Activity {
     private String status;
     private String cover;
     private String isShow;
+    private String saleRules;
+    private String saleType;
+    private Integer deliveryHour;
+    private BigDecimal price;
     @Transient
     private Commodity commodity;
     @Transient
