@@ -1,5 +1,6 @@
 package com.wj.core.entity.activity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wj.core.entity.address.Address;
 import com.wj.core.entity.commodity.Commodity;
 import lombok.Data;
@@ -19,7 +20,9 @@ public class Activity {
     private String title;
     private Integer communityId;
     private String communityCode;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endDate;
     private Integer commodityId;
     private String commodityCode;
@@ -32,6 +35,10 @@ public class Activity {
     private Integer deliveryHour;
     private BigDecimal price;
     private String declare;
+    private String province;
+    private String city;
+    private String area;
+
     @Transient
     private Commodity commodity;
     @Transient
