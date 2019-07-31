@@ -16,6 +16,7 @@ import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,8 @@ public class ActivityService {
 
     @Autowired
     private CommodityRepository commodityRepository;
+    @Value("${wj.oss.access}")
+    private String url;
 
     @Autowired
     private OrderInfoRepository orderInfoRepository;
@@ -75,8 +78,16 @@ public class ActivityService {
     }
 
     public void saveActivity(@NotNull(message = "实体未空") Activity activity) {
-        if (activity.getId() == null)
+        if (activity.getId() == null) {
             activity.setIsShow("0"); // 未上架
+            activity.setStatus("0");
+        }
+
+        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains("http://", activity.getCover())) {
+            activity.setCover(activity.getCover());
+        } else {
+            activity.setCover(url + activity.getCover());
+        }
         activityRepository.save(activity);
         // TODO 添加到定时里，让定时修改状态
     }
