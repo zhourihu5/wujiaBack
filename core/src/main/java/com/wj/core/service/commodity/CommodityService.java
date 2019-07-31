@@ -51,5 +51,9 @@ public class CommodityService {
         lablesRepository.deleteById(id);
     }
 
+    public void saveCommodity(Commodity commodity) {
+
+    }
+
 
 }
