@@ -204,4 +204,28 @@ public class BaseCommuntityService {
         return list;
     }
 
+
+
+    public Page<BaseCommuntity> findByCityCodeAndName(Integer cityCode, String name, Pageable pageable) {
+        Page<BaseCommuntity> page = null;
+        if (cityCode != null && !CommonUtils.isNull(name)) {
+            page = baseCommuntityRepository.findByCityCodeAndName(cityCode, name, pageable);
+        } else if (cityCode != null && CommonUtils.isNull(name)) {
+            page = baseCommuntityRepository.findByCityCode(cityCode, pageable);
+        } else if (cityCode == null && !CommonUtils.isNull(name)) {
+            page = baseCommuntityRepository.findByName(name, pageable);
+        } else {
+            page = baseCommuntityRepository.findAll(pageable);
+        }
+        for (BaseCommuntity baseCommuntity : page) {
+            BaseArea area = baseAreaRepository.findByCityId(baseCommuntity.getArea());
+            BaseArea city = baseAreaRepository.findByCityId(baseCommuntity.getCity());
+            BaseArea provice = baseAreaRepository.findByCityId(baseCommuntity.getProvince());
+            if (area != null) baseCommuntity.setAreaName(area.getAreaName());
+            if (city != null) baseCommuntity.setCityName(city.getAreaName());
+            if (provice != null) baseCommuntity.setProvinceName(provice.getAreaName());
+        }
+        return page;
+    }
+
 }

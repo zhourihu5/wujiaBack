@@ -38,5 +38,7 @@ public class Activity {
     private Address address;
     @Transient
     private Integer isJoin;
+    @Transient
+    private String largeMoney;
 
 }

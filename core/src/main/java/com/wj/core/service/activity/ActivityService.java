@@ -67,7 +67,11 @@ public class ActivityService {
     }
 
     public Page<Activity> findAll(Pageable pageable) {
-        return activityRepository.findAll(pageable);
+        Page<Activity> page = activityRepository.findAll(pageable);
+        page.forEach(Activity -> {
+            Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
+        });
+        return page;
     }
 
     public void saveActivity(@NotNull(message = "实体未空") Activity activity) {
@@ -120,10 +124,15 @@ public class ActivityService {
     public ActivityUserDTO findByActivityId(Integer activityId) {
         ActivityUserDTO activityUserDTO = new ActivityUserDTO();
         Activity activity = activityRepository.findByActivityId(activityId);
+        String largeMoney = activity.getSaleRules().substring(activity.getSaleRules().lastIndexOf("|")+1);
+        activity.setLargeMoney(largeMoney);
         activity.setCommodity(commodityRepository.findByCommodityId(activity.getCommodityId()));
-        List<OrderInfo> orderInfoList = orderInfoRepository.findByActivityId(activityId);
+        Integer pageNum = 0;
+        Integer pageSize = 10;
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "create_date");
+        Page<OrderInfo> orderInfoPage = orderInfoRepository.findByActivityId(activityId, pageable);
         List<SysUserInfo> userInfoList = new ArrayList<>();
-        orderInfoList.forEach(OrderInfo -> {
+        orderInfoPage.forEach(OrderInfo -> {
             SysUserInfo userInfo = userInfoRepository.findByUserId(OrderInfo.getUserId());
             userInfoList.add(userInfo);
         });

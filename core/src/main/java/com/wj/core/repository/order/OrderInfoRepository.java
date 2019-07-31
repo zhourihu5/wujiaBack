@@ -27,6 +27,9 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer> {
     @Query(value = "select * from ebiz_order_info where activity_id = ?1 and status in (1,2,3)", nativeQuery = true)
     public List<OrderInfo> findByActivityId(Integer activityId);
 
+    @Query(value = "select * from ebiz_order_info where activity_id = ?1 and status in (1,2,3)", nativeQuery = true)
+    public Page<OrderInfo> findByActivityId(Integer activityId, Pageable pageable);
+
     @Query(value = "select * from ebiz_order_info where user_id = ?1 and status in (1,2,3)", nativeQuery = true)
     public List<OrderInfo> findByUserId(Integer userId);
 }

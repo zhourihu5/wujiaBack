@@ -31,6 +31,9 @@ public interface BaseCommuntityRepository extends JpaRepository<BaseCommuntity, 
     @Query(value = "select * from base_communtity where area = ?1 and name like CONCAT('%',?2,'%')", nativeQuery = true)
     public Page<BaseCommuntity> findByAreaCodeAndName(Integer areaCode, String nickName, Pageable pageable);
 
+    @Query(value = "select * from base_communtity where city = ?1", nativeQuery = true)
+    public Page<BaseCommuntity> findByCityCode(Integer cityCode, Pageable pageable);
+
     /**
      * 根据市code查询当前所有社区
      * @param areaCode
@@ -38,6 +41,9 @@ public interface BaseCommuntityRepository extends JpaRepository<BaseCommuntity, 
      */
     @Query(value = "select * from base_communtity where area = ?1", nativeQuery = true)
     public List<BaseCommuntity> findByAreaCode(Integer areaCode);
+
+    @Query(value = "select * from base_communtity where city = ?1", nativeQuery = true)
+    public List<BaseCommuntity> findByCityCode(Integer cityCode);
 
     @Modifying
     @Query(value = "update BaseCommuntity b set b.code = ?1 where b.id = ?2")
@@ -51,4 +57,9 @@ public interface BaseCommuntityRepository extends JpaRepository<BaseCommuntity, 
     BaseCommuntity findByCode(String code);
 
 
+    @Query(value = "select * from base_communtity where city = ?1 and name like CONCAT('%',?2,'%')", nativeQuery = true)
+    public Page<BaseCommuntity> findByCityCodeAndName(Integer cityCode, String name, Pageable pageable);
+
+    @Query(value = "select * from base_communtity where city = ?1 and name like CONCAT('%',?2,'%')", nativeQuery = true)
+    public List<BaseCommuntity> findByCityCodeAndName(Integer cityCode, String name);
 }
