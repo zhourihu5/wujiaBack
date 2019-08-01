@@ -28,6 +28,7 @@ import org.apache.http.util.EntityUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,6 +51,9 @@ public class UserInfoController {
 
     @Autowired
     private BaseFamilyService baseFamilyService;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
 
     /**
@@ -82,5 +86,26 @@ public class UserInfoController {
         indexDTO.setCommuntity(communtity);
         return ResponseMessage.ok(indexDTO);
     }
+
+    @ApiOperation(value = "小程序更新用户信息", notes = "小程序更新用户信息")
+    @PostMapping("updateInfo")
+    public ResponseMessage updateInfo(SysUserInfo userInfo) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer)claims.get("userId");
+        userInfoService.updateInfo(userInfo);
+        return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value = "查询用户信息", notes = "查询用户信息")
+    @PostMapping("findUserInfo")
+    public ResponseMessage<SysUserInfo> findUserInfo() {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);i
+
+        Integer userId = (Integer)claims.get("userId");
+        return ResponseMessage.ok(userInfoService.findUserInfo(userId));
+    }
+
 
 }

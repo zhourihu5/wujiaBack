@@ -178,5 +178,12 @@ public class UserInfoService {
         userInfoRepository.delete(sysUserInfo);
     }
 
+
+    @Transactional
+    public void updateInfo(SysUserInfo sysUserInfo) {
+        userInfoRepository.updateInfo(sysUserInfo.getId(), sysUserInfo.getNickName(), sysUserInfo.getSex(), sysUserInfo.getBirthday());
+    }
+
+
 }
 

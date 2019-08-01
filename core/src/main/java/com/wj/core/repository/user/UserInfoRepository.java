@@ -68,4 +68,8 @@ public interface UserInfoRepository extends JpaRepository<SysUserInfo, Integer> 
      */
     @Query(value = "select * from sys_user_info where wx_open_id = ?1", nativeQuery = true)
     public SysUserInfo findByOpenId(String openid);
+
+    @Modifying
+    @Query(value = "update sys_user_info set nick_name = ?2, sex = ?3, birthday = ?4 where id = ?1", nativeQuery = true)
+    public void updateInfo(Integer userId, String nickName, String sex, String birthday);
 }

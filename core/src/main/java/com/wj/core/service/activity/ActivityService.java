@@ -163,11 +163,11 @@ public class ActivityService {
 //        long endTime = endDate.getTime();
 //        activity.setStartTime(startTime);
 //        activity.setEndTime(endTime);
-        String largeMoney = activity.getSaleRules().substring(activity.getSaleRules().lastIndexOf("|")+1);
+        String largeMoney = activity.getSaleRules().substring(activity.getSaleRules().lastIndexOf("|") + 1);
         activity.setLargeMoney(largeMoney);
         Commodity commodity = commodityRepository.findByCommodityId(activity.getCommodityId());
         String objType = "comm";
-        List<AttaInfo> attaInfoList =  attaInfoRepository.findByObjectIdAndObjectType(commodity.getId(), objType);
+        List<AttaInfo> attaInfoList = attaInfoRepository.findByObjectIdAndObjectType(commodity.getId(), objType);
         commodity.setAttaInfoList(attaInfoList);
         String[] strs = commodity.getFormatVal().split(",");
         commodity.setFormatVals(strs);
@@ -208,6 +208,12 @@ public class ActivityService {
 
     public Activity isOrder(Integer activityId, Integer userId) {
         Activity activity = activityRepository.findByActivityId(activityId);
+        String[] rules = activity.getSaleRules().split(",");
+        for (int i = 0; i < rules.length; i++) {
+            String count = rules[i].substring(0, rules[i].indexOf("|"));//截取|之前的字符串
+            String money = rules[i].substring(activity.getSaleRules().lastIndexOf("|") + 1);
+            System.out.println(count + "---" + money);
+        }
         Address address = addressRepository.findByAddressId(userId, "1");
         if (address != null) {
             activity.setAddress(address);
