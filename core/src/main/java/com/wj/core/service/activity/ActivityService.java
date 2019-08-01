@@ -17,6 +17,8 @@ import com.wj.core.repository.commodity.CommodityRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.address.AddressService;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.CommonUtils;
 import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -207,12 +210,25 @@ public class ActivityService {
 
     public Activity isOrder(Integer activityId, Integer userId) {
         Activity activity = activityRepository.findByActivityId(activityId);
+        activity.setCommodity(commodityRepository.findByCommodityId(activity.getCommodityId()));
+        Integer count = orderInfoRepository.findCountByActivityId(activityId);
         String[] rules = activity.getSaleRules().split(",");
+        Integer amount = 0;
         for (int i = 0; i < rules.length; i++) {
-            String count = rules[i].substring(0, rules[i].indexOf("|"));//截取|之前的字符串
-            String money = rules[i].substring(activity.getSaleRules().lastIndexOf("|") + 1);
-            System.out.println(count + "---" + money);
+            Integer number = Integer.valueOf(rules[i].substring(0, rules[i].indexOf("|")));//截取|之前的字符串
+            Integer money = Integer.valueOf(rules[i].substring(activity.getSaleRules().lastIndexOf("|") + 1));
+            System.out.println(number + "---" + money);
+            if (count < number) {
+                amount = money;
+                break;
+            }
         }
+        BigDecimal num = new BigDecimal(amount);
+        BigDecimal payMoney = activity.getPrice().subtract(num);
+        if (payMoney.doubleValue() <= 0) {
+            throw new ServiceException("系统异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        activity.setPaymentMoney(payMoney);
         Address address = addressRepository.findByAddressId(userId, "1");
         if (address != null) {
             activity.setAddress(address);

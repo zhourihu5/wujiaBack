@@ -21,15 +21,19 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer> {
     @Query(value = "select * from ebiz_order_info where id = ?1", nativeQuery = true)
     public OrderInfo findByOrderId(Integer id);
 
-    @Query(value = "select * from ebiz_order_info where user_id = ?1 and activity_id = ?2 and status in (1,2,3)", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where user_id = ?1 and activity_id = ?2 and status in (2,3)", nativeQuery = true)
     public OrderInfo findByUserIdAndActivityId(Integer userId, Integer activityId);
 
-    @Query(value = "select * from ebiz_order_info where activity_id = ?1 and status in (1,2,3)", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where activity_id = ?1 and status in (2,3)", nativeQuery = true)
     public List<OrderInfo> findByActivityId(Integer activityId);
 
-    @Query(value = "select * from ebiz_order_info where activity_id = ?1 and status in (1,2,3)", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where activity_id = ?1 and status in (2,3)", nativeQuery = true)
     public Page<OrderInfo> findByActivityId(Integer activityId, Pageable pageable);
 
-    @Query(value = "select * from ebiz_order_info where user_id = ?1 and status in (1,2,3)", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where user_id = ?1 and status in (2,3)", nativeQuery = true)
     public List<OrderInfo> findByUserId(Integer userId);
+
+    @Query(value = "select count(*) from ebiz_order_info where activity_id = ?1 and status in (2,3)", nativeQuery = true)
+    public Integer findCountByActivityId(Integer activityId);
+
 }
