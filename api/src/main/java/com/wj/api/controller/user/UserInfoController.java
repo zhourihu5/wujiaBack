@@ -101,7 +101,7 @@ public class UserInfoController {
     @PostMapping("findUserInfo")
     public ResponseMessage<SysUserInfo> findUserInfo() {
         String token = JwtUtil.getJwtToken();
-        Claims claims = JwtUtil.parseJwt(token);i
+        Claims claims = JwtUtil.parseJwt(token);
 
         Integer userId = (Integer)claims.get("userId");
         return ResponseMessage.ok(userInfoService.findUserInfo(userId));
