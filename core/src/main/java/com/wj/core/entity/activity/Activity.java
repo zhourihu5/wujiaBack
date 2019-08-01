@@ -43,5 +43,7 @@ public class Activity {
     private Integer isJoin;
     @Transient
     private String largeMoney;
+    @Transient
+    private BigDecimal paymentMoney;
 
 }
