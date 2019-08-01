@@ -161,6 +161,12 @@ public class UserInfoService {
         userInfoRepository.save(sysUserInfo);
     }
 
+    @Transactional
+    public SysUserInfo addUser(SysUserInfo sysUserInfo) {
+        sysUserInfo.setCreateDate(new Date());
+        return userInfoRepository.save(sysUserInfo);
+    }
+
     /**
      * 删除用户
      *

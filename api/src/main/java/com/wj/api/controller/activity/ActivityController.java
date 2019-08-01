@@ -74,4 +74,14 @@ public class ActivityController {
         return ResponseMessage.ok(activityService.findByActivityId(activityId));
     }
 
+    @ApiOperation(value = "确认订单", notes = "确认订单")
+    @GetMapping("/isOrder")
+    public ResponseMessage<Activity> isOrder(Integer activityId) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        return ResponseMessage.ok(activityService.isOrder(activityId, userId));
+    }
+
+
 }

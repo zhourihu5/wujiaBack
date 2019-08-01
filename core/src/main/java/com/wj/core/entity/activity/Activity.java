@@ -38,7 +38,6 @@ public class Activity {
     private String province;
     private String city;
     private String area;
-
     @Transient
     private Commodity commodity;
     @Transient

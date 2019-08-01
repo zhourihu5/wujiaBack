@@ -1,11 +1,13 @@
 package com.wj.core.entity.commodity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wj.core.entity.atta.AttaInfo;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "ebiz_commodity")
 @Data
@@ -35,4 +37,8 @@ public class Commodity {
     private Date createDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateDate;
+    @Transient
+    private String[] formatVals;
+    @Transient
+    List<AttaInfo> attaInfoList;
 }

@@ -21,4 +21,8 @@ public class XcxLoginDTO {
     private List<Activity> activityList;
 
     private String communtityName;
+
+    private String isBindingFamily;
+
+
 }

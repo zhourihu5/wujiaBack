@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -66,8 +67,12 @@ public class BindingController {
 
     @Autowired
     private ActivityService activityService;
+
     @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private UserFamilyService userFamilyService;
 
     /**
      * 绑定用户信息
@@ -86,15 +91,43 @@ public class BindingController {
                 throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
             }
         }
-        bindingService.bindingUser(bindingDTO.getUserName(), bindingDTO.getCover(), bindingDTO.getNickName(), bindingDTO.getOpenid());
-        SysUserInfo userInfo = userInfoService.findByName(bindingDTO.getUserName());
-        List<Activity> activityList = activityService.findList(userInfo.getId());
-        String jwtToken = JwtUtil.generateToken(userInfo);
         XcxLoginDTO loginDTO = new XcxLoginDTO();
-        loginDTO.setToken(jwtToken);
-        loginDTO.setUserInfo(userInfo);
-        loginDTO.setActivityList(activityList);
-        loginDTO.setCommuntityName(addressService.findCommuntityNameByUserId(userInfo.getId()));
+        SysUserInfo userInfo = userInfoService.findByName(bindingDTO.getUserName());
+        if (userInfo == null) {
+            SysUserInfo sysUserInfo = new SysUserInfo();
+            sysUserInfo.setUserName(bindingDTO.getUserName());
+            sysUserInfo.setIcon(bindingDTO.getCover());
+            sysUserInfo.setWxCover(bindingDTO.getCover());
+            sysUserInfo.setNickName(bindingDTO.getNickName());
+            sysUserInfo.setWxNickName(bindingDTO.getNickName());
+            sysUserInfo.setWxOpenId(bindingDTO.getOpenid());
+            sysUserInfo.setStatus(4);
+            sysUserInfo.setCreateDate(new Date());
+            sysUserInfo = userInfoService.addUser(sysUserInfo);
+            loginDTO.setUserInfo(sysUserInfo);
+            String jwtToken = JwtUtil.generateToken(sysUserInfo);
+            loginDTO.setToken(jwtToken);
+            loginDTO.setUserInfo(sysUserInfo);
+            loginDTO.setIsBindingFamily("0");
+        } else {
+            bindingService.bindingUser(bindingDTO.getUserName(), bindingDTO.getCover(), bindingDTO.getNickName(), bindingDTO.getOpenid());
+            String jwtToken = JwtUtil.generateToken(userInfo);
+            loginDTO.setToken(jwtToken);
+            loginDTO.setUserInfo(userInfo);
+            List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userInfo.getId());
+            if (userFamilyList.size() <= 0) {
+                loginDTO.setIsBindingFamily("0");
+                return ResponseMessage.ok(loginDTO);
+            }
+            List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());
+            if (communtityList.size() > 0) {
+                loginDTO.setCommuntityName(communtityList.get(0).getName());
+                // 根据所在社区选择活动
+                List<Activity> activityList = activityService.findList(userInfo.getId(), communtityList.get(0).getId());
+                loginDTO.setActivityList(activityList);
+            }
+            loginDTO.setIsBindingFamily("1");
+        }
         return ResponseMessage.ok(loginDTO);
     }
 
@@ -112,23 +145,29 @@ public class BindingController {
         JSONObject json = JSON.parseObject(object.toString());
         String openid = json.getString("openid");
         String session_key = json.getString("session_key");
-        SysUserInfo userInfo = new SysUserInfo();
         XcxLoginDTO loginDTO = new XcxLoginDTO();
-        Integer userId = 0;
         if (openid != null) {
-            userInfo = bindingService.findByOpenId(openid);
+            SysUserInfo userInfo = bindingService.findByOpenId(openid);
             if (userInfo != null) {
                 String jwtToken = JwtUtil.generateToken(userInfo);
                 loginDTO.setToken(jwtToken);
                 loginDTO.setUserInfo(userInfo);
-                loginDTO.setCommuntityName(addressService.findCommuntityNameByUserId(userInfo.getId()));
-                userId = userInfo.getId();
+                List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userInfo.getId());
+                if (userFamilyList.size() <= 0) {
+                    loginDTO.setIsBindingFamily("0");
+                    return ResponseMessage.ok(loginDTO);
+                }
+                List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());
+                if (communtityList.size() > 0) {
+                    loginDTO.setCommuntityName(communtityList.get(0).getName());
+                    // 根据所在社区选择活动
+                    List<Activity> activityList = activityService.findList(userInfo.getId(), communtityList.get(0).getId());
+                    loginDTO.setActivityList(activityList);
+                }
+                loginDTO.setIsBindingFamily("1");
             }
             loginDTO.setOpenid(openid);
         }
-        List<Activity> activityList = activityService.findList(userId);
-        loginDTO.setActivityList(activityList);
-
         return ResponseMessage.ok(loginDTO);
     }
 
@@ -136,12 +175,11 @@ public class BindingController {
     @GetMapping("sendMsg")
     public ResponseMessage sendMsg(HttpServletRequest request) {
         String userName = request.getParameter("userName");
-        logger.info(userName + "发送验证码info");
-        SysUserInfo userInfo = userInfoService.findByName(userName);
-        if (userInfo == null) {
-            throw new ServiceException("你不是平台用户", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-
+//        logger.info(userName + "发送验证码info");
+//        SysUserInfo userInfo = userInfoService.findByName(userName);
+//        if (userInfo == null) {
+//            throw new ServiceException("你不是平台用户", ErrorCode.INTERNAL_SERVER_ERROR);
+//        }
         Object code = redisHelper.getValue(userName);
         String smsCode = String.valueOf(code);
         try {

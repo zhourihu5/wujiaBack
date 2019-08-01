@@ -3,14 +3,20 @@ package com.wj.core.service.activity;
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
+import com.wj.core.entity.address.Address;
+import com.wj.core.entity.atta.AttaInfo;
 import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.BaseCommuntity;
+import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.activity.ActivityRepository;
+import com.wj.core.repository.address.AddressRepository;
+import com.wj.core.repository.atta.AttaInfoRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.address.AddressService;
 import com.wj.core.util.CommonUtils;
 import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +32,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -45,11 +53,17 @@ public class ActivityService {
     @Autowired
     private UserInfoRepository userInfoRepository;
 
-    public List<Activity> findList(Integer userId) {
-        List<Activity> activityList = activityRepository.findByStatus("1");
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
+    private AttaInfoRepository attaInfoRepository;
+
+    public List<Activity> findList(Integer userId, Integer communityId) {
+        List<Activity> activityList = activityRepository.findByCommunityIdAndStatus(communityId, "1");
         activityList.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
-            if (userId != 0 || userId != null) {
+            if (userId != null) {
                 OrderInfo orderInfo = orderInfoRepository.findByUserIdAndActivityId(userId, Activity.getId());
                 if (orderInfo != null) {
                     Activity.setIsJoin(1);
@@ -135,9 +149,29 @@ public class ActivityService {
     public ActivityUserDTO findByActivityId(Integer activityId) {
         ActivityUserDTO activityUserDTO = new ActivityUserDTO();
         Activity activity = activityRepository.findByActivityId(activityId);
+//        Date startDate = new Date();
+//        Date endDate = new Date();
+//        try {
+//            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            startDate = sf.parse(activity.getStartDate().toString());
+//            endDate = sf.parse(activity.getStartDate().toString());
+//        } catch (ParseException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        long startTime = startDate.getTime();
+//        long endTime = endDate.getTime();
+//        activity.setStartTime(startTime);
+//        activity.setEndTime(endTime);
         String largeMoney = activity.getSaleRules().substring(activity.getSaleRules().lastIndexOf("|")+1);
         activity.setLargeMoney(largeMoney);
-        activity.setCommodity(commodityRepository.findByCommodityId(activity.getCommodityId()));
+        Commodity commodity = commodityRepository.findByCommodityId(activity.getCommodityId());
+        String objType = "comm";
+        List<AttaInfo> attaInfoList =  attaInfoRepository.findByObjectIdAndObjectType(commodity.getId(), objType);
+        commodity.setAttaInfoList(attaInfoList);
+        String[] strs = commodity.getFormatVal().split(",");
+        commodity.setFormatVals(strs);
+        activity.setCommodity(commodity);
         Integer pageNum = 0;
         Integer pageSize = 10;
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "create_date");
@@ -170,5 +204,14 @@ public class ActivityService {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
         });
         return activityList;
+    }
+
+    public Activity isOrder(Integer activityId, Integer userId) {
+        Activity activity = activityRepository.findByActivityId(activityId);
+        Address address = addressRepository.findByAddressId(userId, "1");
+        if (address != null) {
+            activity.setAddress(address);
+        }
+        return activity;
     }
 }

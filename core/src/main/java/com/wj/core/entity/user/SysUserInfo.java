@@ -41,7 +41,7 @@ public class SysUserInfo implements Serializable {
     private String icon;
     @ApiModelProperty(value = "用户状态")
     private Integer status;
-    @ApiModelProperty(value = "标识 1、后台用户 2、ipad用户 3、app用户")
+    @ApiModelProperty(value = "标识 1、后台用户 2、ipad用户 3、app用户 4.小程序用户")
     private Integer flag;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;

@@ -34,8 +34,7 @@ public class AddressService {
     private BaseCommuntityRepository baseCommuntityRepository;
 
     public List<Address> findListByUserId(Integer userId) {
-        List<Address> activityList = addressRepository.findByUserId(userId);
-        return activityList;
+        return addressRepository.findByUserId(userId);
     }
 
     public Address findByAddressId(Integer userId, String status) {
@@ -56,26 +55,8 @@ public class AddressService {
         return list;
     }
 
-    // 根据用户id查询所在社区名称
-    public String findCommuntityNameByUserId(Integer userId) {
-        String name = "";
-        List<BaseCommuntity> list = new ArrayList<>();
-        // 根据用户id查询家庭id
-        List<SysUserFamily> userFamilyList = userFamilyRepository.findByUserId(userId);
-        userFamilyList.forEach(SysUserFamily -> {
-            // 根据家庭id查询社区id
-            Integer communtityId = familyCommuntityRepository.findByFamilyId(SysUserFamily.getUserFamily().getFamilyId());
-            BaseCommuntity baseCommuntity = baseCommuntityRepository.findByCommuntityId(communtityId);
-            list.add(baseCommuntity);
-        });
-        if (list.size() > 0) {
-            name = list.get(0).getName();
-        }
-        return name;
-    }
-
     @Transactional
-    public void save(Address address) {
+    public void saveAddress(Address address) {
         if (address.getStatus() == null) {
             address.setStatus("0");
         }

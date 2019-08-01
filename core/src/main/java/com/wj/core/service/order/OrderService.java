@@ -35,12 +35,7 @@ public class OrderService {
     @Autowired
     private CommodityRepository commodityRepository;
 
-    public Activity findOrder(Integer activityId, Integer userId) {
-        Activity activity = activityRepository.findByActivityId(activityId);
-        Address address = addressRepository.findByAddressId(userId, "1");
-        activity.setAddress(address);
-        return activity;
-    }
+
 
     // 生成订单
     public void saveOrder(OrderInfo orderInfo) {

@@ -16,6 +16,9 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer>, Jp
     @Query(value = "select * from ebiz_activity where status = ?1", nativeQuery = true)
     public List<Activity> findByStatus(String status);
 
+    @Query(value = "select * from ebiz_activity where community_id = ?1 and status = ?2", nativeQuery = true)
+    public List<Activity> findByCommunityIdAndStatus(Integer communityId, String status);
+
     @Modifying
     @Query("update Activity a set a.status = ?1 where a.id = ?2")
     void modityStatus(String status, Integer id);
