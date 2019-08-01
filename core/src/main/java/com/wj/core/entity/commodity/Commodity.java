@@ -40,6 +40,6 @@ public class Commodity {
     @Transient
     private String[] formatVals;
     @Transient
-    List<AttaInfo> attaInfoList;
+    List<AttaInfo> attaInfos;
     private String uploadImg;
 }
