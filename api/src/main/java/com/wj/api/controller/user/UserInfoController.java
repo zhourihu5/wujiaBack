@@ -98,8 +98,8 @@ public class UserInfoController {
     }
 
     @ApiOperation(value = "查询用户信息", notes = "查询用户信息")
-    @PostMapping("findUserInfo")
-    public ResponseMessage<SysUserInfo> findUserInfo() {
+    @GetMapping("findWxUserInfo")
+    public ResponseMessage<SysUserInfo> findWxUserInfo() {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer)claims.get("userId");
