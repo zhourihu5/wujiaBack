@@ -170,7 +170,7 @@ public class ActivityService {
         Commodity commodity = commodityRepository.findByCommodityId(activity.getCommodityId());
         String objType = "comm";
         List<AttaInfo> attaInfoList = attaInfoRepository.findByObjectIdAndObjectType(commodity.getId(), objType);
-        commodity.setAttaInfoList(attaInfoList);
+        commodity.setAttaInfos(attaInfoList);
         String[] strs = commodity.getFormatVal().split(",");
         commodity.setFormatVals(strs);
         activity.setCommodity(commodity);
