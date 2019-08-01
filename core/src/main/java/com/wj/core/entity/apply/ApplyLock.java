@@ -7,10 +7,9 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ebiz_apply_unlock")
+@Table(name = "ebiz_apply_lock")
 @Data
-public class ApplyUnlock {
-
+public class ApplyLock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -24,10 +23,9 @@ public class ApplyUnlock {
     private String status;
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private String create_date;
+    private String createDate;
     @ApiModelProperty(value = "申请人id")
-    private String userId;
+    private Integer userId;
     @ApiModelProperty(value = "家庭id")
-    private String familyId;
-
+    private Integer familyId;
 }
