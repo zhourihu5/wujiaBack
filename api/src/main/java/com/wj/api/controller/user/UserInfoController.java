@@ -102,7 +102,6 @@ public class UserInfoController {
     public ResponseMessage<SysUserInfo> findUserInfo() {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-
         Integer userId = (Integer)claims.get("userId");
         return ResponseMessage.ok(userInfoService.findUserInfo(userId));
     }
