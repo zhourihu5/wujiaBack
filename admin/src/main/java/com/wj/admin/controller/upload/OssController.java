@@ -31,6 +31,7 @@ public class OssController {
     private static final String APK = "apk";
     private static final String CARD_CONTENT = "card_content";
     private static final String ACTIVITY = "activity";
+    private static final String COMM = "commodity";
     @Value("${wj.oss.access}")
     private String url;
     /**
@@ -69,6 +70,10 @@ public class OssController {
         }
         if (type.equals(ACTIVITY)) {
             String dir = "images/activity/" + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate());
+            path = ossUploadService.ossUpload(file,  dir);
+        }
+        if (type.equals(COMM)) {
+            String dir = "images/commodity/" + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate());
             path = ossUploadService.ossUpload(file,  dir);
         }
         return ResponseMessage.ok(path);

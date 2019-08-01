@@ -4,13 +4,17 @@ package com.wj.admin.controller.base;
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.base.BaseCommuntity;
+import com.wj.core.entity.base.BaseCommuntityInfo;
 import com.wj.core.entity.base.dto.BaseCommuntityDTO;
 import com.wj.core.entity.base.dto.BaseFamilyDTO;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.SysUserInfoDTO;
+import com.wj.core.service.base.BaseCommuntityInfoService;
 import com.wj.core.service.base.BaseCommuntityService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +37,8 @@ public class BaseCommuntityController {
 
     @Autowired
     private BaseCommuntityService baseCommuntityService;
+    @Autowired
+    private BaseCommuntityInfoService baseCommuntityInfoService;
 
     @ApiOperation(value = "获取社区分页信息", notes = "获取社区分页信息")
     @GetMapping("findAll")
@@ -93,6 +99,37 @@ public class BaseCommuntityController {
         logger.info("根据社区查询所有家庭 接口:/v1/communtity/findFamilyListByCode userId=" + claims.get("userId"));
         List<BaseFamilyDTO> list = baseCommuntityService.findFamilyListByCode(communtityCode);
         return ResponseMessage.ok(list);
+    }
+
+    @ApiOperation(value = "根据社区查询黄页信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", dataType = "Integer", value = "页号"),
+            @ApiImplicitParam(name = "pageSize", dataType = "Integer", value = "大小"),
+            @ApiImplicitParam(name = "code", dataType = "String", value = "社区code")
+    })
+    @GetMapping("getComInfoList")
+    public ResponseMessage<Page<BaseCommuntityInfo>> getComInfoList(Integer pageNum, Integer pageSize, String code) {
+        return ResponseMessage.ok(baseCommuntityInfoService.getList(pageNum, pageSize, code));
+    }
+
+    @ApiOperation(value = "根据社区删除黄页信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", dataType = "Integer", value = "主键ID")
+    })
+    @GetMapping("removeCommondityInfo")
+    public ResponseMessage removeCommondityInfo(Integer id) {
+        baseCommuntityInfoService.remove(id);
+        return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value = "根据社区保存黄页信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "baseCommuntityInfo", dataType = "BaseCommuntityInfo", value = "社区黄页实体")
+    })
+    @PostMapping("saveCommondityInfo")
+    public ResponseMessage saveCommondityInfo(@RequestBody BaseCommuntityInfo baseCommuntityInfo) {
+        baseCommuntityInfoService.save(baseCommuntityInfo);
+        return ResponseMessage.ok();
     }
 }
 

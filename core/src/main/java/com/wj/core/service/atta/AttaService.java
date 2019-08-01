@@ -6,6 +6,7 @@ import com.wj.core.util.time.ClockUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -14,6 +15,7 @@ public class AttaService {
     @Autowired
     private AttaInfoRepository attaInfoRepository;
 
+    @Transactional
     public void saveAttaInfo(AttaInfo attaInfo) {
         attaInfo.setCreateDate(ClockUtil.currentDate());
         attaInfoRepository.save(attaInfo);
@@ -23,6 +25,7 @@ public class AttaService {
         return attaInfoRepository.findByObjectIdAndObjectType(objId, objType);
     }
 
+    @Transactional
     public void removeAtta(Integer objId, String objType) {
         attaInfoRepository.deleteByObjectIdAndObjectType(objId, objType);
     }

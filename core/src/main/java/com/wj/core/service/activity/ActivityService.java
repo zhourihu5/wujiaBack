@@ -96,8 +96,7 @@ public class ActivityService {
             activity.setIsShow("0"); // 未上架
             activity.setStatus("0");
         }
-
-        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains("http://", activity.getCover())) {
+        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains(activity.getCover(),"http://")) {
             activity.setCover(activity.getCover());
         } else {
             activity.setCover(url + activity.getCover());

@@ -41,4 +41,5 @@ public class Commodity {
     private String[] formatVals;
     @Transient
     List<AttaInfo> attaInfoList;
+    private String uploadImg;
 }
