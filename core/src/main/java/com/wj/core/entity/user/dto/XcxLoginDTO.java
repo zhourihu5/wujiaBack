@@ -1,6 +1,7 @@
 package com.wj.core.entity.user.dto;
 
 import com.wj.core.entity.activity.Activity;
+import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.dto.DeviceDTO;
 import com.wj.core.entity.user.SysUserInfo;
 import io.swagger.annotations.ApiModel;
@@ -23,6 +24,8 @@ public class XcxLoginDTO {
     private String communtityName;
 
     private String isBindingFamily;
+
+    private List<BaseCommuntity> communtityList;
 
 
 }

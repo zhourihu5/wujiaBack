@@ -122,6 +122,7 @@ public class BindingController {
             List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());
             if (communtityList.size() > 0) {
                 loginDTO.setCommuntityName(communtityList.get(0).getName());
+                loginDTO.setCommuntityList(communtityList);
                 // 根据所在社区选择活动
                 List<Activity> activityList = activityService.findList(userInfo.getId(), communtityList.get(0).getId());
                 loginDTO.setActivityList(activityList);
@@ -160,6 +161,7 @@ public class BindingController {
                 List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());
                 if (communtityList.size() > 0) {
                     loginDTO.setCommuntityName(communtityList.get(0).getName());
+                    loginDTO.setCommuntityList(communtityList);
                     // 根据所在社区选择活动
                     List<Activity> activityList = activityService.findList(userInfo.getId(), communtityList.get(0).getId());
                     loginDTO.setActivityList(activityList);
@@ -175,11 +177,6 @@ public class BindingController {
     @GetMapping("sendMsg")
     public ResponseMessage sendMsg(HttpServletRequest request) {
         String userName = request.getParameter("userName");
-//        logger.info(userName + "发送验证码info");
-//        SysUserInfo userInfo = userInfoService.findByName(userName);
-//        if (userInfo == null) {
-//            throw new ServiceException("你不是平台用户", ErrorCode.INTERNAL_SERVER_ERROR);
-//        }
         Object code = redisHelper.getValue(userName);
         String smsCode = String.valueOf(code);
         try {
