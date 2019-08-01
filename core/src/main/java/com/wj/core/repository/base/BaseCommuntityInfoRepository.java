@@ -13,10 +13,10 @@ import java.util.List;
 
 public interface BaseCommuntityInfoRepository extends JpaRepository<BaseCommuntityInfo, Integer> {
 
-    @Query(value = "select * from base_communtity_info", nativeQuery = true)
-    public List<BaseCommuntityInfo> findList();
+    @Query(value = "select * from base_communtity_info where communtity_id = ?1", nativeQuery = true)
+    public List<BaseCommuntityInfo> findList(Integer communtityId);
 
-    @Query(value = "select * from base_communtity_info", nativeQuery = true)
-    public Page<BaseCommuntityInfo> findAll(Pageable pageable);
+    @Query(value = "select * from base_communtity_info where communtity_id = ?1", nativeQuery = true)
+    public Page<BaseCommuntityInfo> findAll(Integer communtityId,Pageable pageable);
 
 }

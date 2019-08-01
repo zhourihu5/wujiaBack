@@ -29,11 +29,11 @@ public class BaseCommuntityInfoService {
     private BaseCommuntityInfoRepository baseCommuntityInfoRepository;
 
 
-    public Page<BaseCommuntityInfo> findAll(Pageable pageable) {
-        return baseCommuntityInfoRepository.findAll(pageable);
+    public Page<BaseCommuntityInfo> findAll(Integer communtityId, Pageable pageable) {
+        return baseCommuntityInfoRepository.findAll(communtityId, pageable);
     }
 
-    public List<BaseCommuntityInfo> findList() {
-        return baseCommuntityInfoRepository.findList();
+    public List<BaseCommuntityInfo> findList(Integer communtityId) {
+        return baseCommuntityInfoRepository.findList(communtityId);
     }
 }

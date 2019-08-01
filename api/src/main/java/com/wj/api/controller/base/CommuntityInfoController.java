@@ -28,21 +28,21 @@ public class CommuntityInfoController {
 
     @ApiOperation(value = "社区黄页分页列表", notes = "社区黄页分页列表")
     @GetMapping("findAll")
-    public @ResponseBody ResponseMessage<Page<BaseCommuntityInfo>> findAll(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public @ResponseBody ResponseMessage<Page<BaseCommuntityInfo>> findAll(Integer communtityId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
         }
         pageNum = pageNum - 1;
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "start_date");
 
-        Page<BaseCommuntityInfo> list = baseCommuntityInfoService.findAll(pageable);
+        Page<BaseCommuntityInfo> list = baseCommuntityInfoService.findAll(communtityId, pageable);
         return ResponseMessage.ok(list);
     }
 
     @ApiOperation(value = "社区黄页全部列表", notes = "社区黄页全部列表")
     @GetMapping("findList")
-    public @ResponseBody ResponseMessage<List<BaseCommuntityInfo>> findList() {
-        List<BaseCommuntityInfo> list = baseCommuntityInfoService.findList();
+    public @ResponseBody ResponseMessage<List<BaseCommuntityInfo>> findList(Integer communtityId) {
+        List<BaseCommuntityInfo> list = baseCommuntityInfoService.findList(communtityId);
         return ResponseMessage.ok(list);
     }
 }
