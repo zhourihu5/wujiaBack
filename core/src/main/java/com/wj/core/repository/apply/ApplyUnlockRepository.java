@@ -12,8 +12,4 @@ public interface ApplyUnlockRepository extends JpaRepository<ApplyLock, Integer>
     @Query(value = "select * from ebiz_apply_lock where status = ?1", nativeQuery = true)
     public List<ApplyLock> findByStatus(String status);
 
-    @Modifying
-    @Query("update ebiz_apply_lock set status = ?1 where id = ?2")
-    public void modityStatus(String status, Integer id);
-
 }
