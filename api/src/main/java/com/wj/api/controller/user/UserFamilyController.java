@@ -77,4 +77,11 @@ public class UserFamilyController {
         return ResponseMessage.ok();
     }
 
+    @ApiOperation(value = "申请开锁", notes = "申请开锁")
+    @PostMapping("applyUnLock")
+    public ResponseMessage applyUnLock(SysUserFamily userFamily) {
+        userFamilyService.applyUnLock(userFamily);
+        return ResponseMessage.ok();
+    }
+
 }
