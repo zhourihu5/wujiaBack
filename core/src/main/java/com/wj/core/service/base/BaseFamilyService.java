@@ -144,5 +144,9 @@ public class BaseFamilyService {
         }
         return page;
     }
+    
+    public List<BaseFamily> getFamilyByStoreyCode(String unitCode) {
+        return baseFamilyRepository.findByCodeLike(unitCode);
+    }
 
 }

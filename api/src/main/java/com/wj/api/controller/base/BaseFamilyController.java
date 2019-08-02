@@ -22,6 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(value = "/v1/family", tags = "家庭接口模块")
 @RestController
 @RequestMapping("/v1/family/")
@@ -63,6 +65,14 @@ public class BaseFamilyController {
     @GetMapping("bindInfo")
     public ResponseMessage<FamilyBindInfoDTO> bindInfo(Integer familyId) {
         return ResponseMessage.ok(userFamilyService.getFamilyBindInfo(familyId));
+    }
+
+
+    @ApiOperation(value = "获取每层下的家庭")
+    @ApiImplicitParam(name = "storeyCode", dataType = "String", value = "层Code", required = true)
+    @GetMapping("bindInfo")
+    public ResponseMessage<List<BaseFamily>> bindInfo(String storeyCode) {
+        return ResponseMessage.ok(baseFamilyService.getFamilyByStoreyCode(storeyCode));
     }
 
 
