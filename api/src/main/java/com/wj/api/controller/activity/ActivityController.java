@@ -83,5 +83,4 @@ public class ActivityController {
         return ResponseMessage.ok(activityService.isOrder(activityId, userId));
     }
 
-
 }

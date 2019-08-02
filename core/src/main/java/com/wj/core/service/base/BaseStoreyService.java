@@ -7,6 +7,7 @@ import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.repository.base.BaseCommuntityRepository;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.base.BaseStoreyRepository;
+import com.wj.core.repository.base.FamilyCommuntityRepository;
 import com.wj.core.util.base.CommunityUtil;
 import com.wj.core.util.time.ClockUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +30,9 @@ public class BaseStoreyService {
     private BaseFamilyRepository baseFamilyRepository;
     @Autowired
     private BaseCommuntityRepository baseCommuntityRepository;
+
+    @Autowired
+    private FamilyCommuntityRepository familyCommuntityRepository;
 
     public Page<BaseStorey> findAll(Integer unitId, Pageable pageable) {
         Page<BaseStorey> page = null;
@@ -82,7 +86,8 @@ public class BaseStoreyService {
                 baseFamily.setStoreyId(baseStorey.getId());
                 baseFamily.setCode(CommunityUtil.genCode(baseStorey.getCode(), i));
                 baseFamily.setCreateDate(ClockUtil.currentDate());
-                baseFamilyRepository.save(baseFamily);
+                BaseFamily newBaseFamily = baseFamilyRepository.save(baseFamily);
+                familyCommuntityRepository.insert(bc.getId(), newBaseFamily.getId());
             }
         }
     }

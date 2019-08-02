@@ -18,6 +18,7 @@ import com.wj.core.helper.impl.RedisHelperImpl;
 import com.wj.core.service.SendSms;
 import com.wj.core.service.activity.ActivityService;
 import com.wj.core.service.address.AddressService;
+import com.wj.core.service.apply.ApplyLockService;
 import com.wj.core.service.base.BaseDeviceService;
 import com.wj.core.service.base.BaseFamilyService;
 import com.wj.core.service.exception.ErrorCode;
@@ -73,6 +74,9 @@ public class BindingController {
 
     @Autowired
     private UserFamilyService userFamilyService;
+
+    @Autowired
+    private ApplyLockService applyLockService;
 
     /**
      * 绑定用户信息

@@ -1,8 +1,11 @@
 package com.wj.api.controller.apply;
 
 import com.wj.api.filter.ResponseMessage;
+import com.wj.api.utils.JwtUtil;
+import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.apply.ApplyLock;
 import com.wj.core.service.apply.ApplyLockService;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -26,4 +29,5 @@ public class ApplyLockController {
         applyLockService.saveApplyLock(applyLock);
         return ResponseMessage.ok();
     }
+
 }
