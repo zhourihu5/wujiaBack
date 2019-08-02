@@ -70,6 +70,7 @@ public class AddressController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
+        address.setUserId(userId);
         addressService.saveAddress(address);
         return ResponseMessage.ok();
     }
