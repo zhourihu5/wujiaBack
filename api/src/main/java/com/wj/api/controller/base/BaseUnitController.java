@@ -59,6 +59,9 @@ public class BaseUnitController {
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("查询楼所属单元接口:/v1/unit/findByUnit userId=" + claims.get("userId"));
         List<BaseUnit> list = baseUnitService.getUnits(commCode, issuCode, disCode, floorCode);
+        list.forEach(BaseUnit -> {
+            BaseUnit.setName(BaseUnit.getUnitNo());
+        });
         return ResponseMessage.ok(list);
     }
 }

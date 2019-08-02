@@ -37,8 +37,8 @@ public class AddressService {
         return addressRepository.findByUserId(userId);
     }
 
-    public Address findByAddressId(Integer userId, String status) {
-        return addressRepository.findByAddressId(userId, status);
+    public Address findByUserIdAndStatus(Integer userId, String status) {
+        return addressRepository.findByUserIdAndStatus(userId, status);
     }
 
     // 根据用户id查询所在社区
@@ -61,5 +61,9 @@ public class AddressService {
             address.setStatus("0");
         }
         addressRepository.save(address);
+    }
+
+    public Address findByAddressId(Integer userId) {
+        return addressRepository.findByAddressId(userId);
     }
 }

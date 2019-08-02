@@ -55,20 +55,14 @@ public class SysUserInfo implements Serializable {
     @Transient
     private Integer identity;
     @ApiModelProperty(value = "生日")
-    @Transient
     private String birthday;
     @ApiModelProperty(value = "性别")
-    @Transient
     private String sex;
     @ApiModelProperty(value = "真实姓名")
-    @Transient
     private String realName;
     @ApiModelProperty(value = "微信id")
-    @Transient
     private String wxOpenId;
-    @Transient
     private String wxCover;
-    @Transient
     private String wxNickName;
 
 

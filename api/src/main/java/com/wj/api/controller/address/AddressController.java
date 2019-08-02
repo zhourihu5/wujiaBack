@@ -53,6 +53,17 @@ public class AddressController {
         return ResponseMessage.ok(list);
     }
 
+
+    @ApiOperation(value = "地址详细信息", notes = "地址详细信息")
+    @GetMapping("/findDetail")
+    public ResponseMessage<Address> findDetail(Integer addressId) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        Address address = addressService.findByAddressId(addressId);
+        return ResponseMessage.ok(address);
+    }
+
     @ApiOperation(value = "保存地址", notes = "保存地址")
     @PostMapping("saveOrder")
     public ResponseMessage saveOrder(@RequestBody Address address) {

@@ -14,7 +14,7 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
     public List<Address> findByUserId(Integer userId);
 
     @Query(value = "select * from ebiz_address where user_id = ?1 and status = ?2", nativeQuery = true)
-    public Address findByAddressId(Integer userId, String status);
+    public Address findByUserIdAndStatus(Integer userId, String status);
 
     @Modifying
     @Query(value = "update ebiz_address set status = ?2 where user_id = ?1", nativeQuery = true)
@@ -24,4 +24,6 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
     @Query(value = "update ebiz_address set status = ?2 where id = ?1", nativeQuery = true)
     public void updateById(Integer addressId, String status);
 
+    @Query(value = "select * from ebiz_address where id = ?1", nativeQuery = true)
+    public Address findByAddressId(Integer addressId);
 }

@@ -42,5 +42,8 @@ public class BaseUnit {
     private String floorName;
     private Integer issueId;
     private Integer districtId;
+    @ApiModelProperty(value = "单元号")
+    @Transient
+    private String name;
 
 }

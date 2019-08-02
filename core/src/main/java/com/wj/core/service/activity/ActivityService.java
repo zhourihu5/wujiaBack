@@ -166,7 +166,8 @@ public class ActivityService {
         String objType = "comm";
         List<AttaInfo> attaInfoList = attaInfoRepository.findByObjectIdAndObjectType(commodity.getId(), objType);
         commodity.setAttaInfos(attaInfoList);
-        String[] strs = commodity.getFormatVal().split(",");
+//        String[] strs = commodity.getFormatVal().split("|");
+        String[] strs = StringUtils.split(commodity.getFormatVal(),"|");
         commodity.setFormatVals(strs);
         activity.setCommodity(commodity);
         Integer pageNum = 0;
@@ -224,9 +225,9 @@ public class ActivityService {
             throw new ServiceException("系统异常", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         activity.setPaymentMoney(payMoney);
-        Address address = addressRepository.findByAddressId(userId, "1");
-        if (address != null) {
-            activity.setAddress(address);
+        List<Address> addressList = addressRepository.findByUserId(userId);
+        if (addressList.size() > 0) {
+            activity.setAddress(addressList.get(0));
         }
         return activity;
     }

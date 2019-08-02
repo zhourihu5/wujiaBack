@@ -27,10 +27,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -89,10 +86,11 @@ public class UserInfoController {
 
     @ApiOperation(value = "小程序更新用户信息", notes = "小程序更新用户信息")
     @PostMapping("updateInfo")
-    public ResponseMessage updateInfo(SysUserInfo userInfo) {
+    public ResponseMessage updateInfo(@RequestBody SysUserInfo userInfo) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer)claims.get("userId");
+        userInfo.setId(userId);
         userInfoService.updateInfo(userInfo);
         return ResponseMessage.ok();
     }
@@ -103,7 +101,8 @@ public class UserInfoController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer)claims.get("userId");
-        return ResponseMessage.ok(userInfoService.findUserInfo(userId));
+        SysUserInfo sysUserInfo = userInfoService.findUserInfo(userId);
+        return ResponseMessage.ok(sysUserInfo);
     }
 
 
