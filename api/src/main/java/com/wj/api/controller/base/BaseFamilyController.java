@@ -4,6 +4,7 @@ package com.wj.api.controller.base;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.base.BaseFamily;
+import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.entity.base.dto.FamilyBindInfoDTO;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.embeddable.UserFamily;
@@ -72,7 +73,11 @@ public class BaseFamilyController {
     @ApiImplicitParam(name = "storeyCode", dataType = "String", value = "层Code", required = true)
     @GetMapping("getFamilyByStoreyCode")
     public ResponseMessage<List<BaseFamily>> getFamilyByStoreyCode(String storeyCode) {
-        return ResponseMessage.ok(baseFamilyService.getFamilyByStoreyCode(storeyCode));
+        List<BaseFamily> baseFamilyList = baseFamilyService.getFamilyByStoreyCode(storeyCode);
+        baseFamilyList.forEach(BaseFamily -> {
+            BaseFamily.setName(BaseFamily.getNum());
+        });
+        return ResponseMessage.ok(baseFamilyList);
     }
 
 

@@ -50,6 +50,9 @@ public class BaseFamily {
     private Integer communtityId;
     @Transient
     private SysUserInfo userInfo;
+    @ApiModelProperty(value = "门牌号")
+    @Transient
+    private String name;
 
     public Integer getId() {
         return id;
