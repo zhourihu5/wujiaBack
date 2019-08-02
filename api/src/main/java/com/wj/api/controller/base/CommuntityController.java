@@ -25,14 +25,14 @@ public class CommuntityController {
     @Autowired
     private BaseCommuntityService baseCommuntityService;
 
-    @ApiOperation(value = "获取社区分页信息", notes = "获取社区分页信息")
-    @GetMapping("findByCityCodeAndName")
-    public ResponseMessage<Page<BaseCommuntity>> findByCityCodeAndName(Integer cityCode, String name, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
-        pageNum = pageNum - 1;
-        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
-        Page<BaseCommuntity> page = baseCommuntityService.findByCityCodeAndName(cityCode, name, pageable);
-        return ResponseMessage.ok(page);
-    }
+//    @ApiOperation(value = "获取社区分页信息", notes = "获取社区分页信息")
+//    @GetMapping("findByCityCodeAndName")
+//    public ResponseMessage<Page<BaseCommuntity>> findByCityCodeAndName(Integer cityCode, String name, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+//        pageNum = pageNum - 1;
+//        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+//        Page<BaseCommuntity> page = baseCommuntityService.findByCityCodeAndName(cityCode, name, pageable);
+//        return ResponseMessage.ok(page);
+//    }
 
     @ApiOperation(value = "获取社区分页信息", notes = "获取社区分页信息")
     @GetMapping("findByCode")
@@ -40,6 +40,15 @@ public class CommuntityController {
         pageNum = pageNum - 1;
         Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<BaseCommuntity> page = baseCommuntityService.findByCityCodeAndName(cityCode, name, pageable);
+        return ResponseMessage.ok(page);
+    }
+
+    @ApiOperation(value = "获取社区分页信息", notes = "获取社区分页信息")
+    @GetMapping("findByAreaCodeAndName")
+    public ResponseMessage<Page<BaseCommuntity>> findByAreaCodeAndName(Integer areaCode, String name, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        pageNum = pageNum - 1;
+        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Page<BaseCommuntity> page = baseCommuntityService.findAll(areaCode, name, pageable);
         return ResponseMessage.ok(page);
     }
 
