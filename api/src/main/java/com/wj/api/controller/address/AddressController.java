@@ -65,8 +65,8 @@ public class AddressController {
     }
 
     @ApiOperation(value = "保存地址", notes = "保存地址")
-    @PostMapping("saveOrder")
-    public ResponseMessage saveOrder(@RequestBody Address address) {
+    @PostMapping("saveAddress")
+    public ResponseMessage saveAddress(@RequestBody Address address) {
         addressService.saveAddress(address);
         return ResponseMessage.ok();
     }
