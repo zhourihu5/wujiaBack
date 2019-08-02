@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "ebiz_apply_lock")
@@ -23,7 +24,7 @@ public class ApplyLock {
     private String status;
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private String createDate;
+    private Date createDate;
     @ApiModelProperty(value = "申请人id")
     private Integer userId;
     @ApiModelProperty(value = "家庭id")

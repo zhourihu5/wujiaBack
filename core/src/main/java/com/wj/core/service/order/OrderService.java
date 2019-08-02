@@ -45,6 +45,7 @@ public class OrderService {
 
     // 生成订单
     public void saveOrder(OrderInfo orderInfo) {
+        orderInfo.setStatus("1");
         orderInfo.setCreateDate(new Date());
         orderInfo.setUpdateDate(new Date());
         orderInfoRepository.save(orderInfo);

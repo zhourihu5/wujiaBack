@@ -35,6 +35,7 @@ public class ApplyLockService {
     @Transactional
     public void saveApplyLock(ApplyLock applyLock) {
         applyLock.setStatus("0");
+        applyLock.setCreateDate(new Date());
         applyUnlockRepository.save(applyLock);
     }
 
