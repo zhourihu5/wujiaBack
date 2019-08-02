@@ -16,4 +16,7 @@ public interface CommodityRepository extends JpaRepository<Commodity, Integer>, 
     @Query("update Commodity c set c.status = ?1 where c.id = ?2")
     void modityStatus(String status, Integer id);
 
+
+    Commodity findByCode(String code);
+
 }

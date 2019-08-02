@@ -5,8 +5,6 @@ import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
 import com.wj.core.entity.address.Address;
 import com.wj.core.entity.atta.AttaInfo;
-import com.wj.core.entity.base.BaseArea;
-import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.user.SysUserInfo;
@@ -16,13 +14,9 @@ import com.wj.core.repository.atta.AttaInfoRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.user.UserInfoRepository;
-import com.wj.core.service.address.AddressService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
-import com.wj.core.util.CommonUtils;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -35,8 +29,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -145,6 +137,9 @@ public class ActivityService {
         }
         Pageable page = PageRequest.of(pageNum - 1, pageSize, Sort.Direction.DESC, "id");
         Page<Activity> pageCard = activityRepository.findAll(specification, page);
+        pageCard.forEach(activity -> {
+            activity.setCommodity(commodityRepository.findByCommodityId(activity.getCommodityId()));
+        });
         return pageCard;
     }
 
