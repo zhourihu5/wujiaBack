@@ -67,6 +67,9 @@ public class AddressController {
     @ApiOperation(value = "保存地址", notes = "保存地址")
     @PostMapping("saveAddress")
     public ResponseMessage saveAddress(@RequestBody Address address) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
         addressService.saveAddress(address);
         return ResponseMessage.ok();
     }

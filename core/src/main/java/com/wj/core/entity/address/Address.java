@@ -18,6 +18,8 @@ public class Address {
     private String phone;
     private String sex;
     private String address;
+    private String province;
+    private String city;
     private String area;
     private String status;
     private Integer userId;
