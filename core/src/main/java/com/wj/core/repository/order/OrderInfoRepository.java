@@ -6,11 +6,12 @@ import io.swagger.models.auth.In;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer> {
+public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, JpaSpecificationExecutor<OrderInfo> {
 
     @Query(value = "select * from ebiz_order_info", nativeQuery = true)
     public Page<OrderInfo> findAll(Pageable pageable);

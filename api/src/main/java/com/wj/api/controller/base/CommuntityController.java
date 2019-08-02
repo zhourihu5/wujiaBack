@@ -34,4 +34,13 @@ public class CommuntityController {
         return ResponseMessage.ok(page);
     }
 
+    @ApiOperation(value = "获取社区分页信息", notes = "获取社区分页信息")
+    @GetMapping("findByCode")
+    public ResponseMessage<Page<BaseCommuntity>> findByCode(Integer cityCode, String name, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        pageNum = pageNum - 1;
+        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Page<BaseCommuntity> page = baseCommuntityService.findByCityCodeAndName(cityCode, name, pageable);
+        return ResponseMessage.ok(page);
+    }
+
 }

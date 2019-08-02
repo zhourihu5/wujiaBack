@@ -25,11 +25,11 @@ public class BaseCommuntityInfo {
     @ApiModelProperty(value = "类型")
     private String type;
     @ApiModelProperty(value = "社区id")
-    private String communtityId;
+    private String communityId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     private String province;
-    private String commodityCode;
+    private String communityCode;
     private String city;
     private String area;
 

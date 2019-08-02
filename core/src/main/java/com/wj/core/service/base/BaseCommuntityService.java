@@ -227,5 +227,4 @@ public class BaseCommuntityService {
         }
         return page;
     }
-
 }

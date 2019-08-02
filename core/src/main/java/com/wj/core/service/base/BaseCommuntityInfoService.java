@@ -45,7 +45,7 @@ public class BaseCommuntityInfoService {
 
             List<Predicate> predicates = Lists.newArrayList();
             if (StringUtils.isNotBlank(code)) {
-                predicates.add(criteriaBuilder.equal(root.get("communtityCode"), code));
+                predicates.add(criteriaBuilder.equal(root.get("communityCode"), code));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };

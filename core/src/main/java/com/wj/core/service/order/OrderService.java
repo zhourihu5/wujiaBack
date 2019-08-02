@@ -1,5 +1,6 @@
 package com.wj.core.service.order;
 
+import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.address.Address;
 import com.wj.core.entity.base.BaseDevice;
@@ -12,11 +13,16 @@ import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.order.OrderRepairRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import java.util.Date;
 import java.util.List;
 
@@ -61,5 +67,37 @@ public class OrderService {
         OrderInfo orderInfo = orderInfoRepository.findByOrderId(orderId);
         orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
         return orderInfo;
+    }
+
+    public Page<OrderInfo> getList(Integer pageNum, Integer pageSize, Date startDate, Date endDate, String status, String activityName) {
+        Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
+
+            List<Predicate> predicates = Lists.newArrayList();
+            if (startDate != null) {
+                predicates.add(criteriaBuilder.equal(root.get("createDate"), startDate));
+            }
+            if (endDate != null) {
+                predicates.add(criteriaBuilder.equal(root.get("createDate"), endDate));
+            }
+            if (StringUtils.isNotBlank(status)) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), status));
+            }
+            if (StringUtils.isNotBlank(activityName)) {
+                predicates.add(criteriaBuilder.equal(root.get("activityName"), activityName));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        Pageable page = PageRequest.of(pageNum - 1, pageSize, Sort.Direction.DESC, "createDate");
+        Page<OrderInfo> pageOrder = orderInfoRepository.findAll(specification, page);
+        pageOrder.forEach(order -> {
+            order.setCommodity(commodityRepository.findByCommodityId(order.getCommodityId()));
+        });
+        return pageOrder;
     }
 }

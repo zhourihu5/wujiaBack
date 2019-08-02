@@ -43,6 +43,7 @@ public class OrderInfo {
     private String commodityCode;
     private Integer activityId;
     private String activityCode;
+    private String activityName;
     @Transient
     private Commodity commodity;
     @Transient
