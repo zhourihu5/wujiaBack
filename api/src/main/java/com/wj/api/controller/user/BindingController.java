@@ -6,6 +6,7 @@ import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.CommonUtils;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.activity.Activity;
+import com.wj.core.entity.apply.ApplyLock;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDevice;
 import com.wj.core.entity.user.SysUserFamily;
@@ -121,6 +122,10 @@ public class BindingController {
             List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userInfo.getId());
             if (userFamilyList.size() <= 0) {
                 loginDTO.setIsBindingFamily("0");
+                List<ApplyLock> applyLockList = applyLockService.findByUserId(userInfo.getId());
+                if (applyLockList.size() > 0) {
+                    loginDTO.setIsApplyLock(applyLockList.get(0).getStatus());
+                }
                 return ResponseMessage.ok(loginDTO);
             }
             List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());
@@ -160,6 +165,10 @@ public class BindingController {
                 List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userInfo.getId());
                 if (userFamilyList.size() <= 0) {
                     loginDTO.setIsBindingFamily("0");
+                    List<ApplyLock> applyLockList = applyLockService.findByUserId(userInfo.getId());
+                    if (applyLockList.size() > 0) {
+                        loginDTO.setIsApplyLock(applyLockList.get(0).getStatus());
+                    }
                     return ResponseMessage.ok(loginDTO);
                 }
                 List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());

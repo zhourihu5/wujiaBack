@@ -25,6 +25,8 @@ public class XcxLoginDTO {
 
     private String isBindingFamily;
 
+    private String isApplyLock;
+
     private List<BaseCommuntity> communtityList;
 
 
