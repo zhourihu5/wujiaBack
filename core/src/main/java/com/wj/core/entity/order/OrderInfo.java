@@ -37,7 +37,6 @@ public class OrderInfo {
     private Integer shopId;
     private String shopCode;
     private String shopName;
-    private String platForm;
     private Date updateDate;
     private Integer commodityId;
     private String commodityCode;
