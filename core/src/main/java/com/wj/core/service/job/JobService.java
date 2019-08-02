@@ -7,6 +7,7 @@ import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.time.ClockUtil;
 import com.wj.core.util.time.DateFormatUtil;
 import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,15 +16,9 @@ import java.util.Set;
 @Service
 public class JobService {
 
-//    @Autowired
+    @Autowired
     private Scheduler scheduler;
 
-    /**
-     * @param info
-     * @return
-     * @// TODO: 2018/6/8 保存定时任务
-     */
-    @SuppressWarnings("unchecked")
     public Boolean addTask(TaskEntity info) {
         String jobName = info.getJobName(),
                 jobGroup = info.getJobGroup(),
@@ -35,12 +30,12 @@ public class JobService {
             }
             TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
             JobKey jobKey = JobKey.jobKey(jobName, jobGroup);
-
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
             CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withDescription(jobDescription).withSchedule(scheduleBuilder).build();
-
+            JobDataMap jobDataMap = new JobDataMap();
+            jobDataMap.put("objectId", info.getObjectId());
             Class<? extends Job> clazz = (Class<? extends Job>) Class.forName(info.getJobClass());
-            JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(jobKey).withDescription(jobDescription).build();
+            JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(jobKey).withDescription(jobDescription).setJobData(jobDataMap).build();
             scheduler.scheduleJob(jobDetail, trigger);
             return true;
         } catch (SchedulerException | ClassNotFoundException e) {
@@ -48,11 +43,6 @@ public class JobService {
         }
     }
 
-    /**
-     * @param taskEntity
-     * @return
-     * @// TODO: 2018/6/8 开始定时任务
-     */
     @Transactional
     public Boolean resumeTask(TaskEntity taskEntity) {
         try {
@@ -64,11 +54,6 @@ public class JobService {
     }
 
 
-    /**
-     * 修改定时任务
-     *
-     * @param info
-     */
     public Boolean updateTask(TaskEntity info) {
         String jobName = info.getJobName(),
                 jobGroup = info.getJobGroup(),
@@ -96,10 +81,6 @@ public class JobService {
         }
     }
 
-    /**
-     * @param taskEntity
-     * @// TODO: 2018/6/1 停止任务
-     */
     @Transactional
     public Boolean pauseTask(TaskEntity taskEntity) {
         TriggerKey triggerKey = TriggerKey.triggerKey(taskEntity.getJobName(), taskEntity.getJobGroup());
@@ -113,11 +94,6 @@ public class JobService {
         }
     }
 
-    /**
-     * @param taskEntity
-     * @return
-     * @// TODO: 2018/6/7 删除任务
-     */
     public Boolean deleteTask(TaskEntity taskEntity) {
         TriggerKey triggerKey = TriggerKey.triggerKey(taskEntity.getJobName(), taskEntity.getJobGroup());
         try {
@@ -132,16 +108,13 @@ public class JobService {
         return false;
     }
 
-    /**
-     * 验证是否存在
-     *
-     * @param jobName
-     * @param jobGroup
-     * @throws SchedulerException
-     */
-    private boolean checkExists(String jobName, String jobGroup) throws SchedulerException {
+    public boolean checkExists(String jobName, String jobGroup) {
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
-        return scheduler.checkExists(triggerKey);
+        try {
+            return scheduler.checkExists(triggerKey);
+        } catch (SchedulerException e) {
+            throw new ServiceException("查询任务错误", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

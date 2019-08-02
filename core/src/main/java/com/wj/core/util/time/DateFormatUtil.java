@@ -33,6 +33,8 @@ public class DateFormatUtil {
 	public static final String PATTERN_DEFAULT = "yyyy-MM-dd HH:mm:ss.SSS";
 	public static final String PATTERN_DEFAULT_ON_SECOND = "yyyy-MM-dd HH:mm:ss";
 	public static final String PATTERN_DEFALT_DATE = "yyyyMMdd";
+    public static final String CRON_DATE_FORMAT = "ss mm HH dd MM ? yyyy";
+
 
 	// 使用工厂方法FastDateFormat.getInstance(), 从缓存中获取实例
 

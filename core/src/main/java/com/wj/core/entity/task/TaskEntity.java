@@ -17,5 +17,6 @@ public class TaskEntity {
     private Long startTime;
     private Long endTime;
     private String state; //状态
+    private Integer objectId;
 
 }

@@ -47,13 +47,13 @@ public class ActivityController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", dataType = "Integer", value = "页号"),
             @ApiImplicitParam(name = "pageSize", dataType = "Integer", value = "大小"),
-            @ApiImplicitParam(name = "startDate", dataType = "Date", value = "开始时间"),
-            @ApiImplicitParam(name = "endDate", dataType = "Date", value = "结束时间"),
+            @ApiImplicitParam(name = "startDate", dataType = "String", value = "开始时间"),
+            @ApiImplicitParam(name = "endDate", dataType = "String", value = "结束时间"),
             @ApiImplicitParam(name = "status", dataType = "String", value = "状态 0 未开始 1 已开始 2已技术"),
             @ApiImplicitParam(name = "title", dataType = "String", value = "标题")
     })
     @GetMapping("list")
-    public ResponseMessage<Page<Activity>> list(Integer pageNum, Integer pageSize, Date startDate, Date endDate, String status, String title) {
+    public ResponseMessage<Page<Activity>> list(Integer pageNum, Integer pageSize, String startDate, String endDate, String status, String title) {
         return ResponseMessage.ok(activityService.getList(pageNum, pageSize, startDate, endDate, status, title));
     }
 

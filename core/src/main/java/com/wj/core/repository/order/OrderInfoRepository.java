@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -37,4 +38,7 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Query(value = "select count(*) from ebiz_order_info where activity_id = ?1 and status in (2,3)", nativeQuery = true)
     public Integer findCountByActivityId(Integer activityId);
 
+    @Query("update OrderInfo o set o.status = ?1 where o.id = ?2")
+    @Modifying
+    void modityStatus(String status, Integer id);
 }

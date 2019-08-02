@@ -7,6 +7,7 @@ import com.wj.core.entity.address.Address;
 import com.wj.core.entity.atta.AttaInfo;
 import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
+import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.address.AddressRepository;
@@ -16,6 +17,8 @@ import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.job.JobService;
+import com.wj.core.util.time.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,10 +28,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
 
 @Service
@@ -53,6 +58,8 @@ public class ActivityService {
 
     @Autowired
     private AttaInfoRepository attaInfoRepository;
+    @Autowired
+    private JobService jobService;
 
     public List<Activity> findList(Integer userId, Integer communityId) {
         List<Activity> activityList = activityRepository.findByCommunityIdAndStatus(communityId, "1");
@@ -97,10 +104,22 @@ public class ActivityService {
             activity.setCover(url + activity.getCover());
         }
         activityRepository.save(activity);
-        // TODO 添加到定时里，让定时修改状态
+        boolean ex = jobService.checkExists("activity_update_status_" + activity.getId(), "activity");
+        TaskEntity taskEntity = new TaskEntity();
+        taskEntity.setJobName("activity_update_status_" + activity.getId());
+        taskEntity.setJobGroup("activity");
+        taskEntity.setJobClass(new ActivityTask().getClass().getName());
+        taskEntity.setObjectId(activity.getId());
+        taskEntity.setCronExpression(DateFormatUtil.formatDate(DateFormatUtil.CRON_DATE_FORMAT, activity.getEndDate()));
+        if (!ex) {
+            jobService.addTask(taskEntity);
+        } else {
+            jobService.updateTask(taskEntity);
+        }
     }
 
     // 活动更新为已经结束
+    @Transactional
     public void modityStatusEnd(Integer id) {
         activityRepository.modityStatus("3", id);
     }
@@ -111,15 +130,23 @@ public class ActivityService {
     }
 
 
-    public Page<Activity> getList(Integer pageNum, Integer pageSize, Date startDate, Date endDate, String status, String title) {
+    public Page<Activity> getList(Integer pageNum, Integer pageSize, String startDate, String endDate, String status, String title) {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
 
             List<Predicate> predicates = Lists.newArrayList();
-            if (startDate != null) {
-                predicates.add(criteriaBuilder.equal(root.get("startDate"), startDate));
+            if (StringUtils.isNotBlank(startDate)) {
+                try {
+                    predicates.add(criteriaBuilder.equal(root.get("startDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, startDate)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
-            if (endDate != null) {
-                predicates.add(criteriaBuilder.equal(root.get("endDate"), endDate));
+            if (StringUtils.isNotBlank(endDate)) {
+                try {
+                    predicates.add(criteriaBuilder.equal(root.get("endDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, endDate)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
             if (StringUtils.isNotBlank(status)) {
                 predicates.add(criteriaBuilder.equal(root.get("status"), status));

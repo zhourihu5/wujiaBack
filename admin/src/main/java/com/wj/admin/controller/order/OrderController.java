@@ -40,7 +40,7 @@ public class OrderController {
             @ApiImplicitParam(name = "activityName", dataType = "String", value = "活动名称")
     })
     @GetMapping("/order/list")
-    public ResponseMessage<Page<OrderInfo>> list(Integer pageNum, Integer pageSize, Date startDate, Date endDate, String status, String activityName) {
+    public ResponseMessage<Page<OrderInfo>> list(Integer pageNum, Integer pageSize, String startDate, String endDate, String status, String activityName) {
         return ResponseMessage.ok(orderService.getList(pageNum, pageSize, startDate, endDate, status, activityName));
     }
 

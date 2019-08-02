@@ -6,13 +6,18 @@ import com.wj.core.entity.address.Address;
 import com.wj.core.entity.base.BaseDevice;
 import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
+import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.address.AddressRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.order.OrderRepairRepository;
+import com.wj.core.service.activity.ActivityTask;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.job.JobService;
+import com.wj.core.util.time.DateFormatUtil;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +46,8 @@ public class OrderService {
 
     @Autowired
     private CommodityRepository commodityRepository;
-
+    @Autowired
+    private JobService jobService;
 
 
     // 生成订单
@@ -49,6 +56,25 @@ public class OrderService {
         orderInfo.setCreateDate(new Date());
         orderInfo.setUpdateDate(new Date());
         orderInfoRepository.save(orderInfo);
+
+        boolean ex = jobService.checkExists("order_close_" + orderInfo.getId(), "order");
+        // 添加定时任务，定时关闭为支付的订单
+        TaskEntity taskEntity = new TaskEntity();
+        taskEntity.setJobName("order_close_" + orderInfo.getId());
+        taskEntity.setJobGroup("order");
+        taskEntity.setJobClass(new OrderTask().getClass().getName());
+        taskEntity.setObjectId(orderInfo.getId());
+        taskEntity.setCronExpression(DateFormatUtil.formatDate(DateFormatUtil.CRON_DATE_FORMAT, DateUtils.addMinutes(orderInfo.getCreateDate(), 15)));
+        if (!ex) {
+            jobService.addTask(taskEntity);
+        } else {
+            jobService.updateTask(taskEntity);
+        }
+    }
+
+    // 订单支付时间过去
+    public void closeOrder(Integer id) {
+        orderInfoRepository.modityStatus("4", id);
     }
 
     public Page<OrderInfo> findList(String status, Pageable pageable) {
@@ -58,7 +84,7 @@ public class OrderService {
         } else {
             page = orderInfoRepository.findAllByStatus(status, pageable);
         }
-        for (OrderInfo orderInfo: page) {
+        for (OrderInfo orderInfo : page) {
             orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
         }
         return page;
@@ -70,15 +96,23 @@ public class OrderService {
         return orderInfo;
     }
 
-    public Page<OrderInfo> getList(Integer pageNum, Integer pageSize, Date startDate, Date endDate, String status, String activityName) {
+    public Page<OrderInfo> getList(Integer pageNum, Integer pageSize, String startDate, String endDate, String status, String activityName) {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
 
             List<Predicate> predicates = Lists.newArrayList();
-            if (startDate != null) {
-                predicates.add(criteriaBuilder.equal(root.get("createDate"), startDate));
+            if (StringUtils.isNotBlank(startDate)) {
+                try {
+                    predicates.add(criteriaBuilder.equal(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, startDate)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
-            if (endDate != null) {
-                predicates.add(criteriaBuilder.equal(root.get("createDate"), endDate));
+            if (StringUtils.isNotBlank(endDate)) {
+                try {
+                    predicates.add(criteriaBuilder.equal(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, endDate)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
             if (StringUtils.isNotBlank(status)) {
                 predicates.add(criteriaBuilder.equal(root.get("status"), status));
