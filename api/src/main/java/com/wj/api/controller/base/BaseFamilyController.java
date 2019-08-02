@@ -70,8 +70,8 @@ public class BaseFamilyController {
 
     @ApiOperation(value = "获取每层下的家庭")
     @ApiImplicitParam(name = "storeyCode", dataType = "String", value = "层Code", required = true)
-    @GetMapping("bindInfo")
-    public ResponseMessage<List<BaseFamily>> bindInfo(String storeyCode) {
+    @GetMapping("getFamilyByStoreyCode")
+    public ResponseMessage<List<BaseFamily>> getFamilyByStoreyCode(String storeyCode) {
         return ResponseMessage.ok(baseFamilyService.getFamilyByStoreyCode(storeyCode));
     }
 
