@@ -57,7 +57,6 @@ public class OrderController {
     @ApiOperation(value = "下单", notes = "下单")
     @PostMapping("saveOrder")
     public ResponseMessage saveOrder(@RequestBody OrderInfo orderInfo) {
-
         orderService.saveOrder(orderInfo);
         return ResponseMessage.ok();
     }
