@@ -28,7 +28,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -49,13 +51,23 @@ public class OrderService {
     @Autowired
     private JobService jobService;
 
-
     // 生成订单
-    public void saveOrder(OrderInfo orderInfo) {
+    public OrderInfo saveOrder(OrderInfo orderInfo) {
+        // 判断活动是否结束 结束不能下单
+        Activity activity = activityRepository.findByActivityId(orderInfo.getActivityId());
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTime = formatter.format(date);
+        String endDate = formatter.format(activity.getEndDate());
+//        boolean isbefore = isDateBefore(currentTime,endDate);
+        boolean isafter = isDateAfter(currentTime,endDate);
+        if (isafter) {
+            throw new ServiceException("活动已经结束，您不能下单!", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         orderInfo.setStatus("1");
         orderInfo.setCreateDate(new Date());
         orderInfo.setUpdateDate(new Date());
-        orderInfoRepository.save(orderInfo);
+        OrderInfo orderInfo1 = orderInfoRepository.save(orderInfo);
 
         boolean ex = jobService.checkExists("order_close_" + orderInfo.getId(), "order");
         // 添加定时任务，定时关闭为支付的订单
@@ -70,6 +82,7 @@ public class OrderService {
         } else {
             jobService.updateTask(taskEntity);
         }
+        return orderInfo1;
     }
 
     // 订单支付时间过去
@@ -134,5 +147,40 @@ public class OrderService {
             order.setCommodity(commodityRepository.findByCommodityId(order.getCommodityId()));
         });
         return pageOrder;
+    }
+
+    // 支付订单
+    public void payOrder(OrderInfo orderInfo) {
+        // 先判断订单状态是否是待付款 是待付款查询订单实付金额调用微信支付
+        OrderInfo orderInfo1 = orderInfoRepository.findByOrderId(orderInfo.getId());
+        if (!orderInfo1.getStatus().equals("1")) {
+            throw new ServiceException("此订单不能支付", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        // 调用微信支付如果成功 更改订单支付状态 待收货
+        orderInfoRepository.modityStatus("2", orderInfo.getId());
+        // 调用微信支付失败 告诉前端支付失败
+    }
+
+
+
+
+    public static boolean isDateBefore(String date1,String date2){
+        try{
+            DateFormat df = DateFormat.getDateTimeInstance();
+            return df.parse(date1).before(df.parse(date2));
+        }catch(ParseException e){
+            System.out.println( e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean isDateAfter(String date1,String date2){
+        try{
+            DateFormat df = DateFormat.getDateTimeInstance();
+            return df.parse(date1).after(df.parse(date2));
+        }catch(ParseException e){
+            System.out.println( e.getMessage());
+            return false;
+        }
     }
 }

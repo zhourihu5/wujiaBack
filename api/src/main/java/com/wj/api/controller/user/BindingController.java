@@ -124,7 +124,8 @@ public class BindingController {
                 loginDTO.setIsBindingFamily("0");
                 List<ApplyLock> applyLockList = applyLockService.findByUserId(userInfo.getId());
                 if (applyLockList.size() > 0) {
-                    loginDTO.setIsApplyLock(applyLockList.get(0).getStatus());
+                    loginDTO.setApplyLock(applyLockList.get(0));
+//                    loginDTO.setIsApplyLock(applyLockList.get(0).getStatus());
                 }
                 return ResponseMessage.ok(loginDTO);
             }
@@ -167,7 +168,7 @@ public class BindingController {
                     loginDTO.setIsBindingFamily("0");
                     List<ApplyLock> applyLockList = applyLockService.findByUserId(userInfo.getId());
                     if (applyLockList.size() > 0) {
-                        loginDTO.setIsApplyLock(applyLockList.get(0).getStatus());
+                        loginDTO.setApplyLock(applyLockList.get(0));
                     }
                     return ResponseMessage.ok(loginDTO);
                 }

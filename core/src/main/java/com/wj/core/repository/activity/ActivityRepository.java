@@ -13,11 +13,11 @@ import java.util.List;
 
 public interface ActivityRepository extends JpaRepository<Activity, Integer>, JpaSpecificationExecutor<Activity> {
 
-    @Query(value = "select * from ebiz_activity where status = ?1", nativeQuery = true)
-    public List<Activity> findByStatus(String status);
+    @Query(value = "select * from ebiz_activity where is_show = ?1", nativeQuery = true)
+    public List<Activity> findByStatus(String isShow);
 
-    @Query(value = "select * from ebiz_activity where community_id = ?1 and status = ?2", nativeQuery = true)
-    public List<Activity> findByCommunityIdAndStatus(Integer communityId, String status);
+    @Query(value = "select * from ebiz_activity where community_id = ?1 and is_show = ?2", nativeQuery = true)
+    public List<Activity> findByCommunityIdAndStatus(Integer communityId, String isShow);
 
     @Modifying
     @Query("update Activity a set a.status = ?1 where a.id = ?2")
@@ -30,6 +30,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer>, Jp
     @Query(value = "select * from ebiz_activity where id = ?1", nativeQuery = true)
     public Activity findByActivityId(Integer id);
 
-    @Query(value = "select * from ebiz_activity", nativeQuery = true)
-    public Page<Activity> findAll(Pageable pageable);
+    @Query(value = "select * from ebiz_activity where is_show = ?1", nativeQuery = true)
+    public Page<Activity> findAll(String isShow, Pageable pageable);
 }
