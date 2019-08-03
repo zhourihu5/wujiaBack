@@ -31,5 +31,6 @@ public class ApplyLock {
     private Integer familyId;
     @ApiModelProperty(value = "家庭全称：xxx小区xx期xxxx")
     private String familyName;
+    private String remark;
 
 }
