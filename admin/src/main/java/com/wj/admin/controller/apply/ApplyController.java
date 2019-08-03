@@ -33,11 +33,12 @@ public class ApplyController {
     @ApiOperation(value="审核接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "status", dataType = "String", value = "审核是否通过 0.待审核 1.通过 2.不通过"),
-            @ApiImplicitParam(name = "id", dataType = "Integer", value = "卡片类型 0.功能 1.外链 2.内链 3.图文")
+            @ApiImplicitParam(name = "remark", dataType = "String", value = "驳回原因"),
+            @ApiImplicitParam(name = "id", dataType = "Integer", value = "主键ID")
     })
     @GetMapping("/lock/audit")
-    public ResponseMessage remove(String status, Integer id) {
-        applyLockService.modityStatus(status, id);
+    public ResponseMessage remove(String status, Integer id, String remark) {
+        applyLockService.modityStatus(status, remark, id);
         return ResponseMessage.ok();
     }
 

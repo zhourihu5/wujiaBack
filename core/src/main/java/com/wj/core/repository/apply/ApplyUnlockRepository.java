@@ -19,5 +19,8 @@ public interface ApplyUnlockRepository extends JpaRepository<ApplyLock, Integer>
     @Query("update ApplyLock a set a.status = ?1 where a.id = ?2")
     @Modifying
     void modityStatus(String status, Integer id);
+    @Query("update ApplyLock a set a.status = ?1, a.remark = ?2 where a.id = ?3")
+    @Modifying
+    void modityStatusAndRemark(String status, String remark, Integer id);
 
 }
