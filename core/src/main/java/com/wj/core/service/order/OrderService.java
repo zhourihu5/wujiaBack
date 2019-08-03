@@ -26,8 +26,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -64,6 +66,31 @@ public class OrderService {
         if (isafter) {
             throw new ServiceException("活动已经结束，您不能下单!", ErrorCode.INTERNAL_SERVER_ERROR);
         }
+        Integer count = orderInfoRepository.findCountByActivityId(activity.getCommodityId());
+        String[] rules = activity.getSaleRules().split(",");
+        Integer amount = 0;
+        for (int i = 1; i < rules.length; i++) {
+            Integer number0 = Integer.valueOf(rules[i-1].substring(0, rules[i-1].indexOf("|")));
+            Integer number = Integer.valueOf(rules[i].substring(0, rules[i].indexOf("|")));//截取|之前的字符串
+            Integer money0 = Integer.valueOf(rules[i-1].substring(rules[i-1].lastIndexOf("|") + 1));
+            Integer money = Integer.valueOf(rules[i].substring(rules[i].lastIndexOf("|") + 1));
+            System.out.println(number0 + "---" + money0);
+            System.out.println(number + "---" + money);
+            if (count >= number0 && count < number ) {
+                amount = money0;
+                break;
+            }
+        }
+        // 优惠金额
+        BigDecimal favPrice = new BigDecimal(amount);
+        // 实际支付金额
+        BigDecimal payMoney = activity.getPrice().subtract(favPrice);
+        if (payMoney.doubleValue() <= 0) {
+            throw new ServiceException("系统异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        orderInfo.setPrice(activity.getPrice());
+        orderInfo.setRealPrice(payMoney);
+        orderInfo.setFavPrice(favPrice);
         orderInfo.setStatus("1");
         orderInfo.setCreateDate(new Date());
         orderInfo.setUpdateDate(new Date());
@@ -150,6 +177,7 @@ public class OrderService {
     }
 
     // 支付订单
+    @Transactional
     public void payOrder(OrderInfo orderInfo) {
         // 先判断订单状态是否是待付款 是待付款查询订单实付金额调用微信支付
         OrderInfo orderInfo1 = orderInfoRepository.findByOrderId(orderInfo.getId());

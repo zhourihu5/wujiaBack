@@ -67,7 +67,8 @@ public class OrderController {
 
     @ApiOperation(value = "支付", notes = "支付")
     @PostMapping("payOrder")
-    public ResponseMessage payOrder() {
+    public ResponseMessage payOrder(@RequestBody OrderInfo orderInfo) {
+        orderService.payOrder(orderInfo);
         return ResponseMessage.ok();
     }
 
