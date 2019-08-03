@@ -56,10 +56,19 @@ public class OrderController {
 
     @ApiOperation(value = "下单", notes = "下单")
     @PostMapping("saveOrder")
-    public ResponseMessage saveOrder(@RequestBody OrderInfo orderInfo) {
-        orderService.saveOrder(orderInfo);
-        return ResponseMessage.ok();
+    public ResponseMessage<OrderInfo> saveOrder(@RequestBody OrderInfo orderInfo) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        orderInfo.setUserId(userId);
+        return ResponseMessage.ok(orderService.saveOrder(orderInfo));
     }
 
+
+    @ApiOperation(value = "支付", notes = "支付")
+    @PostMapping("payOrder")
+    public ResponseMessage payOrder() {
+        return ResponseMessage.ok();
+    }
 
 }

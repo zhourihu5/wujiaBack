@@ -1,6 +1,7 @@
 package com.wj.core.entity.user.dto;
 
 import com.wj.core.entity.activity.Activity;
+import com.wj.core.entity.apply.ApplyLock;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.dto.DeviceDTO;
 import com.wj.core.entity.user.SysUserInfo;
@@ -25,7 +26,7 @@ public class XcxLoginDTO {
 
     private String isBindingFamily;
 
-    private String isApplyLock;
+    private ApplyLock applyLock;
 
     private List<BaseCommuntity> communtityList;
 

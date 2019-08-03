@@ -86,7 +86,7 @@ public class ActivityService {
     }
 
     public Page<Activity> findAll(Pageable pageable) {
-        Page<Activity> page = activityRepository.findAll(pageable);
+        Page<Activity> page = activityRepository.findAll("1", pageable);
         page.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
         });
@@ -237,12 +237,15 @@ public class ActivityService {
         Integer count = orderInfoRepository.findCountByActivityId(activityId);
         String[] rules = activity.getSaleRules().split(",");
         Integer amount = 0;
-        for (int i = 0; i < rules.length; i++) {
+        for (int i = 1; i < rules.length; i++) {
+            Integer number0 = Integer.valueOf(rules[i-1].substring(0, rules[i-1].indexOf("|")));
             Integer number = Integer.valueOf(rules[i].substring(0, rules[i].indexOf("|")));//截取|之前的字符串
-            Integer money = Integer.valueOf(rules[i].substring(activity.getSaleRules().lastIndexOf("|") + 1));
+            Integer money0 = Integer.valueOf(rules[i-1].substring(rules[i-1].lastIndexOf("|") + 1));
+            Integer money = Integer.valueOf(rules[i].substring(rules[i].lastIndexOf("|") + 1));
+            System.out.println(number0 + "---" + money0);
             System.out.println(number + "---" + money);
-            if (count < number) {
-                amount = money;
+            if (count >= number0 && count < number ) {
+                amount = money0;
                 break;
             }
         }
