@@ -83,4 +83,13 @@ public class OrderController {
         return ResponseMessage.ok();
     }
 
+    @ApiOperation(value = "确认收获订单", notes = "确认收获订单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "orderInfo", dataType = "OrderInfo", value = "只给order.id就可以", required = true)})
+    @PostMapping("receiveOrder")
+    public ResponseMessage receiveOrder(@RequestBody OrderInfo orderInfo) {
+        orderService.receiveOrder(orderInfo.getId());
+        return ResponseMessage.ok();
+    }
+
 }
