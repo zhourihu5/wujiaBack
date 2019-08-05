@@ -216,4 +216,9 @@ public class OrderService {
     public void cancelOrder(Integer id) {
         orderInfoRepository.modityStatus("4", id);
     }
+
+    @Transactional
+    public void receiveOrder(Integer id) {
+        orderInfoRepository.modityStatus("3", id);
+    }
 }
