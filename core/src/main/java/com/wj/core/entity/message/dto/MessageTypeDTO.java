@@ -10,6 +10,7 @@ public class MessageTypeDTO {
 
     private String typeNo;
     private String typeName;
+    private String icon;
     private Integer unReadNum;
     private List<Message> unReadList;
 

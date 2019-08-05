@@ -150,14 +150,17 @@ public class MessageService {
         MessageTypeDTO sysMsg = new MessageTypeDTO();
         sysMsg.setTypeNo("3");
         sysMsg.setTypeName("系统通知");
+        sysMsg.setIcon("https://wujia01.oss-cn-beijing.aliyuncs.com/msg_system.png");
         sysMsg.setUnReadList(messageRepository.findUserTypeMsg(userId, familyId, 3, "0"));
         MessageTypeDTO comMsg = new MessageTypeDTO();
         comMsg.setTypeNo("2");
         comMsg.setTypeName("社区通知");
         comMsg.setUnReadList(messageRepository.findUserTypeMsg(userId, familyId, 2, "0"));
+        comMsg.setIcon("https://wujia01.oss-cn-beijing.aliyuncs.com/msg_community.png");
         MessageTypeDTO orderMsg = new MessageTypeDTO();
         orderMsg.setTypeNo("4");
         orderMsg.setTypeName("订单通知");
+        orderMsg.setIcon("https://wujia01.oss-cn-beijing.aliyuncs.com/msg_order.png");
         orderMsg.setUnReadList(messageRepository.findUserTypeMsg(userId, familyId, 4, "0"));
         List<MessageTypeDTO> list = Lists.newArrayList(sysMsg, comMsg, orderMsg);
         return list;
