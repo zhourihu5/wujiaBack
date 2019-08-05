@@ -10,6 +10,8 @@ import com.wj.core.service.activity.ActivityService;
 import com.wj.core.service.order.OrderService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +71,15 @@ public class OrderController {
     @PostMapping("payOrder")
     public ResponseMessage payOrder(@RequestBody OrderInfo orderInfo) {
         orderService.payOrder(orderInfo);
+        return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value = "取消订单", notes = "取消订单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "orderInfo", dataType = "OrderInfo", value = "只给order.id就可以", required = true)})
+    @PostMapping("cancelOrder")
+    public ResponseMessage cancelOrder(@RequestBody OrderInfo orderInfo) {
+        orderService.cancelOrder(orderInfo.getId());
         return ResponseMessage.ok();
     }
 

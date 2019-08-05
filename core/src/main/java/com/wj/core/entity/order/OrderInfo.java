@@ -1,5 +1,6 @@
 package com.wj.core.entity.order;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.commodity.Commodity;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class OrderInfo {
 //    订单状态 1.待付款 2.待收货 3.已收货 4.已过期
     private String status;
     private String remark;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     private Date payDate;
     private String closeRemark;

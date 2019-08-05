@@ -20,7 +20,9 @@ public class Activity {
     private String title;
     private Integer communityId;
     private String communityCode;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endDate;
     private Integer commodityId;
     private String commodityCode;

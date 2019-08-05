@@ -3,6 +3,7 @@ package com.wj.api.controller.message;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.message.Message;
+import com.wj.core.entity.message.dto.MessageTypeDTO;
 import com.wj.core.service.message.MessageService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
@@ -70,6 +71,15 @@ public class MessageController {
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
         return ResponseMessage.ok(messageService.isUnReadMessage(userId, 0));
+    }
+
+    @ApiOperation(value="获取用户按分类获取消息")
+    @GetMapping("/getTypeList")
+    public ResponseMessage<List<MessageTypeDTO>> getTypeList() {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        return ResponseMessage.ok(messageService.getTypeList(userId));
     }
 
 }

@@ -30,5 +30,4 @@ public class XcxLoginDTO {
 
     private List<BaseCommuntity> communtityList;
 
-
 }
