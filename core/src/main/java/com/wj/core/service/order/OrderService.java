@@ -16,6 +16,8 @@ import com.wj.core.service.activity.ActivityTask;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.job.JobService;
+import com.wj.core.util.number.RandomUtil;
+import com.wj.core.util.time.ClockUtil;
 import com.wj.core.util.time.DateFormatUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -94,8 +96,10 @@ public class OrderService {
         orderInfo.setStatus("1");
         orderInfo.setCreateDate(new Date());
         orderInfo.setUpdateDate(new Date());
-        OrderInfo orderInfo1 = orderInfoRepository.save(orderInfo);
-
+        orderInfo.setPayDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
+        orderInfoRepository.save(orderInfo);
+        String code = DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + StringUtils.left(orderInfo.getId().toString(), 8);
+        orderInfoRepository.modityCode(code, orderInfo.getId());
         boolean ex = jobService.checkExists("order_close_" + orderInfo.getId(), "order");
         // 添加定时任务，定时关闭为支付的订单
         TaskEntity taskEntity = new TaskEntity();
@@ -109,7 +113,7 @@ public class OrderService {
         } else {
             jobService.updateTask(taskEntity);
         }
-        return orderInfo1;
+        return orderInfo;
     }
 
     // 订单支付时间过去
@@ -126,6 +130,7 @@ public class OrderService {
         }
         for (OrderInfo orderInfo : page) {
             orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
+            orderInfo.setActivity(activityRepository.findByActivityId(orderInfo.getActivityId()));
         }
         return page;
     }

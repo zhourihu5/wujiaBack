@@ -46,6 +46,7 @@ public class OrderInfo {
     private Integer activityId;
     private String activityCode;
     private String activityName;
+    private Date payEndDate;
     @Transient
     private Commodity commodity;
     @Transient
