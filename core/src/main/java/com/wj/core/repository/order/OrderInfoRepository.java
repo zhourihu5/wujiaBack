@@ -41,4 +41,8 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Query("update OrderInfo o set o.status = ?1 where o.id = ?2")
     @Modifying
     void modityStatus(String status, Integer id);
+
+    @Query("update OrderInfo o set o.code = ?1 where o.id = ?2")
+    @Modifying
+    void modityCode(String code, Integer id);
 }
