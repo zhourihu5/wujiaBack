@@ -171,6 +171,9 @@ public class BindingController {
                         loginDTO.setApplyLock(applyLockList.get(0));
                     }
                     return ResponseMessage.ok(loginDTO);
+                } else {
+                    //TODO 用户存在两个家庭的处理方式，现在默认取一个
+                    userInfo.setFid(userFamilyList.get(0).getUserFamily().getFamilyId());
                 }
                 List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());
                 if (communtityList.size() > 0) {
