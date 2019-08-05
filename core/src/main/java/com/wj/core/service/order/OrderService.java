@@ -133,6 +133,7 @@ public class OrderService {
     public OrderInfo findOrderDetail(Integer orderId) {
         OrderInfo orderInfo = orderInfoRepository.findByOrderId(orderId);
         orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
+        orderInfo.setActivity(activityRepository.findByActivityId(orderInfo.getActivityId()));
         return orderInfo;
     }
 
