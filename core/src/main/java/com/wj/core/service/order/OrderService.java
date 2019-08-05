@@ -55,6 +55,7 @@ public class OrderService {
     @Autowired
     private JobService jobService;
 
+    @Transactional
     // 生成订单
     public OrderInfo saveOrder(OrderInfo orderInfo) {
         // 判断活动是否结束 结束不能下单
