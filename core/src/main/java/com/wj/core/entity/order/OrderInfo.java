@@ -46,6 +46,7 @@ public class OrderInfo {
     private Integer activityId;
     private String activityCode;
     private String activityName;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date payEndDate;
     @Transient
     private Commodity commodity;
