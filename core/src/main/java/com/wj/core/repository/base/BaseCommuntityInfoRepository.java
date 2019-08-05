@@ -14,10 +14,10 @@ import java.util.List;
 
 public interface BaseCommuntityInfoRepository extends JpaRepository<BaseCommuntityInfo, Integer>, JpaSpecificationExecutor<BaseCommuntityInfo> {
 
-    @Query(value = "select * from base_communtity_info where communtity_id = ?1", nativeQuery = true)
+    @Query(value = "select * from base_communtity_info where community_id = ?1", nativeQuery = true)
     public List<BaseCommuntityInfo> findList(Integer communtityId);
 
-    @Query(value = "select * from base_communtity_info where communtity_id = ?1", nativeQuery = true)
+    @Query(value = "select * from base_communtity_info where community_id = ?1", nativeQuery = true)
     public Page<BaseCommuntityInfo> findAll(Integer communtityId,Pageable pageable);
 
 }
