@@ -57,7 +57,10 @@ public class ActivityController {
         }
         pageNum = pageNum - 1;
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "start_date");
-        Page<Activity> page = activityService.findAll(pageable);
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        Page<Activity> page = activityService.findAll(userId, pageable);
         return ResponseMessage.ok(page);
     }
 

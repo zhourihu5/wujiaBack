@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +66,7 @@ public class OrderService {
         String currentTime = formatter.format(date);
         String endDate = formatter.format(activity.getEndDate());
 //        boolean isbefore = isDateBefore(currentTime,endDate);
-        boolean isafter = isDateAfter(currentTime,endDate);
+        boolean isafter = isDateAfter(currentTime, endDate);
         if (isafter) {
             throw new ServiceException("活动已经结束，您不能下单!", ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -73,23 +74,35 @@ public class OrderService {
         String[] rules = activity.getSaleRules().split(",");
         Integer amount = 0;
         for (int i = 1; i < rules.length; i++) {
-            Integer number0 = Integer.valueOf(rules[i-1].substring(0, rules[i-1].indexOf("|")));
+            Integer number0 = Integer.valueOf(rules[i - 1].substring(0, rules[i - 1].indexOf("|")));
             Integer number = Integer.valueOf(rules[i].substring(0, rules[i].indexOf("|")));//截取|之前的字符串
-            Integer money0 = Integer.valueOf(rules[i-1].substring(rules[i-1].lastIndexOf("|") + 1));
+            Integer money0 = Integer.valueOf(rules[i - 1].substring(rules[i - 1].lastIndexOf("|") + 1));
             Integer money = Integer.valueOf(rules[i].substring(rules[i].lastIndexOf("|") + 1));
             System.out.println(number0 + "---" + money0);
             System.out.println(number + "---" + money);
-            if (count >= number0 && count < number ) {
+            if (count >= number0 && count < number) {
                 amount = money0;
                 break;
             }
         }
         // 优惠金额
-        BigDecimal favPrice = new BigDecimal(amount);
+        BigDecimal favPrice;
         // 实际支付金额
-        BigDecimal payMoney = activity.getPrice().subtract(favPrice);
-        if (payMoney.doubleValue() <= 0) {
-            throw new ServiceException("系统异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        BigDecimal payMoney;
+        if (activity.getSaleType().equals("1")) {
+            favPrice = new BigDecimal(amount);
+            // 实际支付金额
+            payMoney = activity.getPrice().subtract(favPrice);
+            if (payMoney.doubleValue() <= 0) {
+                throw new ServiceException("系统异常", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            BigDecimal zhe = new BigDecimal(1 - amount / 100);
+            favPrice = activity.getPrice().multiply(zhe);
+            payMoney = activity.getPrice().subtract(favPrice);
+            if (payMoney.doubleValue() <= 0) {
+                throw new ServiceException("系统异常", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
         }
         orderInfo.setPrice(activity.getPrice());
         orderInfo.setRealPrice(payMoney);
@@ -118,6 +131,7 @@ public class OrderService {
     }
 
     // 订单支付时间过去
+    @Transactional
     public void closeOrder(Integer id) {
         orderInfoRepository.modityStatus("4", id);
     }
@@ -191,30 +205,39 @@ public class OrderService {
         if (!orderInfo1.getStatus().equals("1")) {
             throw new ServiceException("此订单不能支付", ErrorCode.INTERNAL_SERVER_ERROR);
         }
+        // 判断下单时间是否超时
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTime = formatter.format(date);
+        Date afterDate = new Date(orderInfo1.getCreateDate().getTime() + 900000);
+        String orderDate = formatter.format(afterDate);
+//        boolean isbefore = isDateBefore(currentTime,endDate);
+        boolean isafter = isDateAfter(currentTime, orderDate);
+        if (isafter) {
+            throw new ServiceException("订单已超时，不能支付!", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         // 调用微信支付如果成功 更改订单支付状态 待收货
         orderInfoRepository.modityStatus("2", orderInfo.getId());
         // 调用微信支付失败 告诉前端支付失败
     }
 
 
-
-
-    public static boolean isDateBefore(String date1,String date2){
-        try{
+    public static boolean isDateBefore(String date1, String date2) {
+        try {
             DateFormat df = DateFormat.getDateTimeInstance();
             return df.parse(date1).before(df.parse(date2));
-        }catch(ParseException e){
-            System.out.println( e.getMessage());
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }
 
-    public static boolean isDateAfter(String date1,String date2){
-        try{
+    public static boolean isDateAfter(String date1, String date2) {
+        try {
             DateFormat df = DateFormat.getDateTimeInstance();
             return df.parse(date1).after(df.parse(date2));
-        }catch(ParseException e){
-            System.out.println( e.getMessage());
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }
@@ -226,6 +249,6 @@ public class OrderService {
 
     @Transactional
     public void receiveOrder(Integer id) {
-        orderInfoRepository.modityStatus("3", id);
+        orderInfoRepository.saveStatusAndDate("3", new Date(), id);
     }
 }

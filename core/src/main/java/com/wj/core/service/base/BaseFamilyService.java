@@ -146,7 +146,7 @@ public class BaseFamilyService {
     }
 
     public List<BaseFamily> getFamilyByStoreyCode(String unitCode) {
-        return baseFamilyRepository.findByCodeLike(unitCode);
+        return baseFamilyRepository.findByCodeLike(unitCode + "%");
     }
 
 }

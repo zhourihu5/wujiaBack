@@ -13,10 +13,10 @@ import java.util.List;
 
 public interface ActivityRepository extends JpaRepository<Activity, Integer>, JpaSpecificationExecutor<Activity> {
 
-    @Query(value = "select * from ebiz_activity where is_show = ?1", nativeQuery = true)
+    @Query(value = "select * from ebiz_activity where is_show = ?1 order by start_date desc", nativeQuery = true)
     public List<Activity> findByStatus(String isShow);
 
-    @Query(value = "select * from ebiz_activity where community_id = ?1 and is_show = ?2", nativeQuery = true)
+    @Query(value = "select * from ebiz_activity where community_id = ?1 and is_show = ?2 order by start_date desc", nativeQuery = true)
     public List<Activity> findByCommunityIdAndStatus(Integer communityId, String isShow);
 
     @Modifying
