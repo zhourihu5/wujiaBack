@@ -116,7 +116,6 @@ public class OrderService {
         orderInfo.setCreateDate(ClockUtil.currentDate());
         orderInfo.setUpdateDate(ClockUtil.currentDate());
         orderInfo.setPayEndDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
-        orderInfo.setUserCover(userInfo.getWxCover());
         orderInfoRepository.save(orderInfo);
         String code = DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + StringUtils.leftPad(orderInfo.getId().toString(), 8, "0");
         orderInfoRepository.modityCode(code, orderInfo.getId());
