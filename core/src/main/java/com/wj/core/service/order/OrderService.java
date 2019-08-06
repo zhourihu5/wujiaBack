@@ -99,7 +99,7 @@ public class OrderService {
         orderInfo.setUpdateDate(ClockUtil.currentDate());
         orderInfo.setPayDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
         orderInfoRepository.save(orderInfo);
-        String code = DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + StringUtils.left(orderInfo.getId().toString(), 8);
+        String code = DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + StringUtils.leftPad(orderInfo.getId().toString(), 8);
         orderInfoRepository.modityCode(code, orderInfo.getId());
         boolean ex = jobService.checkExists("order_close_" + orderInfo.getId(), "order");
         // 添加定时任务，定时关闭为支付的订单
