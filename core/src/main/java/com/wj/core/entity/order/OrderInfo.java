@@ -49,6 +49,12 @@ public class OrderInfo {
     private String deliveryPerson;
     private String deliveryPhone;
     private Integer deliveryHour;
+    //确认收货时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date receiveDate;
+    //送货送达时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date deliveryDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date payEndDate;
     @Transient

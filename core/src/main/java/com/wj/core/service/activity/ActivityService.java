@@ -85,10 +85,21 @@ public class ActivityService {
         return activityList;
     }
 
-    public Page<Activity> findAll(Pageable pageable) {
+    public Page<Activity> findAll(Integer userId, Pageable pageable) {
         Page<Activity> page = activityRepository.findAll("1", pageable);
+//        page.forEach(Activity -> {
+//            Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
+//        });
         page.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
+            if (userId != null) {
+                OrderInfo orderInfo = orderInfoRepository.findByUserIdAndActivityId(userId, Activity.getId());
+                if (orderInfo != null) {
+                    Activity.setIsJoin(1);
+                } else {
+                    Activity.setIsJoin(0);
+                }
+            }
         });
         return page;
     }
@@ -213,7 +224,7 @@ public class ActivityService {
 
     public List<Activity> findOtherList(Integer userId) {
         List<Activity> activityList = activityRepository.findByStatus("1");
-        Scanner sc = new Scanner(System.in);
+//        Scanner sc = new Scanner(System.in);
         Iterator it = activityList.iterator();
         while (it.hasNext()) {
             Activity ac = (Activity) it.next();
@@ -221,11 +232,11 @@ public class ActivityService {
             List<OrderInfo> orderInfoList = orderInfoRepository.findByUserId(userId);
             orderInfoList.forEach(OrderInfo -> {
                 if (ac.getId() == OrderInfo.getActivityId()) {
-                    activityList.remove(ac);
+                    it.remove();
                 }
             });
         }
-        activityList.forEach(Activity -> {
+         activityList.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
         });
         return activityList;

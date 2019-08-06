@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, JpaSpecificationExecutor<OrderInfo> {
@@ -41,6 +42,10 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Query("update OrderInfo o set o.status = ?1 where o.id = ?2")
     @Modifying
     void modityStatus(String status, Integer id);
+
+    @Query("update OrderInfo o set o.status = ?1, o.receiveDate = ?2 where o.id = ?3")
+    @Modifying
+    void saveStatusAndDate(String status, Date receiveDate, Integer id);
 
     @Query("update OrderInfo o set o.code = ?1 where o.id = ?2")
     @Modifying
