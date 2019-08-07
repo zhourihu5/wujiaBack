@@ -3,12 +3,14 @@ package com.wj.core.entity.activity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wj.core.entity.address.Address;
 import com.wj.core.entity.commodity.Commodity;
+import com.wj.core.entity.user.SysUserInfo;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "ebiz_activity")
@@ -40,6 +42,7 @@ public class Activity {
     private String province;
     private String city;
     private String area;
+    private String remark;
     @Transient
     private Commodity commodity;
     @Transient
@@ -50,5 +53,7 @@ public class Activity {
     private String largeMoney;
     @Transient
     private BigDecimal paymentMoney;
+    @Transient
+    private String saleTip;
 
 }

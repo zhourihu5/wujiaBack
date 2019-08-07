@@ -184,28 +184,26 @@ public class ActivityService {
     public ActivityUserDTO findByActivityId(Integer activityId) {
         ActivityUserDTO activityUserDTO = new ActivityUserDTO();
         Activity activity = activityRepository.findByActivityId(activityId);
-//        Date startDate = new Date();
-//        Date endDate = new Date();
-//        try {
-//            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            startDate = sf.parse(activity.getStartDate().toString());
-//            endDate = sf.parse(activity.getStartDate().toString());
-//        } catch (ParseException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        long startTime = startDate.getTime();
-//        long endTime = endDate.getTime();
-//        activity.setStartTime(startTime);
-//        activity.setEndTime(endTime);
         String largeMoney = activity.getSaleRules().substring(activity.getSaleRules().lastIndexOf("|") + 1);
         activity.setLargeMoney(largeMoney);
         Commodity commodity = commodityRepository.findByCommodityId(activity.getCommodityId());
         String objType = "comm";
         List<AttaInfo> attaInfoList = attaInfoRepository.findByObjectIdAndObjectType(commodity.getId(), objType);
         commodity.setAttaInfos(attaInfoList);
-//        String[] strs = commodity.getFormatVal().split("|");
         String[] strs = StringUtils.split(commodity.getFormatVal(),"|");
+        String[] rules = StringUtils.split(activity.getSaleRules(), ",");
+        if (activity.getSaleType().equals("1")) {
+            // 钱
+            for (String rule : rules) {
+                String[] r = StringUtils.split(rule, "|");
+                int salePersonNum = Integer.valueOf(r[0]);
+                if (commodity.getSalesNum() < salePersonNum) {
+                    activity.setSaleTip(salePersonNum - commodity.getSalesNum() + "," + r[1]);
+                    break;
+                }
+            }
+            // TODO 后台去掉折暂时不判断
+        }
         commodity.setFormatVals(strs);
         activity.setCommodity(commodity);
         Integer pageNum = 0;
@@ -221,6 +219,7 @@ public class ActivityService {
         activityUserDTO.setUserInfoList(userInfoList);
         return activityUserDTO;
     }
+
 
     public List<Activity> findOtherList(Integer userId) {
         List<Activity> activityList = activityRepository.findByStatus("1");

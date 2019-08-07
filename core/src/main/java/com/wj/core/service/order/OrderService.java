@@ -7,11 +7,13 @@ import com.wj.core.entity.base.BaseDevice;
 import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.task.TaskEntity;
+import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.address.AddressRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.order.OrderRepairRepository;
+import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.activity.ActivityTask;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
@@ -54,6 +56,8 @@ public class OrderService {
     @Autowired
     private CommodityRepository commodityRepository;
     @Autowired
+    private UserInfoRepository userInfoRepository;
+    @Autowired
     private JobService jobService;
 
     @Transactional
@@ -61,6 +65,7 @@ public class OrderService {
     public OrderInfo saveOrder(OrderInfo orderInfo) {
         // 判断活动是否结束 结束不能下单
         Activity activity = activityRepository.findByActivityId(orderInfo.getActivityId());
+        SysUserInfo userInfo = userInfoRepository.findByUserId(orderInfo.getUserId());
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String currentTime = formatter.format(date);
@@ -112,7 +117,7 @@ public class OrderService {
         orderInfo.setUpdateDate(ClockUtil.currentDate());
         orderInfo.setPayEndDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
         orderInfoRepository.save(orderInfo);
-        String code = DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + StringUtils.leftPad(orderInfo.getId().toString(), 8);
+        String code = DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + StringUtils.leftPad(orderInfo.getId().toString(), 8, "0");
         orderInfoRepository.modityCode(code, orderInfo.getId());
         boolean ex = jobService.checkExists("order_close_" + orderInfo.getId(), "order");
         // 添加定时任务，定时关闭为支付的订单
@@ -218,6 +223,7 @@ public class OrderService {
         }
         // 调用微信支付如果成功 更改订单支付状态 待收货
         orderInfoRepository.modityStatus("2", orderInfo.getId());
+        commodityRepository.moditySaleNum(1, orderInfo1.getCommodityId());
         // 调用微信支付失败 告诉前端支付失败
     }
 
@@ -245,10 +251,16 @@ public class OrderService {
     @Transactional
     public void cancelOrder(Integer id) {
         orderInfoRepository.modityStatus("4", id);
+        TaskEntity taskEntity = new TaskEntity();
+        taskEntity.setJobName("order_close_" + id);
+        taskEntity.setJobGroup("order");
+        jobService.deleteTask(taskEntity);
     }
 
     @Transactional
     public void receiveOrder(Integer id) {
         orderInfoRepository.saveStatusAndDate("3", new Date(), id);
     }
+
+
 }
