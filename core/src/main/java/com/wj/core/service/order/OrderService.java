@@ -2,9 +2,6 @@ package com.wj.core.service.order;
 
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
-import com.wj.core.entity.address.Address;
-import com.wj.core.entity.base.BaseDevice;
-import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.entity.user.SysUserInfo;
@@ -52,7 +49,6 @@ public class OrderService {
     private ActivityRepository activityRepository;
     @Autowired
     private AddressRepository addressRepository;
-
     @Autowired
     private CommodityRepository commodityRepository;
     @Autowired
@@ -60,8 +56,8 @@ public class OrderService {
     @Autowired
     private JobService jobService;
 
-    @Transactional
     // 生成订单
+    @Transactional
     public OrderInfo saveOrder(OrderInfo orderInfo) {
         // 判断活动是否结束 结束不能下单
         Activity activity = activityRepository.findByActivityId(orderInfo.getActivityId());
