@@ -220,6 +220,10 @@ public class OrderService {
         // 调用微信支付如果成功 更改订单支付状态 待收货
         orderInfoRepository.modityStatus("2", orderInfo.getId());
         commodityRepository.moditySaleNum(1, orderInfo1.getCommodityId());
+        TaskEntity taskEntity = new TaskEntity();
+        taskEntity.setJobName("order_close_" + orderInfo1.getId());
+        taskEntity.setJobGroup("order");
+        jobService.deleteTask(taskEntity);
         // 调用微信支付失败 告诉前端支付失败
     }
 
