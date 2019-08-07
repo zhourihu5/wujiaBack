@@ -223,7 +223,7 @@ public class OrderService {
         }
         // 调用微信支付如果成功 更改订单支付状态 待收货
         orderInfoRepository.modityStatus("2", orderInfo.getId());
-        commodityRepository.moditySaleNum(orderInfo.getCommodityId());
+        commodityRepository.moditySaleNum(1, orderInfo1.getCommodityId());
         // 调用微信支付失败 告诉前端支付失败
     }
 
@@ -261,4 +261,6 @@ public class OrderService {
     public void receiveOrder(Integer id) {
         orderInfoRepository.saveStatusAndDate("3", new Date(), id);
     }
+
+
 }

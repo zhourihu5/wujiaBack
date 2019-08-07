@@ -21,8 +21,8 @@ public interface CommodityRepository extends JpaRepository<Commodity, Integer>, 
 
     Commodity findByCode(String code);
 
-    @Query(value = "update ebiz_commodity set sales_num = sales_num + 1 where id = ?1", nativeQuery = true)
+    @Query(value = "update ebiz_commodity set sales_num = sales_num + ?1 where id = ?2", nativeQuery = true)
     @Modifying
-    void moditySaleNum(Integer id);
+    void moditySaleNum(Integer num, Integer id);
 
 }

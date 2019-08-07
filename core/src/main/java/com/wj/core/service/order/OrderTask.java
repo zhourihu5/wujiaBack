@@ -15,7 +15,7 @@ public class OrderTask implements Job {
     private OrderService orderService;
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+    public void execute(JobExecutionContext jobExecutionContext) {
         JobDataMap map = jobExecutionContext.getJobDetail().getJobDataMap();
         Integer objId = (Integer) map.get("objectId");
         orderService.closeOrder(objId);
