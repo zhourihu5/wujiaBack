@@ -17,7 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@Api(value = "/v1/communtityInfo", tags = "d接口模块")
+@Api(value = "/v1/communtityInfo", tags = "社区接口模块")
 @RestController
 @RequestMapping("/v1/communtityInfo/")
 public class CommuntityController {
