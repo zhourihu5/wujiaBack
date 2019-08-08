@@ -1,8 +1,13 @@
 package com.wj.api.controller.wx;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
+import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.order.OrderService;
 import com.wj.core.service.user.UserInfoService;
 import com.wj.core.util.wx.PayUtil;
 import com.wj.core.util.wx.WechatConfig;
@@ -18,6 +23,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Api(tags = "支付模块")
@@ -28,14 +37,36 @@ public class PayController {
     @Autowired
     private UserInfoService userInfoService;
 
+    @Autowired
+    private OrderService orderService;
+
     @ApiOperation(value = "请求支付接口")
     @RequestMapping(value = "/wxPay", method = RequestMethod.POST)
-    public Object wxPay(HttpServletRequest request) {
+    public ResponseMessage<Object> wxPay(HttpServletRequest request, @RequestBody OrderInfo orderInfo) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
         SysUserInfo userInfo = userInfoService.findUserInfo(userId);
         String openid = userInfo.getWxOpenId();
+        OrderInfo orderInfo1 = orderService.findOrderByCode(orderInfo.getCode());
+        if (!orderInfo1.getStatus().equals("1")) {
+            throw new ServiceException("此订单不能支付", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        // 判断下单时间是否超时
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTime = formatter.format(date);
+        Date afterDate = new Date(orderInfo1.getCreateDate().getTime() + 900000);
+        String orderDate = formatter.format(afterDate);
+//        boolean isbefore = isDateBefore(currentTime,endDate);
+        boolean isafter = isDateAfter(currentTime, orderDate);
+        if (isafter) {
+            throw new ServiceException("订单已超时，不能支付!", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        String money = orderInfo1.getRealPrice().multiply(new BigDecimal(100)).intValue() + "";
+        if (null == orderInfo1) {
+            throw new ServiceException("订单错误!", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         try {
             //生成的随机字符串
             String nonce_str = getRandomStringByLength(32);
@@ -44,16 +75,14 @@ public class PayController {
             //获取客户端的ip地址
             String spbill_create_ip = getIpAddr(request);
 
-            String payOrderId = getRandomStringByLength(32);
-
             //组装参数，用户生成统一下单接口的签名
             Map<String, String> packageParams = new HashMap<>();
             packageParams.put("appid", WechatConfig.appid);
             packageParams.put("mch_id", WechatConfig.mch_id);
             packageParams.put("nonce_str", nonce_str);
             packageParams.put("body", body);
-            packageParams.put("out_trade_no", payOrderId + "");//商户订单号,自己的订单ID
-            packageParams.put("total_fee", 1 + "");//支付金额，这边需要转成字符串类型，否则后面的签名会失败
+            packageParams.put("out_trade_no", orderInfo1.getCode());//商户订单号,自己的订单ID
+            packageParams.put("total_fee", money);//支付金额，这边需要转成字符串类型，否则后面的签名会失败
             packageParams.put("spbill_create_ip", spbill_create_ip);
             packageParams.put("notify_url", WechatConfig.notify_url);//支付成功后的回调地址
             packageParams.put("trade_type", WechatConfig.TRADETYPE);//支付方式
@@ -71,13 +100,14 @@ public class PayController {
                     + "<nonce_str>" + nonce_str + "</nonce_str>"
                     + "<notify_url>" + WechatConfig.notify_url + "</notify_url>"
                     + "<openid>" + openid + "</openid>"
-                    + "<out_trade_no>" + payOrderId + "</out_trade_no>"
+                    + "<out_trade_no>" + orderInfo1.getCode() + "</out_trade_no>"
                     + "<spbill_create_ip>" + spbill_create_ip + "</spbill_create_ip>"
-                    + "<total_fee>" + 1 + "</total_fee>"//支付的金额，单位：分
+                    + "<total_fee>" + money + "</total_fee>"//支付的金额，单位：分
                     + "<trade_type>" + WechatConfig.TRADETYPE + "</trade_type>"
                     + "<sign>" + mysign + "</sign>"
                     + "</xml>";
 
+            System.out.println(xml);
             //调用统一下单接口，并接受返回的结果
             String result = PayUtil.httpRequest(WechatConfig.pay_url, "POST", xml);
 
@@ -88,7 +118,9 @@ public class PayController {
             String result_code = (String) map.get("result_code");//返回状态码
 
             Map<String, Object> response = new HashMap<String, Object>();//返回给小程序端需要的参数
-            if (return_code == "SUCCESS" && return_code.equals(result_code)) {
+            System.out.println(return_code == "SUCCESS");
+            System.out.println(return_code.equals(result_code));
+            if (return_code.equals("SUCCESS") && return_code.equals(result_code)) {
                 String prepay_id = (String) map.get("prepay_id");//返回的预付单信息
                 response.put("nonceStr", nonce_str);
                 response.put("package", "prepay_id=" + prepay_id);
@@ -104,7 +136,7 @@ public class PayController {
 
             response.put("appid", WechatConfig.appid);
 
-            return response;
+            return ResponseMessage.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,9 +168,12 @@ public class PayController {
             //根据微信官网的介绍，此处不仅对回调的参数进行验签，还需要对返回的金额与系统订单的金额进行比对等
             if (PayUtil.verify(prestr, (String) map.get("sign"), WechatConfig.key, "utf-8")) {
                 /**此处添加自己的业务逻辑代码start**/
-
+                // 平台订单号
+                String code = (String) map.get("out_trade_no");
+                // 微信订单号
+                String wxOrderCode = (String) map.get("transaction_id");
+                orderService.updateWxOrderByCode(code, wxOrderCode);
                 //注意要判断微信支付重复回调，支付成功后微信会重复的进行回调
-
                 /**此处添加自己的业务逻辑代码end**/
                 //通知微信服务器已经支付成功
                 resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
@@ -185,5 +220,25 @@ public class PayController {
             return ip;
         }
         return request.getRemoteAddr();
+    }
+
+    public static boolean isDateBefore(String date1, String date2) {
+        try {
+            DateFormat df = DateFormat.getDateTimeInstance();
+            return df.parse(date1).before(df.parse(date2));
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean isDateAfter(String date1, String date2) {
+        try {
+            DateFormat df = DateFormat.getDateTimeInstance();
+            return df.parse(date1).after(df.parse(date2));
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 }

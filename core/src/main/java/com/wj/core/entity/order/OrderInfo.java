@@ -49,6 +49,7 @@ public class OrderInfo {
     private String deliveryPerson;
     private String deliveryPhone;
     private Integer deliveryHour;
+    private String wxOrderCode;
     //确认收货时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date receiveDate;

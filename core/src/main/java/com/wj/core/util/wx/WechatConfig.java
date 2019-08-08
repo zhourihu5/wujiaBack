@@ -6,9 +6,10 @@ public class WechatConfig {
     //微信支付的商户id
     public static final String mch_id = "1549473651";
     //微信支付的商户密钥
-    public static final String key = "zhongxinhuiyuanbeijingwanglkejiy";
+    public static final String key = "beijingwujiawangluokejiyouxiangs";
     //支付成功后的服务器回调url，这里填PayController里的回调函数地址
-    public static final String notify_url = "http://192.168.1.75:8081/wx/wxNotify";
+    public static final String notify_url = "http://api.home-guard.cn/wx/wxNotify";
+//    public static final String notify_url = "http://192.168.1.18:8081/wx/wxNotify";
     //签名方式，固定值
     public static final String SIGNTYPE = "MD5";
     //交易类型，小程序支付的固定值为JSAPI
