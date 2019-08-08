@@ -254,7 +254,7 @@ public class OrderService {
 
     @Transactional
     public void updateWxOrderByCode(String code, String wxOrderCode) {
-        orderInfoRepository.updateWxOrderByCode(code wxOrderCode);
+        orderInfoRepository.updateWxOrderByCode(code, wxOrderCode);
     }
 
 
