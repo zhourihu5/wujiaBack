@@ -19,6 +19,7 @@ public class JobService {
     @Autowired
     private Scheduler scheduler;
 
+    @Transactional
     public Boolean addTask(TaskEntity info) {
         String jobName = info.getJobName(),
                 jobGroup = info.getJobGroup(),
@@ -38,7 +39,8 @@ public class JobService {
             JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(jobKey).withDescription(jobDescription).setJobData(jobDataMap).build();
             scheduler.scheduleJob(jobDetail, trigger);
             return true;
-        } catch (SchedulerException | ClassNotFoundException e) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
             throw new ServiceException("类名不存在或执行表达式错误", ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
@@ -54,6 +56,7 @@ public class JobService {
     }
 
 
+    @Transactional
     public Boolean updateTask(TaskEntity info) {
         String jobName = info.getJobName(),
                 jobGroup = info.getJobGroup(),
@@ -94,6 +97,7 @@ public class JobService {
         }
     }
 
+    @Transactional
     public Boolean deleteTask(TaskEntity taskEntity) {
         TriggerKey triggerKey = TriggerKey.triggerKey(taskEntity.getJobName(), taskEntity.getJobGroup());
         try {
