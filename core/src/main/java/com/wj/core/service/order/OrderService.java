@@ -15,6 +15,7 @@ import com.wj.core.service.activity.ActivityTask;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.job.JobService;
+import com.wj.core.util.CommonUtils;
 import com.wj.core.util.number.RandomUtil;
 import com.wj.core.util.time.ClockUtil;
 import com.wj.core.util.time.DateFormatUtil;
@@ -37,6 +38,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class OrderService {
@@ -61,7 +63,7 @@ public class OrderService {
     public OrderInfo saveOrder(OrderInfo orderInfo) {
         // 判断活动是否结束 结束不能下单
         Activity activity = activityRepository.findByActivityId(orderInfo.getActivityId());
-        SysUserInfo userInfo = userInfoRepository.findByUserId(orderInfo.getUserId());
+//        SysUserInfo userInfo = userInfoRepository.findByUserId(orderInfo.getUserId());
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String currentTime = formatter.format(date);
@@ -112,9 +114,9 @@ public class OrderService {
         orderInfo.setCreateDate(ClockUtil.currentDate());
         orderInfo.setUpdateDate(ClockUtil.currentDate());
         orderInfo.setPayEndDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
+        String code = DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + CommonUtils.getRandomStringByLength(24);
+        orderInfo.setCode(code);
         orderInfoRepository.save(orderInfo);
-        String code = DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + StringUtils.leftPad(orderInfo.getId().toString(), 8, "0");
-        orderInfoRepository.modityCode(code, orderInfo.getId());
         boolean ex = jobService.checkExists("order_close_" + orderInfo.getId(), "order");
         // 添加定时任务，定时关闭为支付的订单
         TaskEntity taskEntity = new TaskEntity();
@@ -156,6 +158,10 @@ public class OrderService {
         orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
         orderInfo.setActivity(activityRepository.findByActivityId(orderInfo.getActivityId()));
         return orderInfo;
+    }
+
+    public OrderInfo findOrderByCode(String code) {
+        return orderInfoRepository.findOrderByCode(code);
     }
 
     public Page<OrderInfo> getList(Integer pageNum, Integer pageSize, String startDate, String endDate, String status, String activityName) {
@@ -201,22 +207,7 @@ public class OrderService {
     // 支付订单
     @Transactional
     public void payOrder(OrderInfo orderInfo) {
-        // 先判断订单状态是否是待付款 是待付款查询订单实付金额调用微信支付
         OrderInfo orderInfo1 = orderInfoRepository.findByOrderId(orderInfo.getId());
-        if (!orderInfo1.getStatus().equals("1")) {
-            throw new ServiceException("此订单不能支付", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-        // 判断下单时间是否超时
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currentTime = formatter.format(date);
-        Date afterDate = new Date(orderInfo1.getCreateDate().getTime() + 900000);
-        String orderDate = formatter.format(afterDate);
-//        boolean isbefore = isDateBefore(currentTime,endDate);
-        boolean isafter = isDateAfter(currentTime, orderDate);
-        if (isafter) {
-            throw new ServiceException("订单已超时，不能支付!", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
         // 调用微信支付如果成功 更改订单支付状态 待收货
         orderInfoRepository.modityStatus("2", orderInfo.getId());
         commodityRepository.moditySaleNum(1, orderInfo1.getCommodityId());
@@ -224,7 +215,6 @@ public class OrderService {
         taskEntity.setJobName("order_close_" + orderInfo1.getId());
         taskEntity.setJobGroup("order");
         jobService.deleteTask(taskEntity);
-        // 调用微信支付失败 告诉前端支付失败
     }
 
 
@@ -260,6 +250,11 @@ public class OrderService {
     @Transactional
     public void receiveOrder(Integer id) {
         orderInfoRepository.saveStatusAndDate("3", new Date(), id);
+    }
+
+    @Transactional
+    public void updateWxOrderByCode(String code, String wxOrderCode) {
+        orderInfoRepository.updateWxOrderByCode(code, wxOrderCode);
     }
 
 

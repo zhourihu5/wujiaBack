@@ -24,6 +24,9 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Query(value = "select * from ebiz_order_info where id = ?1", nativeQuery = true)
     public OrderInfo findByOrderId(Integer id);
 
+    @Query(value = "select * from ebiz_order_info where code = ?1", nativeQuery = true)
+    public OrderInfo findOrderByCode(String code);
+
     @Query(value = "select * from ebiz_order_info where user_id = ?1 and activity_id = ?2 and status in (2,3)", nativeQuery = true)
     public OrderInfo findByUserIdAndActivityId(Integer userId, Integer activityId);
 
@@ -50,4 +53,8 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Query("update OrderInfo o set o.code = ?1 where o.id = ?2")
     @Modifying
     void modityCode(String code, Integer id);
+
+    @Query("update OrderInfo o set o.code = ?2 where o.code = ?1")
+    @Modifying
+    void updateWxOrderByCode(String code, String wxOrderCode);
 }
