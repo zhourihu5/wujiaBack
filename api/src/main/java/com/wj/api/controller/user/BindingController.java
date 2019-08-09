@@ -79,13 +79,7 @@ public class BindingController {
     @Autowired
     private ApplyLockService applyLockService;
 
-    /**
-     * 绑定用户信息
-     *
-     * @param bindingDTO
-     * @return ResponseMessage
-     * @author thz
-     */
+
     @ApiOperation(value = "绑定用户信息", notes = "绑定用户信息")
     @PostMapping("bindingUser")
     public ResponseMessage<XcxLoginDTO> bindingUser(@RequestBody BindingDTO bindingDTO) {
@@ -151,7 +145,7 @@ public class BindingController {
      */
     @ApiOperation(value = "查询微信是否已经绑定用户", notes = "查询微信是否已经绑定用户")
     @GetMapping("checkBinding")
-    public ResponseMessage<XcxLoginDTO> getWxOpenId(String code) {
+    public ResponseMessage<XcxLoginDTO> checkBinding(String code) {
         Object object = wxLoginService.wxLogin(code);
         JSONObject json = JSON.parseObject(object.toString());
         String openid = json.getString("openid");
