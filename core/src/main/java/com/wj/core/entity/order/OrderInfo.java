@@ -27,6 +27,7 @@ public class OrderInfo {
     private String payType;
     private String deliveryUname;
     private String deliveryUphone;
+    private String deliveryAddress;
     private String deliveryArea;
 //    订单状态 1.待付款 2.待收货 3.已收货 4.已过期
     private String status;
