@@ -24,5 +24,5 @@ public class Address {
     private String status;
     private Integer userId;
     private Integer communtityId;
-
+    private String communtityName;
 }
