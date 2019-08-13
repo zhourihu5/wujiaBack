@@ -71,4 +71,14 @@ public class ApplyLockController {
         return ResponseMessage.ok();
     }
 
+    @ApiOperation(value = "获取临时开锁密码", notes = "获取临时开锁密码")
+    @GetMapping("generalSecretCodeWithOpenDoor")
+    public ResponseMessage generalSecretCodeWithOpenDoor() {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        String userName = (String) claims.get("userName");;
+        return ResponseMessage.ok();
+    }
+
 }
