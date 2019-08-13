@@ -45,5 +45,8 @@ public class BaseUnit {
     @ApiModelProperty(value = "单元号")
     @Transient
     private String name;
+    private String buildingName;
+    private String parentDirectory;
+    private Integer structureId;
 
 }

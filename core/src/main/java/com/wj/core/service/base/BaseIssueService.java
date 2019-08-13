@@ -1,5 +1,6 @@
 package com.wj.core.service.base;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDistrict;
 import com.wj.core.entity.base.BaseIssue;
@@ -9,8 +10,12 @@ import com.wj.core.repository.base.BaseFloorRepository;
 import com.wj.core.repository.base.BaseIssueRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.qst.QstCommuntityService;
+import com.wj.core.service.qst.dto.TenantstructuresIssuseDTO;
 import com.wj.core.util.CommonUtils;
 import com.wj.core.util.base.CommunityUtil;
+import com.wj.core.util.mapper.JsonMapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +39,9 @@ public class BaseIssueService {
 
     @Autowired
     private BaseFloorRepository baseFloorRepository;
+    @Autowired
+    private QstCommuntityService qstCommuntityService;
+    static JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Transactional
     public BaseIssue saveIssue(BaseIssue issue) {
@@ -43,6 +51,18 @@ public class BaseIssueService {
             String issueCode = CommunityUtil.genCode(cm.getCode(), ++ count);
             baseCommuntityRepository.modityFlag("期", cm.getId());
             issue.setCode(issueCode);
+            String r = qstCommuntityService.tenantstructures(cm.getDirectory(), 1, "期", 1, 2);
+            if (StringUtils.contains(r,"[")) {
+                JavaType type = mapper.buildCollectionType(List.class, TenantstructuresIssuseDTO.class);
+                List<TenantstructuresIssuseDTO> list = mapper.fromJson(r, type);
+                if (list.size() > 0) {
+                    TenantstructuresIssuseDTO dto = list.get(0);
+                    issue.setDirectory(dto.getDirectory());
+                    issue.setParentDirectory(dto.getParentDirectory());
+                    issue.setStructureId(dto.getStructureID());
+                    issue.setStructureName(dto.getStructureName());
+                }
+            }
         }
         issue.setCreateDate(new Date());
         return baseIssueRepository.save(issue);

@@ -1,16 +1,14 @@
 package com.wj.core.service.base;
 
-import com.wj.core.entity.base.BaseCommuntity;
-import com.wj.core.entity.base.BaseFloor;
-import com.wj.core.entity.base.BaseStorey;
-import com.wj.core.entity.base.BaseUnit;
-import com.wj.core.repository.base.BaseCommuntityRepository;
-import com.wj.core.repository.base.BaseFloorRepository;
-import com.wj.core.repository.base.BaseStoreyRepository;
-import com.wj.core.repository.base.BaseUnitRepository;
+import com.fasterxml.jackson.databind.JavaType;
+import com.wj.core.entity.base.*;
+import com.wj.core.repository.base.*;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.qst.QstCommuntityService;
+import com.wj.core.service.qst.dto.TenantstructuresIssuseDTO;
 import com.wj.core.util.base.CommunityUtil;
+import com.wj.core.util.mapper.JsonMapper;
 import com.wj.core.util.time.ClockUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,13 @@ public class BaseUnitService {
 
     @Autowired
     private BaseCommuntityRepository baseCommuntityRepository;
+    @Autowired
+    private BaseDistrictRepository baseDistrictRepository;
+    @Autowired
+    private BaseIssueRepository baseIssueRepository;
+    @Autowired
+    private QstCommuntityService qstCommuntityService;
+    static JsonMapper mapper = JsonMapper.defaultMapper();
 
     /**
      * 保存单元信息-层
@@ -46,21 +51,22 @@ public class BaseUnitService {
     @Transactional
     public void saveUnit(BaseUnit unit) {
         BaseFloor bf = baseFloorRepository.getOne(unit.getFloorId());
+        String commCode = unit.getCode().substring(0, 8);
+        BaseCommuntity bc = baseCommuntityRepository.findByCode(commCode);
         if (unit.getId() == null) {
             Integer count = baseUnitRepository.findCountByFloorId(unit.getFloorId());
-            unit.setCode(CommunityUtil.genCode(bf.getCode(), ++ count));
+            unit.setCode(CommunityUtil.genCode(bf.getCode(), ++count));
             unit.setCreateDate(ClockUtil.currentDate());
             baseUnitRepository.save(unit);
         } else {
             baseUnitRepository.modityStorey(unit.getStorey(), unit.getId());
         }
-        //baseStoreyRepository.deleteByUnitId(unit.getId());
         Long existsNum = baseStoreyRepository.countByUnitId(unit.getId());
         Integer storeyNum = unit.getStorey();
         int num = 0;
         if (existsNum > 0) {
             num = existsNum.intValue() + 1;
-        } else  {
+        } else {
             num += 1;
         }
         for (int i = num; i <= storeyNum; i++) {
@@ -74,10 +80,20 @@ public class BaseUnitService {
             baseStorey.setIssueId(bf.getIssueId());
             baseStorey.setDistrictId(bf.getDistrictId());
             baseStorey.setFloorId(bf.getId());
+            String r = qstCommuntityService.tenantstructures(unit.getDirectory(), 1, "层", 1, null);
+            if (StringUtils.contains(r,"[")) {
+                JavaType type = mapper.buildCollectionType(List.class, TenantstructuresIssuseDTO.class);
+                List<TenantstructuresIssuseDTO> list = mapper.fromJson(r, type);
+                if (list.size() > 0) {
+                    TenantstructuresIssuseDTO dto = list.get(0);
+                    baseStorey.setDirectory(dto.getDirectory());
+                    baseStorey.setParentDirectory(dto.getParentDirectory());
+                    baseStorey.setStructureId(dto.getStructureID());
+                    baseStorey.setStructureName(dto.getStructureName());
+                }
+            }
             baseStoreyRepository.save(baseStorey);
         }
-        String commCode = unit.getCode().substring(0, 8);
-        BaseCommuntity bc = baseCommuntityRepository.findByCode(commCode);
         if (!StringUtils.contains(bc.getFlag(), "层")) {
             baseCommuntityRepository.modityFlag(bc.getFlag() + "-层", bc.getId());
         }
@@ -118,17 +134,17 @@ public class BaseUnitService {
 
     public List<BaseUnit> getUnits(String commCode, String issuCode, String disCode, String floorCode) {
         if (StringUtils.isNotBlank(floorCode)) {
-            return  baseUnitRepository.findByCodeLike(floorCode + "%");
+            return baseUnitRepository.findByCodeLike(floorCode + "%");
         }
         if (StringUtils.isNotBlank(disCode) && StringUtils.isNotBlank(issuCode)) {
-            return  baseUnitRepository.findByCodeLike(disCode + "%");
+            return baseUnitRepository.findByCodeLike(disCode + "%");
         }
         if (StringUtils.isNotBlank(disCode)) {
-            return  baseUnitRepository.findByCodeLike(disCode + "%");
+            return baseUnitRepository.findByCodeLike(disCode + "%");
         }
         if (StringUtils.isNotBlank(issuCode)) {
-            return  baseUnitRepository.findByCodeLike(issuCode + "%");
+            return baseUnitRepository.findByCodeLike(issuCode + "%");
         }
-        return  baseUnitRepository.findByCodeLike(commCode + "%");
+        return baseUnitRepository.findByCodeLike(commCode + "%");
     }
 }
