@@ -26,4 +26,6 @@ public interface BaseIssueRepository extends JpaRepository<BaseIssue, Integer> {
     public BaseIssue findByCode(String code);
 
     List<BaseIssue> findByCodeLike(String code);
+
+    int countByCodeLike(String code);
 }

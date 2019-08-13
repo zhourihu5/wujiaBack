@@ -10,8 +10,15 @@ import com.wj.core.entity.user.dto.SysUserInfoDTO;
 import com.wj.core.repository.base.*;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.qst.QstCommuntityService;
+import com.wj.core.service.qst.dto.QstResult;
+import com.wj.core.service.qst.dto.TenantstructuresIssuseDTO;
+import com.wj.core.service.qst.dto.TenantvillagesDTO;
 import com.wj.core.util.CommonUtils;
 import com.wj.core.util.base.CommunityUtil;
+import com.wj.core.util.mapper.JsonMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,8 +60,11 @@ public class BaseCommuntityService {
     @Autowired
     private BaseFamilyRepository baseFamilyRepository;
     @Autowired
-    private BaseDeviceRepository baseDeviceRepository;
+    private QstCommuntityService qstCommuntityService;
+    @Autowired
+    private BaseStoreyRepository baseStoreyRepository;
 
+    static JsonMapper mapper = JsonMapper.defaultMapper();
 
 
     /**
@@ -82,6 +92,14 @@ public class BaseCommuntityService {
             String code = CommunityUtil.genCommCode(communtity.getId());
             baseCommuntityRepository.modityCode(code, communtity.getId());
             communtity.setCode(code);
+            Map<String, Object> map = qstCommuntityService.tenantvillages(communtity.getArea().toString(), communtity.getName());
+            communtity.setStructureId(Integer.valueOf(map.get("StructureID").toString()));
+            communtity.setVillageName(map.get("VillageName").toString());
+            communtity.setDirectory(map.get("Directory").toString());
+            Map<String, Object> result = qstCommuntityService.tenantStructureDefinition(communtity.getFlag(), communtity.getStructureId());
+            if (Integer.valueOf(result.get("Code").toString()) != 201) {
+                throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+            }
             return communtity;
         } else {
             BaseCommuntity bc = baseCommuntityRepository.getOne(communtity.getId());
@@ -227,4 +245,5 @@ public class BaseCommuntityService {
         }
         return page;
     }
+
 }

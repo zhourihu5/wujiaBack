@@ -11,6 +11,7 @@ import com.wj.core.entity.user.dto.LoginDTO;
 import com.wj.core.service.auth.AuthorityService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.qst.QstCommuntityService;
 import com.wj.core.service.user.UserInfoService;
 import com.wj.core.util.CommonUtils;
 import io.swagger.annotations.Api;
@@ -34,6 +35,8 @@ public class LoginController {
 
     @Autowired
     private AuthorityService authorityService;
+    @Autowired
+    private QstCommuntityService qstCommuntityService;
 
     /**
      * 登录
@@ -85,5 +88,6 @@ public class LoginController {
         loginDTO.setUserInfo(userInfo);
         return ResponseMessage.ok(loginDTO);
     }
+
 
 }

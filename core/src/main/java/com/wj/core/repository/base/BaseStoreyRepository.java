@@ -34,4 +34,6 @@ public interface BaseStoreyRepository extends JpaRepository<BaseStorey, Integer>
     List<BaseStorey> findByCodeLike(String code);
 
     Long countByUnitId(Integer unidId);
+
+    int countByCodeLike(String code);
 }

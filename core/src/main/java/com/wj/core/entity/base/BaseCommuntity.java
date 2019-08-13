@@ -44,9 +44,10 @@ public class BaseCommuntity {
     private String cityName;
     @Transient
     private String provinceName;
-    @Transient
-    private String NodeDisplay;
     private String flag;
+    private Integer structureId;
+    private String directory;
+    private String villageName;
 
 
 }

@@ -30,6 +30,9 @@ public interface UserInfoRepository extends JpaRepository<SysUserInfo, Integer> 
     @Query(value = "select * from sys_user_info where user_name = ?1", nativeQuery = true)
     public SysUserInfo findByName(String name);
 
+    @Query(value = "select * from sys_user_info where user_name = ?1 and flag = ?2", nativeQuery = true)
+    public SysUserInfo findByNameAndStatus(String name, Integer flag);
+
     /**
      * 根据id查询用户信息
      *

@@ -4,9 +4,11 @@ import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.apply.ApplyLock;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.dto.DeviceDTO;
+import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.user.SysUserInfo;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -29,5 +31,7 @@ public class XcxLoginDTO {
     private ApplyLock applyLock;
 
     private List<BaseCommuntity> communtityList;
+
+    private List<OrderInfo> list;
 
 }

@@ -32,4 +32,6 @@ public interface BaseDistrictRepository extends JpaRepository<BaseDistrict, Inte
     BaseDistrict findByCode(String code);
 
     List<BaseDistrict> findByCodeLike(String code);
+
+    int countByCodeLike(String code);
 }

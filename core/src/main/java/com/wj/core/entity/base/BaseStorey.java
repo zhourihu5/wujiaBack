@@ -39,5 +39,6 @@ public class BaseStorey {
     private Integer floorId;
     private Integer districtId;
     private Integer issueId;
-
+    private String parentDirectory;
+    private Integer structureId;
 }

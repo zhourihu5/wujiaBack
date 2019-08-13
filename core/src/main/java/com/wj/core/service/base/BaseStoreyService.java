@@ -1,5 +1,6 @@
 package com.wj.core.service.base;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.base.BaseStorey;
@@ -8,7 +9,10 @@ import com.wj.core.repository.base.BaseCommuntityRepository;
 import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.base.BaseStoreyRepository;
 import com.wj.core.repository.base.FamilyCommuntityRepository;
+import com.wj.core.service.qst.QstCommuntityService;
+import com.wj.core.service.qst.dto.TenantstructuresIssuseDTO;
 import com.wj.core.util.base.CommunityUtil;
+import com.wj.core.util.mapper.JsonMapper;
 import com.wj.core.util.time.ClockUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BaseStoreyService {
@@ -33,6 +38,9 @@ public class BaseStoreyService {
 
     @Autowired
     private FamilyCommuntityRepository familyCommuntityRepository;
+    @Autowired
+    private QstCommuntityService qstCommuntityService;
+    static JsonMapper mapper = JsonMapper.defaultMapper();
 
     public Page<BaseStorey> findAll(Integer unitId, Pageable pageable) {
         Page<BaseStorey> page = null;
@@ -72,7 +80,6 @@ public class BaseStoreyService {
             } else  {
                 num += 1;
             }
-            //baseFamilyRepository.deleteByStoreyId(storey.getId());
             for (int i = num; i <= familyNum; i++) {
                 BaseFamily baseFamily = new BaseFamily();
                 StringBuffer sBuffer = new StringBuffer();
@@ -86,6 +93,18 @@ public class BaseStoreyService {
                 baseFamily.setStoreyId(baseStorey.getId());
                 baseFamily.setCode(CommunityUtil.genCode(baseStorey.getCode(), i));
                 baseFamily.setCreateDate(ClockUtil.currentDate());
+                String r = qstCommuntityService.tenantstructures(storey.getDirectory(), 1, "房", 1, 10);
+                if (StringUtils.contains(r,"[")) {
+                    JavaType type = mapper.buildCollectionType(List.class, Map.class);
+                    List<Map<String, Object>> list = mapper.fromJson(r, type);
+                    if (list.size() > 0) {
+                        Map<String, Object> dto = list.get(0);
+                        baseFamily.setDirectory(dto.get("Directory").toString());
+                        baseFamily.setParentDirectory(dto.get("ParentDirectory").toString());
+                        baseFamily.setStructureId(Integer.valueOf(dto.get("StructureID").toString()));
+                        baseFamily.setStructureName(dto.get("StructureName").toString());
+                    }
+                }
                 BaseFamily newBaseFamily = baseFamilyRepository.save(baseFamily);
                 familyCommuntityRepository.insert(bc.getId(), newBaseFamily.getId());
             }

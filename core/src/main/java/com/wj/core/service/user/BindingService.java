@@ -42,6 +42,15 @@ public class BindingService {
         userInfoRepository.bindingUser(userName, cover, nickName, openid);
     }
 
+    @Transactional
+    public void deliverybindingUser(String userName, String cover, String nickName, String openid) {
+        SysUserInfo userInfo = userInfoRepository.findByNameAndStatus(userName, 5);
+        if (userInfo == null) {
+            throw new ServiceException("此账号不是配送平台账号", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        userInfoRepository.bindingUser(userName, cover, nickName, openid);
+    }
+
     public SysUserInfo findByOpenId(String openid) {
         return userInfoRepository.findByOpenId(openid);
     }

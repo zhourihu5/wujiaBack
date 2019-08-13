@@ -7,7 +7,8 @@ public enum ErrorCode {
     UNAUTHORIZED(401, 401),
     FORBIDDEN(403, 403),
     INTERNAL_SERVER_ERROR(500, 500),
-    DEVICE_KEY_NOTEXSTS(1000, 400);
+    DEVICE_KEY_NOTEXSTS(1000, 400),
+    QST_ERROR(1001, 400);
 
     public int code;
     public int httpStatus;

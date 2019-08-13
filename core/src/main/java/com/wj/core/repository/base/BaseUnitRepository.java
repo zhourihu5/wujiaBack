@@ -52,5 +52,7 @@ public interface BaseUnitRepository extends JpaRepository<BaseUnit, Integer> {
 
     Long countByFloorId(Integer floorId);
 
+    int countByCodeLike(String code);
+
 
 }

@@ -33,5 +33,7 @@ public class BaseIssue {
     private String nodeDisplay;
     @Transient
     private String communtityName;
+    private String parentDirectory;
+    private Integer structureId;
 
 }

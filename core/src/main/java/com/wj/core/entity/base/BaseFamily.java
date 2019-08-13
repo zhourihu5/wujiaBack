@@ -31,6 +31,7 @@ public class BaseFamily {
     @ApiModelProperty(value = "所属层id")
     private Integer storeyId;
     @ApiModelProperty(value = "创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     @ApiModelProperty(value = "节点")
     private String directory;
@@ -53,92 +54,10 @@ public class BaseFamily {
     @ApiModelProperty(value = "门牌号")
     @Transient
     private String name;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNum() {
-        return num;
-    }
-
-    public void setNum(String num) {
-        this.num = num;
-    }
-
-    public Integer getUnitId() {
-        return unitId;
-    }
-
-    public void setUnitId(Integer unitId) {
-        this.unitId = unitId;
-    }
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getCommuntityName() {
-        return communtityName;
-    }
-
-    public void setCommuntityName(String communtityName) {
-        this.communtityName = communtityName;
-    }
-
-    public String getFloorName() {
-        return floorName;
-    }
-
-    public void setFloorName(String floorName) {
-        this.floorName = floorName;
-    }
-
-    public String getUnitName() {
-        return unitName;
-    }
-
-    public void setUnitName(String unitName) {
-        this.unitName = unitName;
-    }
-
-    public SysUserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(SysUserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
-
-    public Integer getCommuntityId() {
-        return communtityId;
-    }
-
-    public void setCommuntityId(Integer communtityId) {
-        this.communtityId = communtityId;
-    }
-
     @ManyToMany(mappedBy = "familyId")
     @JsonIgnore
     private List<SysUserInfo> userId;
-
-    public List<SysUserInfo> getUserId() {
-        return userId;
-    }
-
-    public void setUserId(List<SysUserInfo> userId) {
-        this.userId = userId;
-    }
-
-
+    private String parentDirectory;
+    private Integer structureId;
 
 }

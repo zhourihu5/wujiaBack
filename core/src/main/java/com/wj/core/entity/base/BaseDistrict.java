@@ -33,5 +33,7 @@ public class BaseDistrict {
     private String nodeDisplay;
     @ApiModelProperty(value = "编码")
     private String code;
+    private String parentDirectory;
+    private Integer structureId;
 
 }

@@ -41,7 +41,7 @@ public class SysUserInfo implements Serializable {
     private String icon;
     @ApiModelProperty(value = "用户状态")
     private Integer status;
-    @ApiModelProperty(value = "标识 1、后台用户 2、ipad用户 3、app用户 4.小程序用户")
+    @ApiModelProperty(value = "标识 1、后台用户 2、ipad用户 3、app用户 4、小程序用户 5、送货用户")
     private Integer flag;
     @ApiModelProperty(value = "创建时间")
     private Date createDate;
@@ -64,74 +64,11 @@ public class SysUserInfo implements Serializable {
     private String wxOpenId;
     private String wxCover;
     private String wxNickName;
-
-
-    public List<UserCard> getUserCards() {
-        return userCards;
-    }
-
-    public void setUserCards(List<UserCard> userCards) {
-        this.userCards = userCards;
-    }
+    @ApiModelProperty(value = "身份证号码")
+    private String identityCard;
 
     @OneToMany(mappedBy = "userInfo")
     private List<UserCard> userCards;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getFlag() {
-        return flag;
-    }
-
-    public void setFlag(Integer flag) {
-        this.flag = flag;
-    }
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getCreateDate() {
@@ -140,30 +77,6 @@ public class SysUserInfo implements Serializable {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
-    }
-
-    public Integer getCommuntityId() {
-        return communtityId;
-    }
-
-    public void setCommuntityId(Integer communtityId) {
-        this.communtityId = communtityId;
-    }
-
-    public Integer getFid() {
-        return fid;
-    }
-
-    public void setFid(Integer fid) {
-        this.fid = fid;
-    }
-
-    public Integer getIdentity() {
-        return identity;
-    }
-
-    public void setIdentity(Integer identity) {
-        this.identity = identity;
     }
 
     //因为多对多之间会通过一张中间表来维护两表直接的关系，
@@ -178,25 +91,10 @@ public class SysUserInfo implements Serializable {
     @JsonIgnore
     private List<BaseFamily> familyId;
 
-    public List<BaseFamily> getFamilyId() {
-        return familyId;
-    }
-
-    public void setFamilyId(List<BaseFamily> familyId) {
-        this.familyId = familyId;
-    }
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "op_family_service", joinColumns = {@JoinColumn(name = "userId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "serviceId", referencedColumnName = "id")})
     @JsonIgnore
     private List<OpService> serviceId;
 
-    public List<OpService> getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(List<OpService> serviceId) {
-        this.serviceId = serviceId;
-    }
 
 }

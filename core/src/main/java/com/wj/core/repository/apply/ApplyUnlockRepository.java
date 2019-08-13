@@ -14,13 +14,20 @@ public interface ApplyUnlockRepository extends JpaRepository<ApplyLock, Integer>
     public List<ApplyLock> findByStatus(String status);
 
     @Query(value = "select * from ebiz_apply_lock where user_id = ?1 order by create_date desc", nativeQuery = true)
-    public List<ApplyLock> findByUserId(Integer user_id);
+    public List<ApplyLock> findByUserId(Integer userId);
 
-    @Query("update ApplyLock a set a.status = ?1 where a.id = ?2")
+    @Query(value = "select * from ebiz_apply_lock where id = ?1", nativeQuery = true)
+    public ApplyLock findByApplyId(Integer id);
+
+    @Query(value = "select count(*) from ebiz_apply_lock where user_id = ?1 and family_id = ?2 and status = ?3", nativeQuery = true)
+    public Integer findByUserIdAndFamilyId(Integer userId, Integer familyId, String status);
+
     @Modifying
-    void modityStatus(String status, Integer id);
-    @Query("update ApplyLock a set a.status = ?1, a.remark = ?2 where a.id = ?3")
+    @Query(value = "update ebiz_apply_lock set status = ?1 where id = ?2", nativeQuery = true)
+    public void updateStatus(String status, Integer id);
+
     @Modifying
-    void modityStatusAndRemark(String status, String remark, Integer id);
+    @Query(value = "update ebiz_apply_lock set status = ?1, remark = ?2 where id = ?3", nativeQuery = true)
+    public void updateStatusAndRemark(String status, String remark, Integer id);
 
 }

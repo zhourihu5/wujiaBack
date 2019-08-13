@@ -1,4 +1,4 @@
-package com.wj.api.controller.user;
+package com.wj.api.controller.delivery;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -8,49 +8,47 @@ import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.apply.ApplyLock;
 import com.wj.core.entity.base.BaseCommuntity;
-import com.wj.core.entity.base.BaseDevice;
+import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.BindingDTO;
-import com.wj.core.entity.user.dto.IndexDTO;
-import com.wj.core.entity.user.dto.LoginDTO;
 import com.wj.core.entity.user.dto.XcxLoginDTO;
 import com.wj.core.helper.impl.RedisHelperImpl;
 import com.wj.core.service.SendSms;
 import com.wj.core.service.activity.ActivityService;
 import com.wj.core.service.address.AddressService;
 import com.wj.core.service.apply.ApplyLockService;
-import com.wj.core.service.base.BaseDeviceService;
-import com.wj.core.service.base.BaseFamilyService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.order.OrderService;
 import com.wj.core.service.user.BindingService;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
 import com.wj.core.service.wx.WxLoginService;
-import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@Api(value = "/wx/binding", tags = "微信绑定用户接口模块")
+@Api(value = "/wx/delivery", tags = "微信送货端用户登录接口模块")
 @RestController
-@RequestMapping("/wx/binding/")
-public class BindingController {
+@RequestMapping("/wx/delivery/")
+public class DeliveryLoginController {
 
-    public final static Logger logger = LoggerFactory.getLogger(BindingController.class);
+    public final static Logger logger = LoggerFactory.getLogger(DeliveryLoginController.class);
 
     @Autowired
     private BindingService bindingService;
@@ -74,18 +72,9 @@ public class BindingController {
     private AddressService addressService;
 
     @Autowired
-    private UserFamilyService userFamilyService;
+    private OrderService orderService;
 
-    @Autowired
-    private ApplyLockService applyLockService;
 
-    /**
-     * 绑定用户信息
-     *
-     * @param bindingDTO
-     * @return ResponseMessage
-     * @author thz
-     */
     @ApiOperation(value = "绑定用户信息", notes = "绑定用户信息")
     @PostMapping("bindingUser")
     public ResponseMessage<XcxLoginDTO> bindingUser(@RequestBody BindingDTO bindingDTO) {
@@ -99,63 +88,28 @@ public class BindingController {
         XcxLoginDTO loginDTO = new XcxLoginDTO();
         SysUserInfo userInfo = userInfoService.findByName(bindingDTO.getUserName());
         if (userInfo == null) {
-            SysUserInfo sysUserInfo = new SysUserInfo();
-            sysUserInfo.setUserName(bindingDTO.getUserName());
-            sysUserInfo.setIcon(bindingDTO.getCover());
-            sysUserInfo.setWxCover(bindingDTO.getCover());
-            sysUserInfo.setNickName(bindingDTO.getNickName());
-            sysUserInfo.setWxNickName(bindingDTO.getNickName());
-            sysUserInfo.setWxOpenId(bindingDTO.getOpenid());
-            sysUserInfo.setStatus(4);
-            sysUserInfo.setCreateDate(new Date());
-            sysUserInfo = userInfoService.addUser(sysUserInfo);
-            loginDTO.setUserInfo(sysUserInfo);
-            String jwtToken = JwtUtil.generateToken(sysUserInfo);
-            loginDTO.setToken(jwtToken);
-            loginDTO.setUserInfo(sysUserInfo);
-            loginDTO.setIsBindingFamily("0");
+            throw new ServiceException("请联系吾家管理员", ErrorCode.INTERNAL_SERVER_ERROR);
         } else {
-            bindingService.bindingUser(bindingDTO.getUserName(), bindingDTO.getCover(), bindingDTO.getNickName(), bindingDTO.getOpenid());
+            bindingService.deliverybindingUser(bindingDTO.getUserName(), bindingDTO.getCover(), bindingDTO.getNickName(), bindingDTO.getOpenid());
             String jwtToken = JwtUtil.generateToken(userInfo);
             loginDTO.setToken(jwtToken);
             loginDTO.setUserInfo(userInfo);
-            List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userInfo.getId());
-            if (userFamilyList.size() <= 0) {
-                loginDTO.setIsBindingFamily("0");
-                List<ApplyLock> applyLockList = applyLockService.findByUserId(userInfo.getId());
-                if (applyLockList.size() > 0) {
-                    loginDTO.setApplyLock(applyLockList.get(0));
-//                    loginDTO.setIsApplyLock(applyLockList.get(0).getStatus());
-                }
-                return ResponseMessage.ok(loginDTO);
-            }
-            List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());
-            if (communtityList.size() > 0) {
-                loginDTO.setCommuntityName(communtityList.get(0).getName());
-                loginDTO.setCommuntityList(communtityList);
-                // 根据所在社区选择活动
-                List<Activity> activityList = activityService.findList(userInfo.getId(), communtityList.get(0).getId());
-                loginDTO.setActivityList(activityList);
-            }
-            loginDTO.setIsBindingFamily("1");
+            //选单列表
+            Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "create_date");
+            Page<OrderInfo> page = orderService.findList("2", pageable);
+            loginDTO.setList(page.getContent());
         }
         return ResponseMessage.ok(loginDTO);
     }
 
-    /**
-     * 查询微信是否已经绑定用户
-     *
-     * @param code
-     * @return ResponseMessage
-     * @author thz
-     */
-    @ApiOperation(value = "查询微信是否已经绑定用户", notes = "查询微信是否已经绑定用户")
+
+    @ApiOperation(value = "检查配送端用户是否存在", notes = "检查配送端用户是否存在")
     @GetMapping("checkBinding")
-    public ResponseMessage<XcxLoginDTO> getWxOpenId(String code) {
-        Object object = wxLoginService.wxLogin(code);
-        JSONObject json = JSON.parseObject(object.toString());
-        String openid = json.getString("openid");
-        String session_key = json.getString("session_key");
+    public ResponseMessage<XcxLoginDTO> checkBinding(String code) {
+//        Object object = wxLoginService.wxBdLogin(code);
+//        JSONObject json = JSON.parseObject(object.toString());
+//        String openid = json.getString("openid");
+        String openid = "123";
         XcxLoginDTO loginDTO = new XcxLoginDTO();
         if (openid != null) {
             SysUserInfo userInfo = bindingService.findByOpenId(openid);
@@ -163,27 +117,10 @@ public class BindingController {
                 String jwtToken = JwtUtil.generateToken(userInfo);
                 loginDTO.setToken(jwtToken);
                 loginDTO.setUserInfo(userInfo);
-                List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userInfo.getId());
-                if (userFamilyList.size() <= 0) {
-                    loginDTO.setIsBindingFamily("0");
-                    List<ApplyLock> applyLockList = applyLockService.findByUserId(userInfo.getId());
-                    if (applyLockList.size() > 0) {
-                        loginDTO.setApplyLock(applyLockList.get(0));
-                    }
-                    return ResponseMessage.ok(loginDTO);
-                } else {
-                    //TODO 用户存在两个家庭的处理方式，现在默认取一个
-                    userInfo.setFid(userFamilyList.get(0).getUserFamily().getFamilyId());
-                }
-                List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());
-                if (communtityList.size() > 0) {
-                    loginDTO.setCommuntityName(communtityList.get(0).getName());
-                    loginDTO.setCommuntityList(communtityList);
-                    // 根据所在社区选择活动
-                    List<Activity> activityList = activityService.findList(userInfo.getId(), communtityList.get(0).getId());
-                    loginDTO.setActivityList(activityList);
-                }
-                loginDTO.setIsBindingFamily("1");
+                //选单列表
+                Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "create_date");
+                Page<OrderInfo> page = orderService.findList("2", pageable);
+                loginDTO.setList(page.getContent());
             }
             loginDTO.setOpenid(openid);
         }
