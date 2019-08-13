@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BaseStoreyService {
@@ -94,14 +95,14 @@ public class BaseStoreyService {
                 baseFamily.setCreateDate(ClockUtil.currentDate());
                 String r = qstCommuntityService.tenantstructures(storey.getDirectory(), 1, "房", 1, 10);
                 if (StringUtils.contains(r,"[")) {
-                    JavaType type = mapper.buildCollectionType(List.class, TenantstructuresIssuseDTO.class);
-                    List<TenantstructuresIssuseDTO> list = mapper.fromJson(r, type);
+                    JavaType type = mapper.buildCollectionType(List.class, Map.class);
+                    List<Map<String, Object>> list = mapper.fromJson(r, type);
                     if (list.size() > 0) {
-                        TenantstructuresIssuseDTO dto = list.get(0);
-                        baseFamily.setDirectory(dto.getDirectory());
-                        baseFamily.setParentDirectory(dto.getParentDirectory());
-                        baseFamily.setStructureId(dto.getStructureID());
-                        baseFamily.setStructureName(dto.getStructureName());
+                        Map<String, Object> dto = list.get(0);
+                        baseFamily.setDirectory(dto.get("Directory").toString());
+                        baseFamily.setParentDirectory(dto.get("ParentDirectory").toString());
+                        baseFamily.setStructureId(Integer.valueOf(dto.get("StructureID").toString()));
+                        baseFamily.setStructureName(dto.get("StructureName").toString());
                     }
                 }
                 BaseFamily newBaseFamily = baseFamilyRepository.save(baseFamily);

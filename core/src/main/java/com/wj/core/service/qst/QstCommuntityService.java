@@ -44,41 +44,36 @@ public class QstCommuntityService {
     }
 
     //配置小区位长信息
-    public QstResult tenantStructureDefinition(Integer structureID) {
+    public Map<String, Object> tenantStructureDefinition(String flag, Integer structureID) {
         Map<String, Object> requestParam = new HashMap<>();
         requestParam.put("TenantCode", Qst.TC);
         requestParam.put("StructureID", structureID); //小区结构ID(注：一定是小区的小区结构ID)
         requestParam.put("Period", 2); //期对应的位长配置
         requestParam.put("Region", 2); // 区对应的位长配置
         requestParam.put("Building", 2); //栋对应的位长配置
-        requestParam.put("Unit", 2); // 单元对应的位长配置
+        requestParam.put("Unit", 1); // 单元对应的位长配置
         requestParam.put("Floor", 2); //层对应的位长配置
         requestParam.put("Room", 2); // 房对应的位长配置
         String url = Qst.URL21664 + "TenantStructureDefinition";
         String object = HttpClients.postObjectClientJsonHeaders(url, Qst.TOKEN, requestParam);
-        QstResult qst = mapper.fromJson(object, QstResult.class);
+        Map<String, Object> qst = mapper.fromJson(object, Map.class);
         return qst;
     }
 
     //添加小区节点期 Attribute:2、区 Attribute:2、层不传、房：Attribute:10
     public String tenantstructures(String parentDirectory, Integer nodeNum, String nodeDisplay, Integer nodeStart, Integer attribute) {
-        try {
-            Map<String, Object> requestParam = Maps.newHashMap();
-            requestParam.put("TenantCode", Qst.TC);
-            requestParam.put("ParentDirectory", parentDirectory);
-            requestParam.put("NodeNum", nodeNum);
-            requestParam.put("NodeDisplay", nodeDisplay);
-            requestParam.put("NodeStart", nodeStart);
-            if (attribute != null) {
-                requestParam.put("Attribute", 2);
-            }
-            String url = Qst.URL21664 + "tenantstructures";
-            String result = HttpClients.postObjectClientJsonHeaders(url, Qst.TOKEN, requestParam);
-            return result;
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        Map<String, Object> requestParam = Maps.newHashMap();
+        requestParam.put("TenantCode", Qst.TC);
+        requestParam.put("ParentDirectory", parentDirectory);
+        requestParam.put("NodeNum", nodeNum);
+        requestParam.put("NodeDisplay", nodeDisplay);
+        requestParam.put("NodeStart", nodeStart);
+        if (attribute != null && nodeDisplay.equals("家")) {
+            requestParam.put("Attribute", attribute);
         }
-        return null;
+        String url = Qst.URL21664 + "tenantstructures";
+        String result = HttpClients.putObjectClientJsonHeaders(url, Qst.TOKEN, requestParam);
+        return result;
     }
 
     //添加楼栋（单元门）

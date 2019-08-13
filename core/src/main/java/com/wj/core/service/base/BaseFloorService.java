@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BaseFloorService {
@@ -46,7 +47,7 @@ public class BaseFloorService {
     @Transactional
     public BaseFloor saveFloor(BaseFloor floor) {
         BaseCommuntity bc = baseCommuntityRepository.getOne(floor.getCommuntityId());
-        Integer count = 0;
+        Integer count;
         if (floor.getDistrictId() != null) {
             count = baseFloorRepository.findCountByDistrictId(floor.getDistrictId());
         } else if (floor.getIssueId() != null) {
@@ -87,7 +88,7 @@ public class BaseFloorService {
         } else  {
             num += 1;
         }
-        JavaType type = mapper.buildCollectionType(List.class, TenantunitdoorsDTO.class);
+        JavaType type = mapper.buildCollectionType(List.class, Map.class);
         for (int i = num; i<= unitNum; i ++) {
             BaseUnit bu = new BaseUnit();
             bu.setCode(CommunityUtil.genCode(floor.getCode(), i));
@@ -108,12 +109,12 @@ public class BaseFloorService {
                 parentDirectory = bc.getDirectory();
             }
             String r = qstCommuntityService.tenantunitdoors(parentDirectory, count, i, 1, 1);
-            List<TenantunitdoorsDTO> tenantunitdoorsDTOS = mapper.fromJson(r, type);
+            List<Map<String, Object>> tenantunitdoorsDTOS = mapper.fromJson(r, type);
             if (StringUtils.contains(r, "[")) {
-                TenantunitdoorsDTO tenantunitdoorsDTO = tenantunitdoorsDTOS.get(tenantunitdoorsDTOS.size());
-                bu.setStructureId(tenantunitdoorsDTO.getStructureID());
-                bu.setBuildingName(tenantunitdoorsDTO.getBuildingName());
-                bu.setParentDirectory(tenantunitdoorsDTO.getParentDirectory());
+                Map<String, Object> map = tenantunitdoorsDTOS.get(tenantunitdoorsDTOS.size());
+                bu.setStructureId(Integer.valueOf(map.get("StructureID").toString()));
+                bu.setBuildingName(map.get("BuildingName").toString());
+                bu.setParentDirectory(map.get("ParentDirectory").toString());
             }
             baseUnitRepository.save(bu);
         }

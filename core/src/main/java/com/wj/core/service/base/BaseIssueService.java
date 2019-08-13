@@ -15,7 +15,7 @@ import com.wj.core.service.qst.dto.TenantstructuresIssuseDTO;
 import com.wj.core.util.CommonUtils;
 import com.wj.core.util.base.CommunityUtil;
 import com.wj.core.util.mapper.JsonMapper;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BaseIssueService {
@@ -47,20 +48,20 @@ public class BaseIssueService {
     public BaseIssue saveIssue(BaseIssue issue) {
         if (issue.getId() == null) {
             Integer count = baseIssueRepository.findCountByCommuntityId(issue.getCommuntityId());
-            BaseCommuntity cm = baseCommuntityRepository.getOne(issue.getCommuntityId());
+            BaseCommuntity cm = baseCommuntityRepository.findByCommuntityId(issue.getCommuntityId());
             String issueCode = CommunityUtil.genCode(cm.getCode(), ++ count);
             baseCommuntityRepository.modityFlag("期", cm.getId());
             issue.setCode(issueCode);
             String r = qstCommuntityService.tenantstructures(cm.getDirectory(), 1, "期", 1, 2);
             if (StringUtils.contains(r,"[")) {
-                JavaType type = mapper.buildCollectionType(List.class, TenantstructuresIssuseDTO.class);
-                List<TenantstructuresIssuseDTO> list = mapper.fromJson(r, type);
+                JavaType type = mapper.buildCollectionType(List.class, Map.class);
+                List<Map<String, Object>> list = mapper.fromJson(r, type);
                 if (list.size() > 0) {
-                    TenantstructuresIssuseDTO dto = list.get(0);
-                    issue.setDirectory(dto.getDirectory());
-                    issue.setParentDirectory(dto.getParentDirectory());
-                    issue.setStructureId(dto.getStructureID());
-                    issue.setStructureName(dto.getStructureName());
+                    Map<String, Object> dto = list.get(0);
+                    issue.setDirectory(dto.get("Directory").toString());
+                    issue.setParentDirectory(dto.get("ParentDirectory").toString());
+                    issue.setStructureId(Integer.valueOf(dto.get("StructureID").toString()));
+                    issue.setStructureName(dto.get("StructureName").toString());
                 }
             }
         }

@@ -96,8 +96,8 @@ public class BaseCommuntityService {
             communtity.setStructureId(Integer.valueOf(map.get("StructureID").toString()));
             communtity.setVillageName(map.get("VillageName").toString());
             communtity.setDirectory(map.get("Directory").toString());
-            QstResult result = qstCommuntityService.tenantStructureDefinition(communtity.getStructureId());
-            if (result.getCode() != 201) {
+            Map<String, Object> result = qstCommuntityService.tenantStructureDefinition(communtity.getFlag(), communtity.getStructureId());
+            if (Integer.valueOf(result.get("Code").toString()) != 201) {
                 throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
             }
             return communtity;

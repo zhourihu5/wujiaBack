@@ -62,7 +62,7 @@ public class BaseDistrictService {
                     Map<String, Object> dto = list.get(0);
                     district.setDirectory(dto.get("Directory").toString());
                     district.setParentDirectory(dto.get("ParentDirectory").toString());
-                    district.setStructureId(Integer.valueOf(dto.get("StructureId").toString()));
+                    district.setStructureId(Integer.valueOf(dto.get("StructureID").toString()));
                     district.setStructureName(dto.get("StructureName").toString());
                 }
             }

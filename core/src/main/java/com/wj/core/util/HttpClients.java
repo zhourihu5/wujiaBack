@@ -40,6 +40,7 @@ public class HttpClients {
 
     public static String putObjectClientJsonHeaders(String url, String accessToken, Map<String, Object> requestParam) {
         RestTemplate template = new RestTemplate();
+        template.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
         requestHeaders.set("Authorization", "Bearer " + accessToken);

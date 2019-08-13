@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BaseUnitService {
@@ -82,14 +83,14 @@ public class BaseUnitService {
             baseStorey.setFloorId(bf.getId());
             String r = qstCommuntityService.tenantstructures(unit.getDirectory(), 1, "层", 1, null);
             if (StringUtils.contains(r,"[")) {
-                JavaType type = mapper.buildCollectionType(List.class, TenantstructuresIssuseDTO.class);
-                List<TenantstructuresIssuseDTO> list = mapper.fromJson(r, type);
+                JavaType type = mapper.buildCollectionType(List.class, Map.class);
+                List<Map<String, Object>> list = mapper.fromJson(r, type);
                 if (list.size() > 0) {
-                    TenantstructuresIssuseDTO dto = list.get(0);
-                    baseStorey.setDirectory(dto.getDirectory());
-                    baseStorey.setParentDirectory(dto.getParentDirectory());
-                    baseStorey.setStructureId(dto.getStructureID());
-                    baseStorey.setStructureName(dto.getStructureName());
+                    Map<String, Object> dto = list.get(0);
+                    baseStorey.setDirectory(dto.get("Directory").toString());
+                    baseStorey.setParentDirectory(dto.get("ParentDirectory").toString());
+                    baseStorey.setStructureId(Integer.valueOf(dto.get("StructureID").toString()));
+                    baseStorey.setStructureName(dto.get("StructureName").toString());
                 }
             }
             baseStoreyRepository.save(baseStorey);
