@@ -30,6 +30,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Transient;
 import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -136,6 +137,7 @@ public class ActivityService {
     }
 
     // 活动上架下架
+    @Transactional
     public void modityIsShow(Integer id, String isShow) {
         activityRepository.modityIsShow(isShow, id);
     }

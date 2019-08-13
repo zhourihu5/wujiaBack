@@ -70,7 +70,7 @@ public class ApplyLockService {
     @Transactional
     public void modityStatus(String status, String remark, Integer id) {
         if (status.equals("1")) {
-            ApplyLock applyLock = applyUnlockRepository.getOne(id);
+            ApplyLock applyLock = applyUnlockRepository.findByApplyId(id);
             SysUserFamily sysUserFamily = new SysUserFamily();
             UserFamily userFamily = new UserFamily();
             userFamily.setFamilyId(applyLock.getFamilyId());
@@ -78,9 +78,9 @@ public class ApplyLockService {
             sysUserFamily.setUserFamily(userFamily);
             sysUserFamily.setIdentity(0);
             userFamilyRepository.save(sysUserFamily);
-            applyUnlockRepository.modityStatus(status, id);
+            applyUnlockRepository.updateStatus(status, id);
         } else {
-            applyUnlockRepository.modityStatusAndRemark(status, remark, id);
+            applyUnlockRepository.updateStatusAndRemark(status, remark, id);
         }
 
     }
@@ -88,5 +88,9 @@ public class ApplyLockService {
 
     public List<ApplyLock> findByUserId(Integer userId) {
         return applyUnlockRepository.findByUserId(userId);
+    }
+
+    public Integer findByUserIdAndFamilyId(Integer userId, Integer familyId, String status) {
+        return applyUnlockRepository.findByUserIdAndFamilyId(userId, familyId, status);
     }
 }

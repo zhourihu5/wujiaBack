@@ -46,24 +46,20 @@ public class OrderService {
     @Autowired
     private OrderInfoRepository orderInfoRepository;
     @Autowired
-    private OrderRepairRepository orderRepairRepository;
-    @Autowired
     private ActivityRepository activityRepository;
-    @Autowired
-    private AddressRepository addressRepository;
     @Autowired
     private CommodityRepository commodityRepository;
     @Autowired
-    private UserInfoRepository userInfoRepository;
-    @Autowired
     private JobService jobService;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     // 生成订单
     @Transactional
     public OrderInfo saveOrder(OrderInfo orderInfo) {
         // 判断活动是否结束 结束不能下单
         Activity activity = activityRepository.findByActivityId(orderInfo.getActivityId());
-//        SysUserInfo userInfo = userInfoRepository.findByUserId(orderInfo.getUserId());
+        SysUserInfo userInfo = userInfoRepository.findByUserId(orderInfo.getUserId());
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String currentTime = formatter.format(date);
@@ -111,6 +107,10 @@ public class OrderService {
         orderInfo.setRealPrice(payMoney);
         orderInfo.setFavPrice(favPrice);
         orderInfo.setStatus("1");
+        orderInfo.setPayType("4");
+        orderInfo.setNickName(userInfo.getNickName());
+        orderInfo.setActivityName(activity.getTitle());
+        orderInfo.setCommodityCode(activity.getCommodityCode());
         orderInfo.setCreateDate(ClockUtil.currentDate());
         orderInfo.setUpdateDate(ClockUtil.currentDate());
         orderInfo.setPayEndDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
@@ -170,14 +170,14 @@ public class OrderService {
             List<Predicate> predicates = Lists.newArrayList();
             if (StringUtils.isNotBlank(startDate)) {
                 try {
-                    predicates.add(criteriaBuilder.equal(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, startDate)));
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, startDate)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
             if (StringUtils.isNotBlank(endDate)) {
                 try {
-                    predicates.add(criteriaBuilder.equal(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, endDate)));
+                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, endDate)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -254,7 +254,7 @@ public class OrderService {
 
     @Transactional
     public void updateWxOrderByCode(String code, String wxOrderCode) {
-        orderInfoRepository.updateWxOrderByCode(code, wxOrderCode);
+        orderInfoRepository.updateWxOrderByCode(code, wxOrderCode, new Date());
     }
 
 

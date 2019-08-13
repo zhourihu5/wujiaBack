@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.Transient;
 import java.util.List;
 
 @Service
@@ -53,12 +55,15 @@ public class BaseDeviceService {
      * @param deviceDTO
      * @return void
      */
+    @Transactional
     public void saveDevice(BaseDeviceDTO deviceDTO) {
-        baseDeviceRepository.deleteByFamilyId(deviceDTO.getFamilyId());
+//        baseDeviceRepository.deleteByFamilyId(deviceDTO.getFamilyId());
         BaseDevice device = BeanMapper.map(deviceDTO, BaseDevice.class);
-        Integer count = baseDeviceRepository.findCountByKey(device.getDeviceKey());
-        if (count > 0) {
-            throw new ServiceException("此设备编码已经存在", ErrorCode.INTERNAL_SERVER_ERROR);
+        if (device.getId() == null) {
+            Integer count = baseDeviceRepository.findCountByKey(device.getDeviceKey());
+            if (count > 0) {
+                throw new ServiceException("此设备编码已经存在", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
         }
         baseDeviceRepository.save(device);
     }

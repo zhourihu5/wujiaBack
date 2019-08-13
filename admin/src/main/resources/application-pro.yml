@@ -57,7 +57,9 @@ wj:
   wx:
     appid: wx78aa6144c22e65ae
     secret: d83e174efd68752adcda38678e09f6ef
-
+  bd:
+    appid: wx4421e95088cfd91a
+    secret: b2c587a6d6c3a6c0e87e1fd9c26801e4
 qst:
   info:
     accessToken: http://39.97.233.20:9700/api/

@@ -5,6 +5,8 @@ import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.apply.ApplyLock;
 import com.wj.core.service.apply.ApplyLockService;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +27,15 @@ public class ApplyLockController {
 
     @ApiOperation(value = "申请开锁", notes = "申请开锁")
     @PostMapping("applyUnLock")
-    public ResponseMessage applyUnLock(ApplyLock applyLock) {
+    public ResponseMessage applyUnLock(@RequestBody ApplyLock applyLock) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        applyLock.setUserId(userId);
+        Integer count = applyLockService.findByUserIdAndFamilyId(userId, applyLock.getFamilyId(), "1");
+        if (count > 0) {
+            throw new ServiceException("您已经申请过此小区，无需重复申请！", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         applyLockService.saveApplyLock(applyLock);
         return ResponseMessage.ok();
     }

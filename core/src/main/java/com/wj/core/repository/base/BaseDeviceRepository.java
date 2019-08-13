@@ -44,6 +44,7 @@ public interface BaseDeviceRepository extends JpaRepository<BaseDevice, Integer>
     @Query(value = "update BaseDevice b set b.versionCode = ?1, b.versionName = ?2 where b.deviceKey = ?3")
     public void updateVer(String versionCode, String versionName, String key);
 
+    @Modifying
     void deleteByFamilyId(Integer familyId);
 
 }
