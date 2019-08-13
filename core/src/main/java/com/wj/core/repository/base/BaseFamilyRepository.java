@@ -43,4 +43,5 @@ public interface BaseFamilyRepository extends JpaRepository<BaseFamily, Integer>
     Long countByStoreyId(Integer storeyId);
 
     int countByCodeLike(String code);
+
 }

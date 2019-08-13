@@ -149,4 +149,8 @@ public class BaseFamilyService {
         return baseFamilyRepository.findByCodeLike(unitCode + "%");
     }
 
+    public BaseFamily findByFamilyId(Integer familyId) {
+        return baseFamilyRepository.findByFamilyId(familyId);
+    }
+
 }
