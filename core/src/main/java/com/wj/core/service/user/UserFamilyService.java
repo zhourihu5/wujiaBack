@@ -132,9 +132,9 @@ public class UserFamilyService {
         //全视通
         SysUserInfo userInfo = userInfoRepository.findByUserId(userFamily.getUserFamily().getUserId());
         BaseFamily baseFamily = baseFamilyRepository.findByFamilyId(userFamily.getUserFamily().getFamilyId());
-        String unitCode = baseFamily.getCode().substring(0, 16);
-        BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
-        Map<String, Object> result = qstBindingUserService.userRooms(userInfo.getUserName(), baseUnit.getDirectory());
+//        String unitCode = baseFamily.getCode().substring(0, 16);
+//        BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
+        Map<String, Object> result = qstBindingUserService.userRooms(userInfo.getUserName(), baseFamily.getDirectory());
         if (Integer.valueOf(result.get("Code").toString()) != 200) {
             throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
         }
