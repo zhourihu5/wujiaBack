@@ -14,7 +14,7 @@ import java.util.List;
 @ApiModel(description = "用户订单关联表")
 @Entity
 @Data
-@Table(name = "sys_order_user")
+@Table(name = "ebiz_order_user")
 public class EbizOrderUser {
 
     @EmbeddedId

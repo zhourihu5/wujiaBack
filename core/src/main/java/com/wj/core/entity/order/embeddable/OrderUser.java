@@ -14,7 +14,7 @@ public class OrderUser implements Serializable {
 
     private Integer userId;
     private Integer orderId;
-    private Integer orderCode;
+    private String orderCode;
     private String status;
 
 }

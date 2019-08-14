@@ -51,7 +51,7 @@ public class OrderUserController {
             pageNum = 1;
         }
         pageNum = pageNum - 1;
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "create_date");
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
         Page<EbizOrderUser> page = orderUserService.findAll(status, pageable);
         return ResponseMessage.ok(page);
     }

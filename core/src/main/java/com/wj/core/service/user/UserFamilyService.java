@@ -1,6 +1,8 @@
 package com.wj.core.service.user;
 
 import com.wj.core.entity.base.BaseDevice;
+import com.wj.core.entity.base.BaseFamily;
+import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.entity.base.dto.FamilyBindInfoDTO;
 import com.wj.core.entity.card.OpCard;
 import com.wj.core.entity.card.PadModule;
@@ -11,12 +13,14 @@ import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.entity.user.enums.UserIdentity;
 import com.wj.core.repository.base.BaseDeviceRepository;
 import com.wj.core.repository.base.BaseFamilyRepository;
+import com.wj.core.repository.base.BaseUnitRepository;
 import com.wj.core.repository.card.CardRepository;
 import com.wj.core.repository.card.PadModuleRepository;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.qst.QstBindingUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserFamilyService {
@@ -39,6 +44,15 @@ public class UserFamilyService {
 
     @Autowired
     private BaseDeviceRepository baseDeviceRepository;
+
+    @Autowired
+    private BaseFamilyRepository baseFamilyRepository;
+
+    @Autowired
+    private QstBindingUserService qstBindingUserService;
+
+    @Autowired
+    private BaseUnitRepository baseUnitRepository;
 
 
     /**
@@ -115,6 +129,15 @@ public class UserFamilyService {
             }
         });
         userFamilyRepository.save(userFamily);
+        //全视通
+        SysUserInfo userInfo = userInfoRepository.findByUserId(userFamily.getUserFamily().getUserId());
+        BaseFamily baseFamily = baseFamilyRepository.findByFamilyId(userFamily.getUserFamily().getFamilyId());
+        String unitCode = baseFamily.getCode().substring(0, 16);
+        BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
+        Map<String, Object> result = qstBindingUserService.userRooms(userInfo.getUserName(), baseUnit.getDirectory());
+        if (Integer.valueOf(result.get("Code").toString()) != 201) {
+            throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+        }
     }
 
     /**

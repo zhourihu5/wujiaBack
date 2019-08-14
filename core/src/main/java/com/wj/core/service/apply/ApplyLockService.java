@@ -3,12 +3,19 @@ package com.wj.core.service.apply;
 import com.google.common.collect.Lists;
 import com.wj.core.entity.address.Address;
 import com.wj.core.entity.apply.ApplyLock;
+import com.wj.core.entity.base.BaseFamily;
+import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.repository.apply.ApplyUnlockRepository;
+import com.wj.core.repository.base.BaseFamilyRepository;
+import com.wj.core.repository.base.BaseUnitRepository;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.qst.QstBindingUserService;
 import com.wj.core.util.time.ClockUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +30,7 @@ import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ApplyLockService {
@@ -31,6 +39,14 @@ public class ApplyLockService {
     private ApplyUnlockRepository applyUnlockRepository;
     @Autowired
     private UserFamilyRepository userFamilyRepository;
+    @Autowired
+    private QstBindingUserService qstBindingUserService;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+    @Autowired
+    private BaseFamilyRepository baseFamilyRepository;
+    @Autowired
+    private BaseUnitRepository baseUnitRepository;
 
     @Transactional
     public void saveApplyLock(ApplyLock applyLock) {
@@ -78,6 +94,15 @@ public class ApplyLockService {
             sysUserFamily.setUserFamily(userFamily);
             sysUserFamily.setIdentity(0);
             userFamilyRepository.save(sysUserFamily);
+            //全视通
+            SysUserInfo userInfo = userInfoRepository.findByUserId(applyLock.getUserId());
+            BaseFamily baseFamily = baseFamilyRepository.findByFamilyId(applyLock.getFamilyId());
+            String unitCode = baseFamily.getCode().substring(0, 16);
+            BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
+            Map<String, Object> result = qstBindingUserService.userRooms(userInfo.getUserName(), baseUnit.getDirectory());
+            if (Integer.valueOf(result.get("Code").toString()) != 201) {
+                throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+            }
             applyUnlockRepository.updateStatus(status, id);
         } else {
             applyUnlockRepository.updateStatusAndRemark(status, remark, id);

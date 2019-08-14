@@ -95,7 +95,7 @@ public class DeliveryLoginController {
             loginDTO.setToken(jwtToken);
             loginDTO.setUserInfo(userInfo);
             //选单列表
-            Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "create_date");
+            Pageable pageable = PageRequest.of(0, 3, Sort.Direction.DESC, "create_date");
             Page<OrderInfo> page = orderService.findList("2", pageable);
             loginDTO.setList(page.getContent());
         }
@@ -106,10 +106,9 @@ public class DeliveryLoginController {
     @ApiOperation(value = "检查配送端用户是否存在", notes = "检查配送端用户是否存在")
     @GetMapping("checkBinding")
     public ResponseMessage<XcxLoginDTO> checkBinding(String code) {
-//        Object object = wxLoginService.wxBdLogin(code);
-//        JSONObject json = JSON.parseObject(object.toString());
-//        String openid = json.getString("openid");
-        String openid = "123";
+        Object object = wxLoginService.wxBdLogin(code);
+        JSONObject json = JSON.parseObject(object.toString());
+        String openid = json.getString("openid");
         XcxLoginDTO loginDTO = new XcxLoginDTO();
         if (openid != null) {
             SysUserInfo userInfo = bindingService.findByOpenId(openid);
@@ -118,7 +117,7 @@ public class DeliveryLoginController {
                 loginDTO.setToken(jwtToken);
                 loginDTO.setUserInfo(userInfo);
                 //选单列表
-                Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "create_date");
+                Pageable pageable = PageRequest.of(0, 3, Sort.Direction.DESC, "create_date");
                 Page<OrderInfo> page = orderService.findList("2", pageable);
                 loginDTO.setList(page.getContent());
             }
