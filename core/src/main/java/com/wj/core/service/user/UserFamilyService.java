@@ -135,7 +135,7 @@ public class UserFamilyService {
         String unitCode = baseFamily.getCode().substring(0, 16);
         BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
         Map<String, Object> result = qstBindingUserService.userRooms(userInfo.getUserName(), baseUnit.getDirectory());
-        if (Integer.valueOf(result.get("Code").toString()) != 201) {
+        if (Integer.valueOf(result.get("Code").toString()) != 200) {
             throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
         }
     }
