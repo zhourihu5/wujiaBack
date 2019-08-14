@@ -44,4 +44,7 @@ public interface BaseFamilyRepository extends JpaRepository<BaseFamily, Integer>
 
     int countByCodeLike(String code);
 
+    @Query(value = "select * from base_family where id = ?1 and code like CONCAT('%',?2,'%')", nativeQuery = true)
+    public List<BaseFamily> findByFamilyIdAndCodeLike(Integer fid, String commodityCode);
+
 }

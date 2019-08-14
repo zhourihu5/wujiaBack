@@ -5,7 +5,10 @@ import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.apply.ApplyLock;
 import com.wj.core.entity.base.BaseFamily;
+import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.entity.user.SysUserFamily;
+import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.repository.base.BaseUnitRepository;
 import com.wj.core.service.apply.ApplyLockService;
 import com.wj.core.service.base.BaseFamilyService;
 import com.wj.core.service.exception.ErrorCode;
@@ -21,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Api(value = "/v1/apply", tags = "申请开锁接口模块")
 @RestController
@@ -40,6 +44,9 @@ public class ApplyLockController {
 
     @Autowired
     private OpenDoorService openDoorService;
+
+    @Autowired
+    private BaseUnitRepository baseUnitRepository;
 
     @ApiOperation(value = "申请开锁", notes = "申请开锁")
     @PostMapping("applyUnLock")
@@ -64,11 +71,27 @@ public class ApplyLockController {
         Integer userId = (Integer) claims.get("userId");
         String userName = (String) claims.get("userName");;
         List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userId);
+        //全视通
         for (SysUserFamily userFamily : userFamilyList) {
             BaseFamily baseFamily = familyService.findByFamilyId(userFamily.getUserFamily().getFamilyId());
-            openDoorService.openDoor(userName, baseFamily.getParentDirectory());
+            String unitCode = baseFamily.getCode().substring(0, 16);
+            BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
+            Map<String, Object> result = openDoorService.openDoor(userName, baseUnit.getDirectory());
+            if (Integer.valueOf(result.get("Code").toString()) != 200) {
+                throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+            }
         }
         return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value = "获取临时开锁密码", notes = "获取临时开锁密码")
+    @GetMapping("generalSecretCodeWithOpenDoor")
+    public ResponseMessage<String> generalSecretCodeWithOpenDoor(String communtityCode) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        String userName = (String) claims.get("userName");
+        return ResponseMessage.ok(openDoorService.SecretCodeWithOpenDoor(communtityCode, userId, userName));
     }
 
 }

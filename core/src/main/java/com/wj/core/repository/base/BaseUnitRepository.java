@@ -54,5 +54,6 @@ public interface BaseUnitRepository extends JpaRepository<BaseUnit, Integer> {
 
     int countByCodeLike(String code);
 
-
+    @Query(value = "select * from base_unit where code = ?1", nativeQuery = true)
+    public BaseUnit findByUnitCode(String code);
 }

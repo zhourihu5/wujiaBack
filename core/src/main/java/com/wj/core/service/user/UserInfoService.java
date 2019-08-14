@@ -11,6 +11,7 @@ import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.qst.QstBindingUserService;
 import com.wj.core.util.CommonUtils;
 import com.wj.core.util.mapper.BeanMapper;
 import io.swagger.annotations.ApiModelProperty;
@@ -43,6 +44,9 @@ public class UserInfoService {
 
     @Autowired
     private UserInfoService userInfoService;
+
+    @Autowired
+    private QstBindingUserService qstBindingUserService;
 
     /**
      * 根据名字查询用户信息
@@ -157,13 +161,29 @@ public class UserInfoService {
         if (userInfo != null) {
             throw new ServiceException("此账号已经存在", ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        sysUserInfo.setCreateDate(new Date());
+        if (sysUserInfo.getId() == null) {
+            sysUserInfo.setCreateDate(new Date());
+            Map<String, Object> result = qstBindingUserService.agentregister(sysUserInfo.getUserName());
+            if (Integer.valueOf(result.get("Code").toString()) != 201) {
+                throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+            }
+        }
         userInfoRepository.save(sysUserInfo);
     }
 
     @Transactional
     public SysUserInfo addUser(SysUserInfo sysUserInfo) {
-        sysUserInfo.setCreateDate(new Date());
+        SysUserInfo userInfo = userInfoService.findByName(sysUserInfo.getUserName());
+        if (userInfo != null) {
+            throw new ServiceException("此账号已经存在", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        if (sysUserInfo.getId() == null) {
+            sysUserInfo.setCreateDate(new Date());
+            Map<String, Object> result = qstBindingUserService.agentregister(sysUserInfo.getUserName());
+            if (Integer.valueOf(result.get("Code").toString()) != 201) {
+                throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+            }
+        }
         return userInfoRepository.save(sysUserInfo);
     }
 

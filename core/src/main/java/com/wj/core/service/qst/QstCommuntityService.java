@@ -68,7 +68,7 @@ public class QstCommuntityService {
         requestParam.put("NodeNum", nodeNum);
         requestParam.put("NodeDisplay", nodeDisplay);
         requestParam.put("NodeStart", nodeStart);
-        if (attribute != null && nodeDisplay.equals("家")) {
+        if (attribute != null) {
             requestParam.put("Attribute", attribute);
         }
         String url = Qst.URL21664 + "tenantstructures";
