@@ -87,8 +87,8 @@ public class OpenDoorService {
         requestParam.put("ValidEndTime", endDate);
         requestParam.put("MaxAvailableTimes", 30);
         String object = HttpClients.postObjectClientJsonHeaders(url, Qst.TOKEN, requestParam);
-        Map<String, Object> qst = mapper.fromJson(object, Map.class);
-        return "11";
+        Map<String, Object> result = mapper.fromJson(object, Map.class);
+        return result.get("SecretCode").toString();
     }
 
 
