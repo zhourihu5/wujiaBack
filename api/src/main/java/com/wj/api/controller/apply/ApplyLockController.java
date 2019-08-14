@@ -8,6 +8,7 @@ import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.base.BaseUnitRepository;
 import com.wj.core.service.apply.ApplyLockService;
 import com.wj.core.service.base.BaseFamilyService;
@@ -48,6 +49,9 @@ public class ApplyLockController {
     @Autowired
     private BaseUnitRepository baseUnitRepository;
 
+    @Autowired
+    private BaseFamilyRepository baseFamilyRepository;
+
     @ApiOperation(value = "申请开锁", notes = "申请开锁")
     @PostMapping("applyUnLock")
     public ResponseMessage applyUnLock(@RequestBody ApplyLock applyLock) {
@@ -65,28 +69,43 @@ public class ApplyLockController {
 
     @ApiOperation(value = "远程开锁", notes = "远程开锁")
     @GetMapping("openDoor")
-    public ResponseMessage openDoor() {
+    public ResponseMessage openDoor(String communtityCode) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
-        String userName = (String) claims.get("userName");;
+        String userName = (String) claims.get("userName");
+        String deviceLocalDirectory = "";
         List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userId);
         //全视通
         for (SysUserFamily userFamily : userFamilyList) {
-            BaseFamily baseFamily = familyService.findByFamilyId(userFamily.getUserFamily().getFamilyId());
-            String unitCode = baseFamily.getCode().substring(0, 16);
-            BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
-            Map<String, Object> result = openDoorService.openDoor(userName, baseUnit.getDirectory());
-            if (Integer.valueOf(result.get("Code").toString()) != 200) {
-                throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+            List<BaseFamily> baseFamilyList = baseFamilyRepository.findByFamilyIdAndCodeLike(userFamily.getUserFamily().getFamilyId(), communtityCode);
+            if (baseFamilyList.size() > 0) {
+                String unitCode = baseFamilyList.get(0).getCode().substring(0, 16);
+                BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
+                deviceLocalDirectory = baseUnit.getCode();
+                break;
             }
+//            BaseFamily baseFamily = familyService.findByFamilyId(userFamily.getUserFamily().getFamilyId());
+//            String unitCode = baseFamily.getCode().substring(0, 16);
+//            BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
+//            Map<String, Object> result = openDoorService.openDoor(userName, baseUnit.getDirectory());
+//            if (Integer.valueOf(result.get("Code").toString()) != 200) {
+//                throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+//            }
+        }
+        if (deviceLocalDirectory == "") {
+            throw new ServiceException("系统异常", ErrorCode.QST_ERROR);
+        }
+        Map<String, Object> result = openDoorService.openDoor(userName, deviceLocalDirectory);
+        if (Integer.valueOf(result.get("Code").toString()) != 200) {
+            throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
         }
         return ResponseMessage.ok();
     }
 
     @ApiOperation(value = "获取临时开锁密码", notes = "获取临时开锁密码")
-    @GetMapping("generalSecretCodeWithOpenDoor")
-    public ResponseMessage<String> generalSecretCodeWithOpenDoor(String communtityCode) {
+    @GetMapping("secretCodeWithOpenDoor")
+    public ResponseMessage<String> secretCodeWithOpenDoor(String communtityCode) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
