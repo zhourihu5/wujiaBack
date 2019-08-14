@@ -51,7 +51,7 @@ public class BaseUnitService {
      */
     @Transactional
     public void saveUnit(BaseUnit unit) {
-        BaseFloor bf = baseFloorRepository.getOne(unit.getFloorId());
+        BaseFloor bf = baseFloorRepository.findByFloorId(unit.getFloorId());
         String commCode = unit.getCode().substring(0, 8);
         BaseCommuntity bc = baseCommuntityRepository.findByCode(commCode);
         if (unit.getId() == null) {
@@ -70,6 +70,7 @@ public class BaseUnitService {
         } else {
             num += 1;
         }
+        unit = baseUnitRepository.findByUnitId(unit.getId());
         for (int i = num; i <= storeyNum; i++) {
             BaseStorey baseStorey = new BaseStorey();
             baseStorey.setNum(i);

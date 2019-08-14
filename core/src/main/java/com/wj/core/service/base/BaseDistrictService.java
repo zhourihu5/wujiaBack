@@ -54,7 +54,7 @@ public class BaseDistrictService {
                 baseCommuntityRepository.modityFlag("区", district.getCommuntityId());
                 directory = bc.getDirectory();
             }
-            String r = qstCommuntityService.tenantstructures(directory, 1, "区", 1, 2);
+            String r = qstCommuntityService.tenantstructures(directory, 1, "区", 1, null);
             if (StringUtils.contains(r,"[")) {
                 JavaType type = mapper.buildCollectionType(List.class, Map.class);
                 List<Map<String, Object>> list = mapper.fromJson(r, type);

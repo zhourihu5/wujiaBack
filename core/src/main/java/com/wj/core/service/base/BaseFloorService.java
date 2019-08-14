@@ -111,10 +111,11 @@ public class BaseFloorService {
             String r = qstCommuntityService.tenantunitdoors(parentDirectory, count, i, 1, 1);
             List<Map<String, Object>> tenantunitdoorsDTOS = mapper.fromJson(r, type);
             if (StringUtils.contains(r, "[")) {
-                Map<String, Object> map = tenantunitdoorsDTOS.get(tenantunitdoorsDTOS.size());
+                Map<String, Object> map = tenantunitdoorsDTOS.get(tenantunitdoorsDTOS.size() - 1);
                 bu.setStructureId(Integer.valueOf(map.get("StructureID").toString()));
                 bu.setBuildingName(map.get("BuildingName").toString());
                 bu.setParentDirectory(map.get("ParentDirectory").toString());
+                bu.setDirectory(map.get("Directory").toString());
             }
             baseUnitRepository.save(bu);
         }

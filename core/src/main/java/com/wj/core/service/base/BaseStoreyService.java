@@ -80,6 +80,7 @@ public class BaseStoreyService {
             } else  {
                 num += 1;
             }
+            storey = baseStoreyRepository.findByStoreyid(storey.getId());
             for (int i = num; i <= familyNum; i++) {
                 BaseFamily baseFamily = new BaseFamily();
                 StringBuffer sBuffer = new StringBuffer();
