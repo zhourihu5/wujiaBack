@@ -86,12 +86,12 @@ public class ApplyLockController {
 
     @ApiOperation(value = "获取临时开锁密码", notes = "获取临时开锁密码")
     @GetMapping("generalSecretCodeWithOpenDoor")
-    public ResponseMessage<String> generalSecretCodeWithOpenDoor(Integer communtityId) {
+    public ResponseMessage<String> generalSecretCodeWithOpenDoor(String communtityCode) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
         String userName = (String) claims.get("userName");
-        return ResponseMessage.ok(openDoorService.SecretCodeWithOpenDoor(communtityId, userId, userName));
+        return ResponseMessage.ok(openDoorService.SecretCodeWithOpenDoor(communtityCode, userId, userName));
     }
 
 }
