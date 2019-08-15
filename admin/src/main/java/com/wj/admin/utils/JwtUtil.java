@@ -3,6 +3,7 @@ package com.wj.admin.utils;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.util.number.NumberUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -77,6 +78,17 @@ public class JwtUtil {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    public static Integer getUserIdFromToken(String token) {
+        Integer userId;
+        try {
+            final Claims claims = parseJwt(token);
+            userId = NumberUtil.toIntObject(claims.get("userId").toString());
+        } catch (Exception e) {
+            userId = null;
+        }
+        return userId;
     }
 
 

@@ -1,5 +1,7 @@
 package com.wj.core.util;
 
+import java.util.Random;
+
 /**
  * 工具类
  *
@@ -27,6 +29,39 @@ public class CommonUtils {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 判断是否为空
+     *
+     * @author thz
+     */
+    public static String randomCode() {
+        String randomCode = "";
+        String model = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        char[] m = model.toCharArray();
+        for (int i = 0; i < 6; i++) {
+            char c = m[(int) (Math.random() * 62)];
+            // 保证六位随机数之间没有重复的
+//            if (randomCode.contains(String.valueOf(c))) {
+//                i--;
+//                continue;
+//            }
+            randomCode = randomCode + c;
+        }
+        return randomCode;
+    }
+
+    //获取随机字符串
+    public static String getRandomStringByLength(int length) {
+        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(base.length());
+            sb.append(base.charAt(number));
+        }
+        return sb.toString();
     }
 
     // 阿里天气预报接口地址

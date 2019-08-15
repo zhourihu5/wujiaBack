@@ -9,9 +9,6 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     show-sql: true
-  #  data:
-#    mongodb:
-#      uri: mongodb://39.97.186.122:27017/wj
   redis:
     database: 0
     timeout: 1000
@@ -57,6 +54,20 @@ wj:
     version: 2017-05-25
     SignName: 吾家智工
     TemplateCode: SMS_166655952
+  wx:
+    appid: wx78aa6144c22e65ae
+    secret: d83e174efd68752adcda38678e09f6ef
+  bd:
+    appid: wx4421e95088cfd91a
+    secret: b2c587a6d6c3a6c0e87e1fd9c26801e4
+qst:
+  info:
+    accessToken: http://39.97.233.20:9700/api/
+    api: http://39.97.233.20:21664/api/
+    bindingUser: http://39.97.233.20:9700/api/
+    uuid: Q0U2RTkyQTAtNDdERS00NzRDLTk1ODgtMDg0M0M1QkFDN0VF
+    userName: AdminJXKJ
+    password: 52c297b78d7f27c878e48dcdb7879dfb
 
 #xxl:
 #  job:

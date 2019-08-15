@@ -13,9 +13,10 @@ import java.util.Date;
  * 设备表
  */
 @ApiModel(description = "设备表")
-@Entity
 @Data
+@Entity
 public class BaseDevice {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

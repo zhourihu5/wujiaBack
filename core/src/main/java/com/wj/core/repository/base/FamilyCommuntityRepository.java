@@ -14,7 +14,7 @@ public interface FamilyCommuntityRepository extends JpaRepository<SysFamilyCommu
 
     /**
      * 根据家庭id查询指定社区
-     * @param fid
+     * @param familyId
      * @return Integer
      */
     @Query(value = "select communtity_id from sys_family_communtity where family_id = ?1", nativeQuery = true)
@@ -32,4 +32,5 @@ public interface FamilyCommuntityRepository extends JpaRepository<SysFamilyCommu
     @Modifying
     @Query(value = "insert into sys_family_communtity(communtity_id, family_id) values(?1, ?2)", nativeQuery = true)
     public Integer insert(Integer communtityId, Integer familyId);
+
 }

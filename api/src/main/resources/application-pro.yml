@@ -5,7 +5,7 @@ spring:
   datasource:
     username: wujia_dev
     password: Wujia!@#
-    url: jdbc:mysql://rm-2ze9f44ol605d099mro.mysql.rds.aliyuncs.com:3306/wujia_dev?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    url: jdbc:mysql://rm-2ze9f44ol605d099mro.mysql.rds.aliyuncs.com:3306/wujia_pro?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     show-sql: true
@@ -14,7 +14,7 @@ spring:
 #      uri: mongodb://39.97.186.122:27017/wj
   redis:
     database: 0
-    timeout: 1000
+    timeout: 5000
     # Redis服务器地址
     host: 39.97.186.122
     # Redis服务器连接端口
@@ -30,6 +30,28 @@ spring:
     max-idle: 20
     # 连接池中的最小空闲连接
     min-idle: 10
+  quartz:
+    #相关属性配置
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: true
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    #数据库方式
+    job-store-type: jdbc
 
 #在application.yml引入log4j2.yml
 logging:
@@ -52,5 +74,19 @@ wj:
     version: 2017-05-25
     SignName: 吾家智工
     TemplateCode: SMS_166655952
+  wx:
+    appid: wx78aa6144c22e65ae
+    secret: d83e174efd68752adcda38678e09f6ef
+  bd:
+    appid: wx4421e95088cfd91a
+    secret: b2c587a6d6c3a6c0e87e1fd9c26801e4
 
+qst:
+  info:
+    accessToken: http://39.97.233.20:9700/api/
+    api: http://39.97.233.20:21664/api/
+    bindingUser: http://39.97.233.20:9700/api/
+    uuid: Q0U2RTkyQTAtNDdERS00NzRDLTk1ODgtMDg0M0M1QkFDN0VF
+    userName: AdminJXKJ
+    password: 52c297b78d7f27c878e48dcdb7879dfb
 

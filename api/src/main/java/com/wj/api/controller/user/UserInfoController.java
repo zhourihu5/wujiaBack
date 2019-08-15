@@ -27,9 +27,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +48,9 @@ public class UserInfoController {
 
     @Autowired
     private BaseFamilyService baseFamilyService;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
 
     /**
@@ -82,5 +83,27 @@ public class UserInfoController {
         indexDTO.setCommuntity(communtity);
         return ResponseMessage.ok(indexDTO);
     }
+
+    @ApiOperation(value = "小程序更新用户信息", notes = "小程序更新用户信息")
+    @PostMapping("updateInfo")
+    public ResponseMessage updateInfo(@RequestBody SysUserInfo userInfo) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer)claims.get("userId");
+        userInfo.setId(userId);
+        userInfoService.updateInfo(userInfo);
+        return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value = "查询用户信息", notes = "查询用户信息")
+    @GetMapping("findWxUserInfo")
+    public ResponseMessage<SysUserInfo> findWxUserInfo() {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer)claims.get("userId");
+        SysUserInfo sysUserInfo = userInfoService.findUserInfo(userId);
+        return ResponseMessage.ok(sysUserInfo);
+    }
+
 
 }

@@ -1,22 +1,32 @@
 package com.wj.core.service.message;
 
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.wj.core.entity.message.Message;
 import com.wj.core.entity.message.SysMessageUser;
+import com.wj.core.entity.message.dto.MessageTypeDTO;
+import com.wj.core.entity.message.enums.MessageType;
+import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.SysUserInfoDTO;
+import com.wj.core.entity.user.embeddable.UserFamily;
 import com.wj.core.repository.message.MessageCommuntityRepository;
 import com.wj.core.repository.message.MessageRepository;
 import com.wj.core.repository.message.MessageUserRepository;
+import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.service.base.BaseCommuntityService;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.jiguang.JPush;
 import com.wj.core.util.time.ClockUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +44,8 @@ public class MessageService {
 
     @Autowired
     private BaseCommuntityService baseCommuntityService;
+    @Autowired
+    private UserFamilyRepository userFamilyRepository;
 
     @Transactional
     public Message saveMessage(Message message) {
@@ -126,6 +138,32 @@ public class MessageService {
             // 消息推送
             JPush.sendMsgPush(tagList);
         }
+    }
+
+    public List<MessageTypeDTO> getTypeList(Integer userId) {
+        List<SysUserFamily> familyList = userFamilyRepository.findByUserId(userId);
+        if (CollectionUtils.isEmpty(familyList)) {
+            throw new ServiceException("用户为绑定家庭", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        //TODO 用户多个家庭处理
+        Integer familyId = familyList.get(0).getUserFamily().getFamilyId();
+        MessageTypeDTO sysMsg = new MessageTypeDTO();
+        sysMsg.setTypeNo("3");
+        sysMsg.setTypeName("系统通知");
+        sysMsg.setIcon("https://wujia01.oss-cn-beijing.aliyuncs.com/msg_system.png");
+        sysMsg.setUnReadList(messageRepository.findUserTypeMsg(userId, familyId, 3, "0"));
+        MessageTypeDTO comMsg = new MessageTypeDTO();
+        comMsg.setTypeNo("2");
+        comMsg.setTypeName("社区通知");
+        comMsg.setUnReadList(messageRepository.findUserTypeMsg(userId, familyId, 2, "0"));
+        comMsg.setIcon("https://wujia01.oss-cn-beijing.aliyuncs.com/msg_community.png");
+        MessageTypeDTO orderMsg = new MessageTypeDTO();
+        orderMsg.setTypeNo("4");
+        orderMsg.setTypeName("订单通知");
+        orderMsg.setIcon("https://wujia01.oss-cn-beijing.aliyuncs.com/msg_order.png");
+        orderMsg.setUnReadList(messageRepository.findUserTypeMsg(userId, familyId, 4, "0"));
+        List<MessageTypeDTO> list = Lists.newArrayList(sysMsg, comMsg, orderMsg);
+        return list;
     }
 
 }

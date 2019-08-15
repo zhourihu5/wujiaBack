@@ -3,6 +3,7 @@ package com.wj.api.controller.base;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.core.entity.base.BaseArea;
 import com.wj.core.entity.base.dto.BaseAreaDTO;
+import com.wj.core.entity.base.dto.ProvinceDTO;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.service.base.BaseAreaService;
 import com.wj.core.util.mapper.BeanMapper;
@@ -19,6 +20,15 @@ public class BaseAreaController {
 
     @Autowired
     private BaseAreaService baseAreaService;
+
+
+    @ApiOperation(value = "查询所有区域信息", notes = "获取所有的区域信息json层级结构返回")
+    @GetMapping("all")
+    @ResponseBody
+    public  ResponseMessage<List<ProvinceDTO>> getAll() {
+        return ResponseMessage.ok(baseAreaService.getALl());
+    }
+
 
     @ApiOperation(value = "根据pid查询省市区信息", notes = "根据pid查询省市区信息")
     @GetMapping("findArea")

@@ -32,4 +32,7 @@ public interface MessageRepository extends JpaRepository<Message, Integer>, JpaS
 
     @Query(value = "select * from sys_message where title like CONCAT('%',?1,'%')", nativeQuery = true)
     public Page<Message> findByTitle(String title, Pageable pageable);
+
+    @Query(value = "select * from sys_message a,sys_message_user b where a.id = b.message_id and b.user_id = ?1 and b.family_id = ?2 and a.type = ?3 and b.is_read = ?4", nativeQuery = true)
+    List<Message> findUserTypeMsg(Integer userId, Integer familyId, Integer type, String isRead);
 }

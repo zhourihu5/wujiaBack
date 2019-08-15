@@ -3,6 +3,8 @@ package com.wj.admin.controller.upload;
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.core.entity.op.OpAdv;
 import com.wj.core.service.upload.OssUploadService;
+import com.wj.core.util.time.ClockUtil;
+import com.wj.core.util.time.DateFormatUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class OssController {
     private static final String BANNER = "banner";
     private static final String APK = "apk";
     private static final String CARD_CONTENT = "card_content";
+    private static final String ACTIVITY = "activity";
+    private static final String COMM = "commodity";
     @Value("${wj.oss.access}")
     private String url;
     /**
@@ -63,6 +67,14 @@ public class OssController {
         if (type.equals(CARD_CONTENT)) {
             path = ossUploadService.ossUpload(file, "images/card/content");
             path = url + path;
+        }
+        if (type.equals(ACTIVITY)) {
+            String dir = "images/activity/" + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate());
+            path = ossUploadService.ossUpload(file,  dir);
+        }
+        if (type.equals(COMM)) {
+            String dir = "images/commodity/" + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate());
+            path = ossUploadService.ossUpload(file,  dir);
         }
         return ResponseMessage.ok(path);
     }

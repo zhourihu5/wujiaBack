@@ -1,18 +1,25 @@
 package com.wj.core.service.base;
 
-import com.wj.core.entity.base.BaseArea;
-import com.wj.core.entity.base.BaseCommuntity;
-import com.wj.core.entity.base.SysFamilyCommuntity;
+import com.google.common.collect.Lists;
+import com.wj.core.entity.base.*;
+import com.wj.core.entity.base.dto.BaseFamilyDTO;
 import com.wj.core.entity.base.embeddable.FamilyCommuntity;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.SysUserInfoDTO;
-import com.wj.core.repository.base.BaseAreaRepository;
-import com.wj.core.repository.base.BaseCommuntityRepository;
-import com.wj.core.repository.base.FamilyCommuntityRepository;
+import com.wj.core.repository.base.*;
 import com.wj.core.repository.user.UserFamilyRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.qst.QstCommuntityService;
+import com.wj.core.service.qst.dto.QstResult;
+import com.wj.core.service.qst.dto.TenantstructuresIssuseDTO;
+import com.wj.core.service.qst.dto.TenantvillagesDTO;
 import com.wj.core.util.CommonUtils;
+import com.wj.core.util.base.CommunityUtil;
+import com.wj.core.util.mapper.JsonMapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +46,26 @@ public class BaseCommuntityService {
     @Autowired
     private UserInfoRepository userInfoRepository;
 
+    @Autowired
+    private BaseIssueRepository baseIssueRepository;
+
+    @Autowired
+    private BaseDistrictRepository baseDistrictRepository;
+
+    @Autowired
+    private BaseFloorRepository baseFloorRepository;
+
+    @Autowired
+    private BaseUnitRepository baseUnitRepository;
+    @Autowired
+    private BaseFamilyRepository baseFamilyRepository;
+    @Autowired
+    private QstCommuntityService qstCommuntityService;
+    @Autowired
+    private BaseStoreyRepository baseStoreyRepository;
+
+    static JsonMapper mapper = JsonMapper.defaultMapper();
+
 
     /**
      * 根据id查询社区信息
@@ -47,7 +74,8 @@ public class BaseCommuntityService {
      * @return BaseCommuntity
      */
     public BaseCommuntity findById(Integer id) {
-        return baseCommuntityRepository.findByCommuntityId(id);
+        BaseCommuntity baseCommuntity = baseCommuntityRepository.findByCommuntityId(id);
+        return baseCommuntity;
     }
 
     /**
@@ -57,9 +85,30 @@ public class BaseCommuntityService {
      * @return void
      */
     @Transactional
-    public void saveCommuntity(BaseCommuntity communtity) {
-        communtity.setCreateDate(new Date());
-        baseCommuntityRepository.save(communtity);
+    public BaseCommuntity saveCommuntity(BaseCommuntity communtity) {
+        if (communtity.getId() == null) {
+            communtity.setCreateDate(new Date());
+            communtity = baseCommuntityRepository.save(communtity);
+            String code = CommunityUtil.genCommCode(communtity.getId());
+            baseCommuntityRepository.modityCode(code, communtity.getId());
+            communtity.setCode(code);
+            Map<String, Object> map = qstCommuntityService.tenantvillages(communtity.getArea().toString(), communtity.getName());
+            communtity.setStructureId(Integer.valueOf(map.get("StructureID").toString()));
+            communtity.setVillageName(map.get("VillageName").toString());
+            communtity.setDirectory(map.get("Directory").toString());
+            Map<String, Object> result = qstCommuntityService.tenantStructureDefinition(communtity.getFlag(), communtity.getStructureId());
+            if (Integer.valueOf(result.get("Code").toString()) != 201) {
+                throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+            }
+            return communtity;
+        } else {
+            BaseCommuntity bc = baseCommuntityRepository.getOne(communtity.getId());
+            communtity.setFlag(bc.getFlag());
+            communtity.setCode(bc.getCode());
+            communtity.setCreateDate(bc.getCreateDate());
+            baseCommuntityRepository.save(communtity);
+            return communtity;
+        }
     }
 
     /**
@@ -96,7 +145,7 @@ public class BaseCommuntityService {
      * 根据市code查询当前所有社区
      *
      * @param areaCode
-     * @return List<BaseCommuntity>
+     * @return List<Map < String, BaseCommuntity>>
      */
     public List<BaseCommuntity> findByAreaCode(Integer areaCode) {
         return baseCommuntityRepository.findByAreaCode(areaCode);
@@ -135,6 +184,66 @@ public class BaseCommuntityService {
             });
         });
         return list;
+    }
+
+    /**
+     * 根据社区查询当前社区所有家庭
+     *
+     * @param communtityCode
+     * @return List
+     */
+    public List<BaseFamilyDTO> findFamilyListByCode(String communtityCode) {
+        // 根据社区查询所有期
+        List<BaseFamilyDTO> list = Lists.newArrayList();
+        BaseCommuntity bc = baseCommuntityRepository.findByCode(communtityCode);
+        String flag = bc.getFlag();
+        List<BaseUnit> baseUnits = baseUnitRepository.findByCodeLike(communtityCode + "%");
+        for (BaseUnit bu : baseUnits) {
+            BaseFamilyDTO baseFamilyDTO = new BaseFamilyDTO();
+            String buCode = bu.getCode();
+            String name = "";
+            if (StringUtils.contains(flag, "期")) {
+                BaseIssue bi = baseIssueRepository.findByCode(buCode.substring(0, 10));
+                name += bi.getName();
+            }
+            if (StringUtils.contains(flag, "区")) {
+                BaseDistrict bd = baseDistrictRepository.findByCode(buCode.substring(0, 12));
+                name += bd.getName();
+            }
+            if (StringUtils.contains(flag, "楼")) {
+                BaseFloor bf = baseFloorRepository.findByCode(buCode.substring(0, 14));
+                name += bf.getName();
+            }
+            name += bu.getUnitNo();
+            baseFamilyDTO.setName(name);
+            baseFamilyDTO.setList(baseFamilyRepository.findByCodeLike(bu.getCode() + "%"));
+            list.add(baseFamilyDTO);
+        }
+        return list;
+    }
+
+
+
+    public Page<BaseCommuntity> findByCityCodeAndName(Integer cityCode, String name, Pageable pageable) {
+        Page<BaseCommuntity> page = null;
+        if (cityCode != null && !CommonUtils.isNull(name)) {
+            page = baseCommuntityRepository.findByCityCodeAndName(cityCode, name, pageable);
+        } else if (cityCode != null && CommonUtils.isNull(name)) {
+            page = baseCommuntityRepository.findByCityCode(cityCode, pageable);
+        } else if (cityCode == null && !CommonUtils.isNull(name)) {
+            page = baseCommuntityRepository.findByName(name, pageable);
+        } else {
+            page = baseCommuntityRepository.findAll(pageable);
+        }
+        for (BaseCommuntity baseCommuntity : page) {
+            BaseArea area = baseAreaRepository.findByCityId(baseCommuntity.getArea());
+            BaseArea city = baseAreaRepository.findByCityId(baseCommuntity.getCity());
+            BaseArea provice = baseAreaRepository.findByCityId(baseCommuntity.getProvince());
+            if (area != null) baseCommuntity.setAreaName(area.getAreaName());
+            if (city != null) baseCommuntity.setCityName(city.getAreaName());
+            if (provice != null) baseCommuntity.setProvinceName(provice.getAreaName());
+        }
+        return page;
     }
 
 }

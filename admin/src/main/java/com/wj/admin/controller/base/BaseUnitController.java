@@ -8,8 +8,12 @@ import com.wj.core.entity.base.BaseFloor;
 import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.service.base.BaseUnitService;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +42,7 @@ public class BaseUnitController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("保存单元内容接口:/v1/unit/addUnit userId=" + claims.get("userId"));
+        if (unit.getStorey() == null) throw new ServiceException("层数不能为空", ErrorCode.INTERNAL_SERVER_ERROR);
         baseUnitService.saveUnit(unit);
         return ResponseMessage.ok();
     }
@@ -49,18 +54,24 @@ public class BaseUnitController {
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("获取单元分页信息接口:/v1/unit/findAll userId=" + claims.get("userId"));
         pageNum = pageNum - 1;
-        Pageable pageable =  PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<BaseUnit> page = baseUnitService.findAll(floorId, pageable);
         return ResponseMessage.ok(page);
     }
 
     @ApiOperation(value = "查询楼所属单元", notes = "查询楼所属单元")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "commCode", dataType = "String", value = "社区Code"),
+            @ApiImplicitParam(name = "issuCode", dataType = "String", value = "期Code"),
+            @ApiImplicitParam(name = "disCode", dataType = "String", value = " 区Code"),
+            @ApiImplicitParam(name = "floorCode", dataType = "String", value = " 楼Code")
+    })
     @GetMapping("findByUnit")
-    public ResponseMessage<List<BaseUnit>> findByUnit(Integer floorId) {
+    public ResponseMessage<List<BaseUnit>> findByUnit(String commCode, String issuCode, String disCode, String floorCode) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("查询楼所属单元接口:/v1/unit/findByUnit userId=" + claims.get("userId"));
-        List<BaseUnit> list = baseUnitService.findByFloorId(floorId);
+        List<BaseUnit> list = baseUnitService.getUnits(commCode, issuCode, disCode, floorCode);
         return ResponseMessage.ok(list);
     }
 }
