@@ -6,4 +6,7 @@ public class Qst {
     public final static String TC = "T0001";
     public final static String URL9700 = "http://39.97.233.20:9700/api/";
     public final static String URL21664 = "http://39.97.233.20:21664/api/";
+    public final static String USERNAME = "AdminJXKJ";
+    public final static String PASSWORD = "52c297b78d7f27c878e48dcdb7879dfb";
+    public final static String UUID = "Q0U2RTkyQTAtNDdERS00NzRDLTk1ODgtMDg0M0M1QkFDN0VF";
 }

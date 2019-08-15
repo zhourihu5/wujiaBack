@@ -52,6 +52,17 @@ public class OrderController {
         return ResponseMessage.ok(page);
     }
 
+    @ApiOperation(value = "BD订单分页列表", notes = "订单分页列表")
+    @GetMapping("/findListBD")
+    public ResponseMessage<Page<OrderInfo>> findListBD(String status, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        pageNum = pageNum - 1;
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "create_date");
+        Page<OrderInfo> page = orderService.findListBD(status, pageable);
+        return ResponseMessage.ok(page);
+    }
 
     @ApiOperation(value = "下单", notes = "下单")
     @PostMapping("saveOrder")

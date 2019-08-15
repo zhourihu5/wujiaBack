@@ -53,15 +53,29 @@ public class OrderUserService {
 
     @Transactional
     public void saveOrderUser(OrderUser orderUser) {
+        orderInfoRepository.modityStatus("5", orderUser.getOrderId());
         EbizOrderUser ebizOrderUser = new EbizOrderUser();
         ebizOrderUser.setOrderUser(orderUser);
         orderUserRepository.save(ebizOrderUser);
     }
 
+    @Transactional
+    public void updateOrderUser(OrderUser orderUser) {
+        EbizOrderUser ebizOrderUser = new EbizOrderUser();
+        ebizOrderUser.setOrderUser(orderUser);
+        ebizOrderUser.setFinishDate(new Date());
+        orderUserRepository.updateOrderUser(orderUser.getUserId(), orderUser.getOrderId(), orderUser.getStatus());
+    }
 
-    public Page<EbizOrderUser> findAll(String status, Pageable pageable) {
+
+    public Page<EbizOrderUser> findAll(String status, String startDate, String endDate, Pageable pageable) {
         Page<EbizOrderUser> page = null;
-        page = orderUserRepository.findAllByStatus(status, pageable);
+        if (startDate != null && endDate != null) {
+            page = orderUserRepository.findAllByStatusAndDate(status, startDate, endDate, pageable);
+        } else {
+            page = orderUserRepository.findAllByStatus(status, pageable);
+        }
+
         for (EbizOrderUser ebizOrderUser : page) {
             OrderInfo orderInfo = orderInfoRepository.findByOrderId(ebizOrderUser.getOrderUser().getOrderId());
             orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
@@ -70,7 +84,6 @@ public class OrderUserService {
         }
         return page;
     }
-
 
 
 }

@@ -20,7 +20,7 @@ public class HttpClients {
 
     public static String getObjectClientAndHeaders(String url, HttpHeaders requestHeaders) {
         RestTemplate template = new RestTemplate();
-        HttpEntity<String> requestEntity = new HttpEntity<String>(null, requestHeaders);
+        HttpEntity<String> requestEntity = new HttpEntity(null, requestHeaders);
         ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, requestEntity, String.class);
         return response.getBody();
     }
@@ -33,6 +33,7 @@ public class HttpClients {
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
         requestHeaders.set("Authorization", "Bearer " + accessToken);
         HttpEntity<String> requestEntity = new HttpEntity(requestParam, requestHeaders);
+        System.out.println(requestEntity);
         ResponseEntity<String> response = template.exchange(url, HttpMethod.POST, requestEntity, String.class);
         System.out.println(response.getBody());
         return response.getBody();
