@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +83,7 @@ public class ApplyLockController {
             if (baseFamilyList.size() > 0) {
                 String unitCode = baseFamilyList.get(0).getCode().substring(0, 16);
                 BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
-                deviceLocalDirectory = baseUnit.getCode();
+                deviceLocalDirectory = baseUnit.getDirectory();
                 break;
             }
 //            BaseFamily baseFamily = familyService.findByFamilyId(userFamily.getUserFamily().getFamilyId());
@@ -96,16 +97,17 @@ public class ApplyLockController {
         if (deviceLocalDirectory == "") {
             throw new ServiceException("系统异常", ErrorCode.QST_ERROR);
         }
+        deviceLocalDirectory = deviceLocalDirectory+"-1";
         Map<String, Object> result = openDoorService.openDoor(userName, deviceLocalDirectory);
         if (Integer.valueOf(result.get("Code").toString()) != 200) {
-            throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+            throw new ServiceException("数据异常", ErrorCode.QST_ERROR);
         }
         return ResponseMessage.ok();
     }
 
     @ApiOperation(value = "获取临时开锁密码", notes = "获取临时开锁密码")
     @GetMapping("secretCodeWithOpenDoor")
-    public ResponseMessage<String> secretCodeWithOpenDoor(String communtityCode) {
+    public ResponseMessage<Map<String, Object>> secretCodeWithOpenDoor(String communtityCode) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
