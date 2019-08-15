@@ -30,6 +30,8 @@ public class OrderUserController {
 
     @Autowired
     private OrderUserService orderUserService;
+    @Autowired
+    private OrderService orderService;
 
 
     @ApiOperation(value = "保存用户订单关系", notes = "保存用户订单关系")
@@ -51,6 +53,7 @@ public class OrderUserController {
         Integer userId = (Integer) claims.get("userId");
         orderUser.setUserId(userId);
         orderUserService.updateOrderUser(orderUser);
+        orderService.deliveryOrder(orderUser.getOrderId());
         return ResponseMessage.ok();
     }
 

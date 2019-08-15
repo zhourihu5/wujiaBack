@@ -61,10 +61,7 @@ public class OrderUserService {
 
     @Transactional
     public void updateOrderUser(OrderUser orderUser) {
-        EbizOrderUser ebizOrderUser = new EbizOrderUser();
-        ebizOrderUser.setOrderUser(orderUser);
-        ebizOrderUser.setFinishDate(new Date());
-        orderUserRepository.updateOrderUser(orderUser.getUserId(), orderUser.getOrderId(), orderUser.getStatus());
+        orderUserRepository.updateOrderUser(orderUser.getUserId(), orderUser.getOrderId(), orderUser.getStatus(), new Date());
     }
 
 

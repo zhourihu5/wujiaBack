@@ -56,6 +56,10 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Modifying
     void saveStatusAndDate(String status, Date receiveDate, Integer id);
 
+    @Query("update OrderInfo o set o.status = ?1, o.deliveryDate = ?2 where o.id = ?3")
+    @Modifying
+    void saveStatusAndDeliveryDate(String status, Date receiveDate, Integer id);
+
     @Query("update OrderInfo o set o.code = ?1 where o.id = ?2")
     @Modifying
     void modityCode(String code, Integer id);
