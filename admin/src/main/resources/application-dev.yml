@@ -100,14 +100,3 @@ qst:
     uuid: Q0U2RTkyQTAtNDdERS00NzRDLTk1ODgtMDg0M0M1QkFDN0VF
     userName: AdminJXKJ
     password: 52c297b78d7f27c878e48dcdb7879dfb
-#xxl:
-#  job:
-#    admin:
-#      addresses: http://localhost:8080/xxl-job-admin
-#    executor:
-#      ip:
-#      port: 9999
-#      logpath: /data/applogs/xxl-job/jobhandler
-#      appname: wj-admin
-#      logretentiondays: -1
-#    accessToken:

@@ -2,22 +2,31 @@ server:
   port: 8082
 
 spring:
+  data:
+    redis:
+      repositories:
+        enabled: false
   datasource:
     username: wujia_dev
     password: Wujia!@#
-    url: jdbc:mysql://rm-2ze9f44ol605d099mro.mysql.rds.aliyuncs.com:3306/wujia_dev?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    url: jdbc:mysql://rm-2ze9f44ol605d099mro.mysql.rds.aliyuncs.com:3306/wujia_pro?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     show-sql: true
   redis:
     database: 0
-    timeout: 1000
+    timeout: 5000
     # Redis服务器地址
     host: 39.97.186.122
     # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码（默认为空）
     password:
+    lettuce:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
   pool:
     # 连接池最大连接数（使用负值表示没有限制）
     max-active: 10
@@ -27,12 +36,34 @@ spring:
     max-idle: 20
     # 连接池中的最小空闲连接
     min-idle: 10
-  servlet:
-      multipart:
-        enabled: true
-        max-file-size: 30MB
-        max-request-size: 50MB
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 30MB
+      max-request-size: 50MB
+  quartz:
+    #相关属性配置
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: true
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    #数据库方式
+    job-store-type: jdbc
 #在application.yml引入log4j2.yml
 logging:
   config: classpath:log4j2.yml
@@ -60,6 +91,7 @@ wj:
   bd:
     appid: wx4421e95088cfd91a
     secret: b2c587a6d6c3a6c0e87e1fd9c26801e4
+
 qst:
   info:
     accessToken: http://39.97.233.20:9700/api/
@@ -68,15 +100,3 @@ qst:
     uuid: Q0U2RTkyQTAtNDdERS00NzRDLTk1ODgtMDg0M0M1QkFDN0VF
     userName: AdminJXKJ
     password: 52c297b78d7f27c878e48dcdb7879dfb
-
-#xxl:
-#  job:
-#    admin:
-#      addresses: http://localhost:8080/xxl-job-admin
-#    executor:
-#      ip:
-#      port: 9999
-#      logpath: /data/applogs/xxl-job/jobhandler
-#      appname: wj-admin
-#      logretentiondays: -1
-#    accessToken:

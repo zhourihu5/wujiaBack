@@ -1,12 +1,5 @@
 package com.wj.api.controller;
 
-import com.wj.api.utils.JwtUtil;
-import com.wj.core.entity.user.SysUserInfo;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import jdk.nashorn.internal.runtime.logging.Logger;
-import lombok.extern.java.Log;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
@@ -18,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
