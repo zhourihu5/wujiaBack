@@ -144,7 +144,25 @@ public class OrderService {
         if (status == null) {
             page = orderInfoRepository.findAll(pageable);
         } else {
-            page = orderInfoRepository.findAllByStatus(status, pageable);
+            if (status.equals("2,5")) {
+                page = orderInfoRepository.findAllByStatus(pageable);
+            } else {
+                page = orderInfoRepository.findAllByStatus(status, pageable);
+            }
+        }
+        for (OrderInfo orderInfo : page) {
+            orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
+            orderInfo.setActivity(activityRepository.findByActivityId(orderInfo.getActivityId()));
+        }
+        return page;
+    }
+
+    public Page<OrderInfo> findListBD(String status, Pageable pageable) {
+        Page<OrderInfo> page = null;
+        if (status == null) {
+            page = orderInfoRepository.findAll(pageable);
+        } else {
+            page = orderInfoRepository.findAllByStatusBD(status, pageable);
         }
         for (OrderInfo orderInfo : page) {
             orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
@@ -250,6 +268,11 @@ public class OrderService {
     @Transactional
     public void receiveOrder(Integer id) {
         orderInfoRepository.saveStatusAndDate("3", new Date(), id);
+    }
+
+    @Transactional
+    public void deliveryOrder(Integer id) {
+        orderInfoRepository.saveStatusAndDeliveryDate("3", new Date(), id);
     }
 
     @Transactional

@@ -18,8 +18,14 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Query(value = "select * from ebiz_order_info", nativeQuery = true)
     public Page<OrderInfo> findAll(Pageable pageable);
 
-    @Query(value = "select * from ebiz_order_info where status = ?1", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where status in (?1)", nativeQuery = true)
     public Page<OrderInfo> findAllByStatus(String status, Pageable pageable);
+
+    @Query(value = "select * from ebiz_order_info where status in (2,5)", nativeQuery = true)
+    public Page<OrderInfo> findAllByStatus(Pageable pageable);
+
+    @Query(value = "select * from ebiz_order_info where status = ?1", nativeQuery = true)
+    public Page<OrderInfo> findAllByStatusBD(String status, Pageable pageable);
 
     @Query(value = "select * from ebiz_order_info where id = ?1", nativeQuery = true)
     public OrderInfo findByOrderId(Integer id);
@@ -27,19 +33,19 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Query(value = "select * from ebiz_order_info where code = ?1", nativeQuery = true)
     public OrderInfo findOrderByCode(String code);
 
-    @Query(value = "select * from ebiz_order_info where user_id = ?1 and activity_id = ?2 and status in (2,3)", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where user_id = ?1 and activity_id = ?2 and status in (2,3,5)", nativeQuery = true)
     public OrderInfo findByUserIdAndActivityId(Integer userId, Integer activityId);
 
-    @Query(value = "select * from ebiz_order_info where activity_id = ?1 and status in (2,3)", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where activity_id = ?1 and status in (2,3,5)", nativeQuery = true)
     public List<OrderInfo> findByActivityId(Integer activityId);
 
-    @Query(value = "select * from ebiz_order_info where activity_id = ?1 and status in (2,3)", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where activity_id = ?1 and status in (2,3,5)", nativeQuery = true)
     public Page<OrderInfo> findByActivityId(Integer activityId, Pageable pageable);
 
-    @Query(value = "select * from ebiz_order_info where user_id = ?1 and status in (2,3)", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where user_id = ?1 and status in (2,3,5)", nativeQuery = true)
     public List<OrderInfo> findByUserId(Integer userId);
 
-    @Query(value = "select count(*) from ebiz_order_info where activity_id = ?1 and status in (2,3)", nativeQuery = true)
+    @Query(value = "select count(*) from ebiz_order_info where activity_id = ?1 and status in (2,3,5)", nativeQuery = true)
     public Integer findCountByActivityId(Integer activityId);
 
     @Query("update OrderInfo o set o.status = ?1 where o.id = ?2")
@@ -50,6 +56,10 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Modifying
     void saveStatusAndDate(String status, Date receiveDate, Integer id);
 
+    @Query("update OrderInfo o set o.status = ?1, o.deliveryDate = ?2 where o.id = ?3")
+    @Modifying
+    void saveStatusAndDeliveryDate(String status, Date receiveDate, Integer id);
+
     @Query("update OrderInfo o set o.code = ?1 where o.id = ?2")
     @Modifying
     void modityCode(String code, Integer id);
@@ -57,4 +67,5 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Query("update OrderInfo o set o.code = ?2, o.payDate = ?3 where o.code = ?1")
     @Modifying
     void updateWxOrderByCode(String code, String wxOrderCode, Date date);
+
 }

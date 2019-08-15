@@ -30,6 +30,8 @@ public class OrderUserController {
 
     @Autowired
     private OrderUserService orderUserService;
+    @Autowired
+    private OrderService orderService;
 
 
     @ApiOperation(value = "保存用户订单关系", notes = "保存用户订单关系")
@@ -39,20 +41,31 @@ public class OrderUserController {
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
         orderUser.setUserId(userId);
-        orderUser.setStatus("0");
         orderUserService.saveOrderUser(orderUser);
+        return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value = "修改用户订单关系", notes = "保存用户订单关系")
+    @PostMapping("updateOrderUser")
+    public ResponseMessage updateOrderUser(@RequestBody OrderUser orderUser) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        orderUser.setUserId(userId);
+        orderUserService.updateOrderUser(orderUser);
+        orderService.deliveryOrder(orderUser.getOrderId());
         return ResponseMessage.ok();
     }
 
     @ApiOperation(value = "用户订单分页列表", notes = "用户订单分页列表")
     @GetMapping("/findAll")
-    public ResponseMessage<Page<EbizOrderUser>> findAll(String status, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResponseMessage<Page<EbizOrderUser>> findAll(String status, String startDate, String endDate, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
         }
         pageNum = pageNum - 1;
         Pageable pageable = PageRequest.of(pageNum, pageSize);
-        Page<EbizOrderUser> page = orderUserService.findAll(status, pageable);
+        Page<EbizOrderUser> page = orderUserService.findAll(status, startDate, endDate, pageable);
         return ResponseMessage.ok(page);
     }
 

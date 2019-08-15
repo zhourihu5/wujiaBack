@@ -3,8 +3,10 @@ package com.wj.api.controller.wx;
 import com.alibaba.fastjson.JSONObject;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
+import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.order.OrderService;
@@ -40,15 +42,23 @@ public class PayController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private OrderInfoRepository orderInfoRepository;
+
     @ApiOperation(value = "请求支付接口")
     @RequestMapping(value = "/wxPay", method = RequestMethod.POST)
     public ResponseMessage<Object> wxPay(HttpServletRequest request, @RequestBody OrderInfo orderInfo) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
-        SysUserInfo userInfo = userInfoService.findUserInfo(userId);
-        String openid = userInfo.getWxOpenId();
+        OrderInfo orderInfo0 = orderInfoRepository.findByUserIdAndActivityId(userId, orderInfo.getActivityId());
+        if (orderInfo0 != null) {
+            throw new ServiceException("此次活动每人限制一单!", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         OrderInfo orderInfo1 = orderService.findOrderByCode(orderInfo.getCode());
+        if (null == orderInfo1) {
+            throw new ServiceException("订单错误!", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         if (!orderInfo1.getStatus().equals("1")) {
             throw new ServiceException("此订单不能支付", ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -64,9 +74,8 @@ public class PayController {
             throw new ServiceException("订单已超时，不能支付!", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         String money = orderInfo1.getRealPrice().multiply(new BigDecimal(100)).intValue() + "";
-        if (null == orderInfo1) {
-            throw new ServiceException("订单错误!", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        SysUserInfo userInfo = userInfoService.findUserInfo(userId);
+        String openid = userInfo.getWxOpenId();
         try {
             //生成的随机字符串
             String nonce_str = getRandomStringByLength(32);
