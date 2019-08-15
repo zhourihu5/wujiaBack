@@ -74,6 +74,7 @@ public class CommodityService {
             commodity.setCreateDate(ClockUtil.currentDate());
             commodity.setStatus("0");
             commodity.setCode("COMM" + ClockUtil.currentTimeMillis());
+            commodity.setSalesNum(0);
         }
         commodity.setUserId(userId);
         Commodity comm = commodityRepository.save(commodity);
@@ -82,7 +83,7 @@ public class CommodityService {
             for (String img : imgs) {
                 AttaInfo attaInfo = new AttaInfo();
                 attaInfo.setCreateDate(ClockUtil.currentDate());
-                if (StringUtils.contains(commodity.getUploadImg(), "http://")) {
+                if (StringUtils.contains(img, "http://")) {
                     attaInfo.setAttaAddr(img);
                 } else {
                     attaInfo.setAttaAddr(url + img);
