@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -24,8 +25,8 @@ public interface OrderUserRepository extends JpaRepository<EbizOrderUser, Intege
     public Page<EbizOrderUser> findAllByStatus(String status, Pageable pageable);
 
     @Modifying
-    @Query(value = "update ebiz_order_user set status = ?3 where user_id = ?1 and order_id = ?2", nativeQuery = true)
-    public void updateOrderUser(Integer userId, Integer orderId, String status);
+    @Query(value = "update ebiz_order_user set status = ?3 , finish_date = ?4 where user_id = ?1 and order_id = ?2", nativeQuery = true)
+    public void updateOrderUser(Integer userId, Integer orderId, String status, Date date);
 
     @Query(value = "select * from ebiz_order_user where status = ?1 and finish_date >= ?2 and finish_date <= ?3 ", nativeQuery = true)
     public Page<EbizOrderUser> findAllByStatusAndDate(String status, String startDate, String endDate, Pageable pageable);

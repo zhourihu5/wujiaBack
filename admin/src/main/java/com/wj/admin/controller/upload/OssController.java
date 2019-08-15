@@ -48,22 +48,22 @@ public class OssController {
         String path = "";
         if (type.equals(CARD_TYPE)) {
             path = ossUploadService.ossUpload(file, cardPath);
-        }
+        }else
         if (type.equals(SERVICE_TYPE)) {
             path = ossUploadService.ossUpload(file, servicePath);
-        }
+        }else
         if (type.equals(ADV_TYPE)) {
             path = ossUploadService.ossUpload(file, "images/adv/icon");
-        }
+        }else
         if (type.equals(SCREEN)) {
             path = ossUploadService.ossUpload(file, "images/screen/icon");
-        }
+        }else
         if (type.equals(BANNER)) {
             path = ossUploadService.ossUpload(file, "images/banner/icon");
-        }
+        }else
         if (type.equals(APK)) {
             path = ossUploadService.ossUpload(file, "apk/package");
-        }
+        }else
         if (type.equals(CARD_CONTENT)) {
             path = ossUploadService.ossUpload(file, "images/card/content");
             path = url + path;
@@ -87,6 +87,7 @@ public class OssController {
             for (MultipartFile f : files) {
                 path = ossUploadService.ossUpload(f, "images/card/content");
                 path = url + path;
+                //???fixme??
             }
         }
         return ResponseMessage.ok(path);

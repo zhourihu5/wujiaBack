@@ -271,6 +271,11 @@ public class OrderService {
     }
 
     @Transactional
+    public void deliveryOrder(Integer id) {
+        orderInfoRepository.saveStatusAndDeliveryDate("3", new Date(), id);
+    }
+
+    @Transactional
     public void updateWxOrderByCode(String code, String wxOrderCode) {
         orderInfoRepository.updateWxOrderByCode(code, wxOrderCode, new Date());
     }
