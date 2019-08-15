@@ -18,7 +18,6 @@ public class OrderUser implements Serializable {
     private Integer orderId;
     private String orderCode;
     private String status;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date finashDate;
+
 
 }
