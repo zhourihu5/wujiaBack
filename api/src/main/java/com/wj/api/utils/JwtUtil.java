@@ -95,6 +95,16 @@ public class JwtUtil {
         }
         return userId;
     }
+    public static Integer getUserIdFromToken() {
+        Integer userId;
+        try {
+            final Claims claims = parseJwt(getJwtToken());
+            userId = NumberUtil.toIntObject(claims.get("userId").toString());
+        } catch (Exception e) {
+            userId = null;
+        }
+        return userId;
+    }
 
 
 }

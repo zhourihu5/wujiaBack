@@ -122,9 +122,9 @@ public class AdvService {
             tagList.add("community_" + strArray[i]);
             advCommuntityRepository.addAdvCommuntity(advId, Integer.valueOf(strArray[i]), new Date());
             List<SysUserInfoDTO> list = baseCommuntityService.findUserListByCid(Integer.valueOf(strArray[i]));
-            list.forEach(SysUserInfo -> {
+            list.forEach(sysUserInfo -> {
                 // 保存广告和用户关系
-                advUserRepository.addAdvUser(advId, SysUserInfo.getId(), new Date());
+                advUserRepository.addAdvUser(advId, sysUserInfo.getId(), new Date());
             });
         }
         // 广告推送
