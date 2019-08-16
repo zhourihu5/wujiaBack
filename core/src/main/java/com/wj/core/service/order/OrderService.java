@@ -285,4 +285,9 @@ public class OrderService {
     public Integer updateOrderDelivery(String nickName, String userName, Integer orderId) {
         return orderInfoRepository.updateOrderDelivery(nickName, userName, orderId);
     }
+
+    @Transactional
+    public Integer updateOrdeReceiveDate(Integer orderId) {
+        return orderInfoRepository.updateOrdeReceiveDate(new Date(), orderId);
+    }
 }

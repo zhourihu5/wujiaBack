@@ -71,4 +71,8 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Query("update OrderInfo o set o.deliveryPerson = ?1, o.deliveryPhone = ?2 where o.id = ?3")
     @Modifying
     public Integer updateOrderDelivery(String nickName, String userName, Integer id);
+
+    @Query("update OrderInfo o set o.receiveDate = ?1, o.deliveryDate = ?1 where o.id = ?2")
+    @Modifying
+    public Integer updateOrdeReceiveDate(Date date, Integer id);
 }
