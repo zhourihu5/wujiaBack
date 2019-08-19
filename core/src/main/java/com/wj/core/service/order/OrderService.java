@@ -178,6 +178,10 @@ public class OrderService {
         return orderInfo;
     }
 
+    public OrderInfo getOrder(Integer orderId) {
+        return orderInfoRepository.findByOrderId(orderId);
+    }
+
     public OrderInfo findOrderByCode(String code) {
         return orderInfoRepository.findOrderByCode(code);
     }
