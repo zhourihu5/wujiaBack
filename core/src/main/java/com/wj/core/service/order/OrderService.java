@@ -20,6 +20,7 @@ import com.wj.core.util.CommonUtils;
 import com.wj.core.util.number.RandomUtil;
 import com.wj.core.util.time.ClockUtil;
 import com.wj.core.util.time.DateFormatUtil;
+import com.wj.core.util.wx.WechatConfig;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +117,8 @@ public class OrderService {
         orderInfo.setCreateDate(ClockUtil.currentDate());
         orderInfo.setUpdateDate(ClockUtil.currentDate());
         orderInfo.setPayEndDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
-        String code = DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + CommonUtils.getRandomStringByLength(24);
+        String code = WechatConfig.mch_id + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + CommonUtils.getRandomStringByLength(10);
+
         orderInfo.setCode(code);
         orderInfoRepository.save(orderInfo);
         boolean ex = jobService.checkExists("order_close_" + orderInfo.getId(), "order");
