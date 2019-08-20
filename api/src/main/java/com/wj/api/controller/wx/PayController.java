@@ -153,7 +153,7 @@ public class PayController {
     }
 
     //这里是支付回调接口，微信支付成功后会自动调用
-    @RequestMapping(value = "/wxNotify", method = RequestMethod.GET)
+    @RequestMapping(value = "/wxNotify")
     public void wxNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
         System.out.println("支付回调---------------------------");
         BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
