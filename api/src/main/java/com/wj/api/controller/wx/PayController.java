@@ -178,14 +178,15 @@ public class PayController {
         String returnCode = (String) map.get("return_code");
         logger.info(returnCode+"---------returnCode----");
         if ("SUCCESS".equals(returnCode)) {
-            //验证签名是否正确
-            Map<String, String> validParams = PayUtil.paraFilter(map);  //回调验签时需要去除sign和空值参数
-            logger.info(validParams+"---------validParams----");
-            String prestr = PayUtil.createLinkString(validParams);
-            logger.info(prestr+"------------prestr1-");
+//            //验证签名是否正确
+//            Map<String, String> validParams = PayUtil.paraFilter(map);  //回调验签时需要去除sign和空值参数
+//            logger.info(validParams+"---------validParams----");
+//            String prestr = PayUtil.createLinkString(validParams);
+//            logger.info(prestr+"------------prestr1-");
             //根据微信官网的介绍，此处不仅对回调的参数进行验签，还需要对返回的金额与系统订单的金额进行比对等
-            logger.info(PayUtil.verify(prestr, (String) map.get("sign"), WechatConfig.key, "utf-8")+"------------prestr2-");
-            if (PayUtil.verify(prestr, (String) map.get("sign"), WechatConfig.key, "utf-8")) {
+//            logger.info(PayUtil.verify(prestr, (String) map.get("sign"), WechatConfig.key, "utf-8")+"------------prestr2-");
+//            if (PayUtil.verify(prestr, (String) map.get("sign"), WechatConfig.key, "utf-8")) {
+//            if (PayUtil.verify(prestr, (String) map.get("sign"), WechatConfig.key, "utf-8")) {
                 /**此处添加自己的业务逻辑代码start**/
                 // 平台订单号
                 String code = (String) map.get("out_trade_no");
@@ -197,7 +198,7 @@ public class PayController {
                 //通知微信服务器已经支付成功
                 resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
                         + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
-            }
+//            }
         } else {
             resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
                     + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
