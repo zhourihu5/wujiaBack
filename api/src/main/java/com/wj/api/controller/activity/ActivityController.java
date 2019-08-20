@@ -41,17 +41,17 @@ public class ActivityController {
      */
     @ApiOperation(value = "没参与过的活动列表", notes = "没参与过的活动列表")
     @GetMapping("findOtherList")
-    public ResponseMessage findOtherList() {
+    public ResponseMessage findOtherList(Integer communityId) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
-        List<Activity> list = activityService.findOtherList(userId);
+        List<Activity> list = activityService.findOtherList(userId, communityId);
         return ResponseMessage.ok(list);
     }
 
     @ApiOperation(value = "活动分页列表", notes = "活动分页列表")
     @GetMapping("/findAll")
-    public ResponseMessage<Page<Activity>> findAll(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResponseMessage<Page<Activity>> findAll(Integer communityId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
         }
@@ -60,14 +60,14 @@ public class ActivityController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
-        Page<Activity> page = activityService.findAll(userId, pageable);
+        Page<Activity> page = activityService.findAll(userId, communityId, pageable);
         return ResponseMessage.ok(page);
     }
 
     @ApiOperation(value = "活动全部列表", notes = "活动全部列表")
     @GetMapping("/findList")
-    public ResponseMessage<List<Activity>> findList() {
-        List<Activity> list = activityService.findList();
+    public ResponseMessage<List<Activity>> findList(Integer communityId) {
+        List<Activity> list = activityService.findList(communityId);
         return ResponseMessage.ok(list);
     }
 

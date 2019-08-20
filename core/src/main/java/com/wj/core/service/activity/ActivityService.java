@@ -63,7 +63,7 @@ public class ActivityService {
     private JobService jobService;
 
     public List<Activity> findList(Integer userId, Integer communityId) {
-        List<Activity> activityList = activityRepository.findByCommunityIdAndStatus(communityId, "1");
+        List<Activity> activityList = activityRepository.findByCommunityIdAndIsShow(communityId, "1");
         activityList.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
             if (userId != null) {
@@ -78,16 +78,16 @@ public class ActivityService {
         return activityList;
     }
 
-    public List<Activity> findList() {
-        List<Activity> activityList = activityRepository.findByStatus("1");
+    public List<Activity> findList(Integer communityId) {
+        List<Activity> activityList = activityRepository.findByIsShow("1", communityId);
         activityList.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
         });
         return activityList;
     }
 
-    public Page<Activity> findAll(Integer userId, Pageable pageable) {
-        Page<Activity> page = activityRepository.findAll("1", pageable);
+    public Page<Activity> findAll(Integer userId, Integer communityId, Pageable pageable) {
+        Page<Activity> page = activityRepository.findAll("1", communityId, pageable);
 //        page.forEach(Activity -> {
 //            Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
 //        });
@@ -223,8 +223,8 @@ public class ActivityService {
     }
 
 
-    public List<Activity> findOtherList(Integer userId) {
-        List<Activity> activityList = activityRepository.findByStatus("1");
+    public List<Activity> findOtherList(Integer userId, Integer communityId) {
+        List<Activity> activityList = activityRepository.findByIsShow("1", communityId);
 //        Scanner sc = new Scanner(System.in);
         Iterator it = activityList.iterator();
         while (it.hasNext()) {
