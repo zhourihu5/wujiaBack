@@ -1,6 +1,7 @@
 package com.wj.api.controller.wx;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wj.api.controller.user.LoginController;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.activity.Activity;
@@ -17,6 +18,8 @@ import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +38,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/wx/")
 public class PayController {
+    public final static Logger logger = LoggerFactory.getLogger(PayController.class);
+
 
     @Autowired
     private UserInfoService userInfoService;
@@ -155,7 +160,7 @@ public class PayController {
     //这里是支付回调接口，微信支付成功后会自动调用
     @RequestMapping(value = "/wxNotify")
     public void wxNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("支付回调---------------------------");
+        logger.info("支付回调---------------------------");
         BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
         String line = null;
         StringBuilder sb = new StringBuilder();
