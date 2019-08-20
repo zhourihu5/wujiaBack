@@ -15,6 +15,7 @@ import com.wj.core.service.activity.ActivityTask;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.job.JobService;
+import com.wj.core.service.wx.PayUserService;
 import com.wj.core.util.CommonUtils;
 import com.wj.core.util.number.RandomUtil;
 import com.wj.core.util.time.ClockUtil;
@@ -32,13 +33,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class OrderService {
@@ -53,6 +53,8 @@ public class OrderService {
     private JobService jobService;
     @Autowired
     private UserInfoRepository userInfoRepository;
+    @Autowired
+    private PayUserService payUserService;
 
     // 生成订单
     @Transactional
@@ -233,6 +235,15 @@ public class OrderService {
         taskEntity.setJobName("order_close_" + orderInfo1.getId());
         taskEntity.setJobGroup("order");
         jobService.deleteTask(taskEntity);
+    }
+
+    public void refundUserList(HttpServletRequest request, Integer activityId) {
+        List<OrderInfo> orderInfoList = orderInfoRepository.findByActivityId(activityId);
+        List<SysUserInfo> userInfoList = new ArrayList<>();
+        orderInfoList.forEach(OrderInfo -> {
+            SysUserInfo userInfo = userInfoRepository.findByUserId(OrderInfo.getUserId());
+            payUserService.wxPay(request, userInfo, OrderInfo);
+        });
     }
 
 

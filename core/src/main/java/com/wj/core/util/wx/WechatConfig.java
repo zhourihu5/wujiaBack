@@ -16,4 +16,6 @@ public class WechatConfig {
     public static final String TRADETYPE = "JSAPI";
     //微信统一下单接口地址
     public static final String pay_url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+
+    public static final String red_pay_url = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
 }
