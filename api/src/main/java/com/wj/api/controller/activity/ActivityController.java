@@ -4,6 +4,7 @@ import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
+import com.wj.core.entity.user.dto.XcxLoginDTO;
 import com.wj.core.service.activity.ActivityService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
@@ -84,6 +85,15 @@ public class ActivityController {
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
         return ResponseMessage.ok(activityService.isOrder(activityId, userId));
+    }
+
+    @ApiOperation(value = "小程序切换社区首页接口", notes = "小程序切换社区首页接口")
+    @GetMapping("/wxIndex")
+    public ResponseMessage<XcxLoginDTO> wxIndex(Integer communityId) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        return ResponseMessage.ok(activityService.wxIndex(communityId, userId));
     }
 
 }

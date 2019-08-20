@@ -2,6 +2,7 @@ package com.wj.core.util;
 
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
@@ -34,8 +35,12 @@ public class HttpClients {
         requestHeaders.set("Authorization", "Bearer " + accessToken);
         HttpEntity<String> requestEntity = new HttpEntity(requestParam, requestHeaders);
         System.out.println(requestEntity);
-        ResponseEntity<String> response = template.exchange(url, HttpMethod.POST, requestEntity, String.class);
-        System.out.println(response.getBody());
+        ResponseEntity<String> response = null;
+        try {
+            response = template.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        } catch (RestClientException e) {
+            return e.getMessage();
+        }
         return response.getBody();
     }
 

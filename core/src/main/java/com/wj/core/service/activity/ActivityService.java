@@ -5,16 +5,19 @@ import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
 import com.wj.core.entity.address.Address;
 import com.wj.core.entity.atta.AttaInfo;
+import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.entity.user.dto.XcxLoginDTO;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.address.AddressRepository;
 import com.wj.core.repository.atta.AttaInfoRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.address.AddressService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.job.JobService;
@@ -42,25 +45,24 @@ public class ActivityService {
 
     @Autowired
     private ActivityRepository activityRepository;
-
     @Autowired
     private CommodityRepository commodityRepository;
     @Value("${wj.oss.access}")
     private String url;
-
     @Autowired
     private OrderInfoRepository orderInfoRepository;
-
     @Autowired
     private UserInfoRepository userInfoRepository;
-
     @Autowired
     private AddressRepository addressRepository;
-
     @Autowired
     private AttaInfoRepository attaInfoRepository;
     @Autowired
     private JobService jobService;
+    @Autowired
+    private AddressService addressService;
+    @Autowired
+    private ActivityService activityService;
 
     public List<Activity> findList(Integer userId, Integer communityId) {
         List<Activity> activityList = activityRepository.findByCommunityIdAndIsShow(communityId, "1");
@@ -272,5 +274,16 @@ public class ActivityService {
             activity.setAddress(addressList.get(0));
         }
         return activity;
+    }
+
+    public XcxLoginDTO wxIndex(Integer communityId, Integer userId) {
+        XcxLoginDTO loginDTO = new XcxLoginDTO();
+        List<BaseCommuntity> communtityList = addressService.findByUserId(userId);
+        loginDTO.setCommuntityList(communtityList);
+        Commodity commodity = commodityRepository.findByCommodityId(communityId);
+        loginDTO.setCommuntityName(commodity.getName());
+        List<Activity> activityList = activityService.findList(userId, communityId);
+        loginDTO.setActivityList(activityList);
+        return loginDTO;
     }
 }
