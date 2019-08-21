@@ -3,6 +3,7 @@ package com.wj.core.service.base;
 import com.google.common.collect.Lists;
 import com.wj.core.entity.base.*;
 import com.wj.core.entity.base.dto.BaseFamilyDTO;
+import com.wj.core.entity.base.dto.QstCommunityDTO;
 import com.wj.core.entity.base.embeddable.FamilyCommuntity;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
@@ -96,7 +97,7 @@ public class BaseCommuntityService {
             communtity.setStructureId(Integer.valueOf(map.get("StructureID").toString()));
             communtity.setVillageName(map.get("VillageName").toString());
             communtity.setDirectory(map.get("Directory").toString());
-            Map<String, Object> result = qstCommuntityService.tenantStructureDefinition(communtity.getFlag(), communtity.getStructureId());
+            Map<String, Object> result = qstCommuntityService.tenantStructureDefinition(communtity.getStructureId());
             if (Integer.valueOf(result.get("Code").toString()) != 201) {
                 throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
             }
@@ -109,6 +110,25 @@ public class BaseCommuntityService {
             baseCommuntityRepository.save(communtity);
             return communtity;
         }
+    }
+
+    @Transactional
+    public BaseCommuntity saveQstCommuntity(QstCommunityDTO communityDTO) {
+        BaseCommuntity communtity = new BaseCommuntity();
+        communtity.setName(communityDTO.getName());
+        communtity.setCreateDate(new Date());
+        baseCommuntityRepository.modityCode(CommunityUtil.genCommCode(communtity.getId()), communtity.getId());
+        Map<String, Object> map = qstCommuntityService.tenantvillages(communityDTO.getArea().toString(), communityDTO.getName());
+        communtity.setStructureId(Integer.valueOf(map.get("StructureID").toString()));
+        communtity.setVillageName(map.get("VillageName").toString());
+        communtity.setDirectory(map.get("Directory").toString());
+        Map<String, Object> result = qstCommuntityService.tenantStructureDefinition(communtity.getStructureId(), communityDTO.getPeriod(), communityDTO.getRegion(), communityDTO.getBuilding(), communityDTO.getUnit(), communityDTO.getFloor(), communityDTO.getRoom());
+        communtity.setFlag(result.get("flag").toString());
+        baseCommuntityRepository.save(communtity);
+        if (Integer.valueOf(result.get("Code").toString()) != 201) {
+            throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
+        }
+        return communtity;
     }
 
     /**
@@ -221,7 +241,6 @@ public class BaseCommuntityService {
         }
         return list;
     }
-
 
 
     public Page<BaseCommuntity> findByCityCodeAndName(Integer cityCode, String name, Pageable pageable) {

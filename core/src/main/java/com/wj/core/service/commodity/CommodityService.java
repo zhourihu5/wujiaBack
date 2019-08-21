@@ -73,7 +73,7 @@ public class CommodityService {
         } else {
             commodity.setCreateDate(ClockUtil.currentDate());
             commodity.setStatus("0");
-            commodity.setCode("COMM" + ClockUtil.currentTimeMillis());
+            commodity.setCode("C" + ClockUtil.currentTimeMillis());
         }
         commodity.setUserId(userId);
         Commodity comm = commodityRepository.save(commodity);
