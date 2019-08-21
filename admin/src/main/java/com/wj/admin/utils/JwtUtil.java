@@ -39,7 +39,7 @@ public class JwtUtil {
      */
     public static String createJwt(Map<String, Object> claims) {
         return "Bearer " + Jwts.builder().setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 120 * 1000L))  //过期时间
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 1 * 1000L))  //过期时间
                 .signWith(SignatureAlgorithm.HS512, base64Secret).compact();  //加密方式
     }
 

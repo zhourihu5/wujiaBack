@@ -1,5 +1,7 @@
 package com.wj.admin.controller;
 
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -35,16 +37,16 @@ public class MyCommonErrorController extends BasicErrorController {
     @RequestMapping(produces = {"application/json"})
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
         //加入跨域相关内容
-        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+//        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
 //        response.setHeader("Access-Control-Allow-Origin", "*");
 //        response.setHeader("Access-Control-Expose-Headers", "X-Total-Count");
 //        response.setHeader("Access-Control-Allow-Headers", "origin, x-requested-with, x-http-method-override, content-type, Authentication, Authorization, hospital");
 //        response.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS, HEAD, PATCH");
-        response.setHeader("Access-Control-Allow-Origin","*");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, Content-Type");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
+//        response.setHeader("Access-Control-Allow-Origin","*");
+//        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
+//        response.setHeader("Access-Control-Max-Age", "3600");
+//        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, Content-Type");
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
         HttpStatus status = this.getStatus(request);
         Map<String, Object> errorAttributes = this.getErrorAttributes(request, true);
         String message = (String) errorAttributes.get("message");
@@ -52,6 +54,9 @@ public class MyCommonErrorController extends BasicErrorController {
         body.put("code", getCode(message));
         body.put("message", message);
         body.put("data", null);
+        if (getCode(message) < 0) {
+            throw new ServiceException("token异常", ErrorCode.FORBIDDEN);
+        }
         return new ResponseEntity(body, status);
     }
 
