@@ -15,14 +15,23 @@ import java.util.List;
 
 public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, JpaSpecificationExecutor<OrderInfo> {
 
-    @Query(value = "select * from ebiz_order_info", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where user_id = ?1", nativeQuery = true)
     public Page<OrderInfo> findAll(Pageable pageable);
 
-    @Query(value = "select * from ebiz_order_info where status in (?1)", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where user_id = ?1", nativeQuery = true)
+    public Page<OrderInfo> findAllByUserId(Integer userId, Pageable pageable);
+
+    @Query(value = "select * from ebiz_order_info where status in (?2)", nativeQuery = true)
     public Page<OrderInfo> findAllByStatus(String status, Pageable pageable);
+
+    @Query(value = "select * from ebiz_order_info where user_id = ?1 and status in (?2)", nativeQuery = true)
+    public Page<OrderInfo> findAllByUserIdAndStatus(Integer userId, String status, Pageable pageable);
 
     @Query(value = "select * from ebiz_order_info where status in (2,5)", nativeQuery = true)
     public Page<OrderInfo> findAllByStatus(Pageable pageable);
+
+    @Query(value = "select * from ebiz_order_info where user_id = ?1 and status in (2,5)", nativeQuery = true)
+    public Page<OrderInfo> findAllByUserIdAndStatus(Integer userId, Pageable pageable);
 
     @Query(value = "select * from ebiz_order_info where status = ?1", nativeQuery = true)
     public Page<OrderInfo> findAllByStatusBD(String status, Pageable pageable);

@@ -161,6 +161,24 @@ public class OrderService {
         return page;
     }
 
+    public Page<OrderInfo> findListByUserId(Integer userId, String status, Pageable pageable) {
+        Page<OrderInfo> page = null;
+        if (status == null) {
+            page = orderInfoRepository.findAllByUserId(userId, pageable);
+        } else {
+            if (status.equals("2,5")) {
+                page = orderInfoRepository.findAllByUserIdAndStatus(userId, pageable);
+            } else {
+                page = orderInfoRepository.findAllByUserIdAndStatus(userId, status, pageable);
+            }
+        }
+        for (OrderInfo orderInfo : page) {
+            orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
+            orderInfo.setActivity(activityRepository.findByActivityId(orderInfo.getActivityId()));
+        }
+        return page;
+    }
+
     public Page<OrderInfo> findListBD(String status, Pageable pageable) {
         Page<OrderInfo> page = null;
         if (status == null) {

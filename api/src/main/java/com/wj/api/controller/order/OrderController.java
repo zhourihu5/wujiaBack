@@ -43,12 +43,15 @@ public class OrderController {
     @ApiOperation(value = "订单分页列表", notes = "订单分页列表")
     @GetMapping("/findList")
     public ResponseMessage<Page<OrderInfo>> findList(String status, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
         if (pageNum == null) {
             pageNum = 1;
         }
         pageNum = pageNum - 1;
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "create_date");
-        Page<OrderInfo> page = orderService.findList(status, pageable);
+        Page<OrderInfo> page = orderService.findListByUserId(userId, status, pageable);
         return ResponseMessage.ok(page);
     }
 
