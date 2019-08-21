@@ -38,13 +38,12 @@ public class QstCommuntityService {
     public static void main(String[] args) {
         String str = "{\"StructureID\": 1783,\"AreaID\": 440402000000,\"Directory\": \"21\",\"VillageName\": \"大井社区\",\"Attribute\": 1}";
         JsonMapper mapper = JsonMapper.defaultMapper();
-
         Map<String, Object> t = mapper.fromJson(str, Map.class);
         System.out.println(t.get("AreaID"));
     }
 
     //配置小区位长信息
-    public Map<String, Object> tenantStructureDefinition(String flag, Integer structureID) {
+    public Map<String, Object> tenantStructureDefinition(Integer structureID) {
         Map<String, Object> requestParam = new HashMap<>();
         requestParam.put("TenantCode", Qst.TC);
         requestParam.put("StructureID", structureID); //小区结构ID(注：一定是小区的小区结构ID)
@@ -57,6 +56,43 @@ public class QstCommuntityService {
         String url = Qst.URL21664 + "TenantStructureDefinition";
         String object = HttpClients.postObjectClientJsonHeaders(url, Qst.TOKEN, requestParam);
         Map<String, Object> qst = mapper.fromJson(object, Map.class);
+        return qst;
+    }
+
+    //配置小区位长信息
+    public Map<String, Object> tenantStructureDefinition(Integer structureID, Integer period, Integer region, Integer building, Integer unit, Integer floor, Integer room) {
+        Map<String, Object> requestParam = new HashMap<>();
+        requestParam.put("TenantCode", Qst.TC);
+        requestParam.put("StructureID", structureID); //小区结构ID(注：一定是小区的小区结构ID)
+        String flag = "";
+        if (period != null && period > 0) {
+            requestParam.put("Period", period); //期对应的位长配置
+            flag.concat("期");
+        }
+        if (region != null && region > 0) {
+            requestParam.put("Region", region); // 区对应的位长配置
+            flag.concat("区");
+        }
+        if (building != null && building > 0) {
+            requestParam.put("Building", building); //栋对应的位长配置
+            flag.concat("楼");
+        }
+        if (unit != null && unit > 0) {
+            requestParam.put("Unit", unit); // 单元对应的位长配置
+            flag.concat("单");
+        }
+        if (unit != null && unit > 0) {
+            requestParam.put("Floor", floor); //层对应的位长配置
+            flag.concat("楼");
+        }
+        if (room != null && room > 0) {
+            requestParam.put("Room", room); // 房对应的位长配置
+            flag.concat("家");
+        }
+        String url = Qst.URL21664 + "TenantStructureDefinition";
+        String object = HttpClients.postObjectClientJsonHeaders(url, Qst.TOKEN, requestParam);
+        Map<String, Object> qst = mapper.fromJson(object, Map.class);
+        qst.put("flag", flag);
         return qst;
     }
 
