@@ -100,7 +100,7 @@ public class BindingController {
             sysUserInfo.setNickName(bindingDTO.getNickName());
             sysUserInfo.setWxNickName(bindingDTO.getNickName());
             sysUserInfo.setWxOpenId(bindingDTO.getOpenid());
-            sysUserInfo.setStatus(4);
+            sysUserInfo.setFlag(4);
             sysUserInfo.setCreateDate(new Date());
             sysUserInfo = userInfoService.addUser(sysUserInfo);
             loginDTO.setUserInfo(sysUserInfo);
