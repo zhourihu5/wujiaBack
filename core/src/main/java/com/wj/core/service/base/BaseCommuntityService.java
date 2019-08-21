@@ -118,7 +118,7 @@ public class BaseCommuntityService {
         communtity.setName(communityDTO.getName());
         communtity.setCreateDate(new Date());
         baseCommuntityRepository.modityCode(CommunityUtil.genCommCode(communtity.getId()), communtity.getId());
-        Map<String, Object> map = qstCmuntityService.tenantvillages(communityDTO.getArea().toString(), communityDTO.getName());
+        Map<String, Object> map = qstCommuntityService.tenantvillages(communityDTO.getArea().toString(), communityDTO.getName());
         communtity.setStructureId(Integer.valueOf(map.get("StructureID").toString()));
         communtity.setVillageName(map.get("VillageName").toString());
         communtity.setDirectory(map.get("Directory").toString());
