@@ -34,6 +34,10 @@ public class SendSms {
     private String SignName;
     @Value("${wj.send.TemplateCode}")
     private String TemplateCode;
+    @Value("${wj.send.TemplateCodeApply}")
+    private String TemplateCodeApply;
+    @Value("${wj.send.TemplateCodeDelivery}")
+    private String TemplateCodeDelivery;
 
     public String send(String phoneNumbers, String smsCode) {
         DefaultProfile profile = DefaultProfile.getProfile("cn-beijing", key, secret);
@@ -72,9 +76,35 @@ public class SendSms {
         request.setVersion(version);
         request.setAction(action);
         request.putQueryParameter("SignName", SignName);
-        request.putQueryParameter("TemplateCode", TemplateCode);
+        request.putQueryParameter("TemplateCode", TemplateCodeApply);
         request.putQueryParameter("PhoneNumbers", phoneNumbers);
         request.putQueryParameter("TemplateParam", "{\"name\":\"" + name + "\"}");
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.getData());
+            JSONObject jsonObject = JSONObject.parseObject(response.getData());
+            String message = jsonObject.getString("Message");
+            return message;
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String sendDelivery(String phoneNumbers) {
+        DefaultProfile profile = DefaultProfile.getProfile("cn-beijing", key, secret);
+        IAcsClient client = new DefaultAcsClient(profile);
+
+        CommonRequest request = new CommonRequest();
+        request.setMethod(MethodType.POST);
+        request.setDomain(domain);
+        request.setVersion(version);
+        request.setAction(action);
+        request.putQueryParameter("SignName", SignName);
+        request.putQueryParameter("TemplateCode", TemplateCodeDelivery);
+        request.putQueryParameter("PhoneNumbers", phoneNumbers);
         try {
             CommonResponse response = client.getCommonResponse(request);
             System.out.println(response.getData());

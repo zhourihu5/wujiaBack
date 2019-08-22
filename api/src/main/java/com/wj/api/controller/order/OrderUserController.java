@@ -15,6 +15,7 @@ import com.wj.core.repository.message.MessageCommuntityRepository;
 import com.wj.core.repository.message.MessageUserRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.SendSms;
 import com.wj.core.service.base.BaseCommuntityService;
 import com.wj.core.service.message.MessageService;
 import com.wj.core.service.order.OrderService;
@@ -63,6 +64,8 @@ public class OrderUserController {
     private MessageUserRepository messageUserRepository;
     @Autowired
     private UserFamilyService userFamilyService;
+    @Autowired
+    private SendSms sendSms;
 
 
     @ApiOperation(value = "保存配送员订单关系", notes = "保存配送员订单关系")
@@ -89,6 +92,8 @@ public class OrderUserController {
         }
 
         Integer count = orderService.updateOrderDelivery(userInfo.getNickName(), userInfo.getUserName(), orderUser.getOrderId());
+        SysUserInfo user = userInfoService.findUserInfo(orderUser.getUserId());
+        sendSms.sendDelivery(user.getUserName());
         orderUser.setUserId(userId);
         orderUserService.saveOrderUser(orderUser);
         return ResponseMessage.ok();
