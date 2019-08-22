@@ -82,6 +82,7 @@ public class PayUserService {
             packageParams.put("mch_id", WechatConfig.mch_id);
             packageParams.put("wxappid", WechatConfig.appid);
             packageParams.put("send_name", send_name);
+            packageParams.put("scene_id", scene_id);
             packageParams.put("re_openid", openid);
             packageParams.put("total_amount", total_amount + "");
             packageParams.put("total_num", total_num + "");
@@ -119,7 +120,8 @@ public class PayUserService {
             //调取微信发红包接口
 //            String contextPath = request.getSession().getServletContext().getRealPath("");
 //            String certPath = contextPath.substring(0, contextPath.lastIndexOf("\\")) + wechatConfig.getCert();
-            String certPath = "";
+            String certPath = "/Users/thz/Desktop/apiclient_cert.p12";
+            System.out.println(certPath);
             String certPassword = WechatConfig.mch_id;
             String rets = certPost(WechatConfig.red_pay_url, xml, certPath, certPassword);
             System.out.println(rets);
@@ -155,7 +157,16 @@ public class PayUserService {
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
 
         FileInputStream instream = new FileInputStream(new File(cretPath));
-        keyStore.load(instream, certPwd.toCharArray());
+        System.out.println(certPwd.toCharArray());
+        try {
+            keyStore.load(instream, certPwd.toCharArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
         instream.close();
 
         SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(keyStore, certPwd.toCharArray()).build();

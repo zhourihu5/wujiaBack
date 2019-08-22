@@ -21,6 +21,7 @@ import com.wj.core.service.address.AddressService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.job.JobService;
+import com.wj.core.service.message.MessageService;
 import com.wj.core.util.time.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,8 @@ public class ActivityService {
     private AddressService addressService;
     @Autowired
     private ActivityService activityService;
+    @Autowired
+    private MessageService messageService;
 
     public List<Activity> findList(Integer userId, Integer communityId) {
         List<Activity> activityList = activityRepository.findByCommunityIdAndIsShow(communityId, "1");
@@ -284,6 +287,8 @@ public class ActivityService {
         loginDTO.setCommuntityName(commodity.getName());
         List<Activity> activityList = activityService.findList(userId, communityId);
         loginDTO.setActivityList(activityList);
+        loginDTO.setUnRead(messageService.isUnReadMessage(userId, 0));
+
         return loginDTO;
     }
 }

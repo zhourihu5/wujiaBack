@@ -19,7 +19,7 @@ import java.util.List;
 
 @Api(value = "/v1/refund", tags = "退款模块")
 @RestController
-@RequestMapping("/v1/refund/")
+@RequestMapping("/refund/")
 public class RefundController {
 
     @Autowired
