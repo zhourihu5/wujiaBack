@@ -22,5 +22,6 @@ public class Shop {
     private Date createDate;
     private Integer communityId;
     private String communityCode;
+    private String address;
 
 }

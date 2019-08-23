@@ -82,7 +82,7 @@ public class CommodityService {
             for (String img : imgs) {
                 AttaInfo attaInfo = new AttaInfo();
                 attaInfo.setCreateDate(ClockUtil.currentDate());
-                if (StringUtils.contains(commodity.getUploadImg(), "http://")) {
+                if (StringUtils.contains(commodity.getUploadImg(), "https://")) {
                     attaInfo.setAttaAddr(img);
                 } else {
                     attaInfo.setAttaAddr(url + img);

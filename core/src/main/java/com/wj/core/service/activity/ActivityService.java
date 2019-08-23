@@ -115,7 +115,7 @@ public class ActivityService {
             activity.setIsShow("0"); // 未上架
             activity.setStatus("0");
         }
-        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains(activity.getCover(),"http://")) {
+        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains(activity.getCover(),"https://")) {
             activity.setCover(activity.getCover());
         } else {
             activity.setCover(url + activity.getCover());
@@ -139,6 +139,8 @@ public class ActivityService {
     @Transactional
     public void modityStatusEnd(Integer id) {
         activityRepository.modityStatus("3", id);
+        activityRepository.modityIsShow("0", id);
+
     }
 
     // 活动上架下架

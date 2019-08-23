@@ -17,7 +17,9 @@ import com.wj.core.util.mapper.BeanMapper;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -202,6 +204,17 @@ public class UserInfoService {
     @Transactional
     public void updateInfo(SysUserInfo sysUserInfo) {
         userInfoRepository.updateInfo(sysUserInfo.getId(), sysUserInfo.getNickName(), sysUserInfo.getSex(), sysUserInfo.getBirthday());
+    }
+
+    public Page<SysUserInfo> getShopUserList(Integer pageNum, Integer pageSize) {
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        Pageable page = PageRequest.of(pageNum - 1, pageSize, Sort.Direction.DESC, "id");
+        return userInfoRepository.findByFlag(6, page);
     }
 
 

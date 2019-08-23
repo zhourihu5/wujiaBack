@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.wj.core.entity.base.*;
 import com.wj.core.entity.base.dto.BaseFamilyDTO;
 import com.wj.core.entity.base.dto.QstCommunityDTO;
-import com.wj.core.entity.base.embeddable.FamilyCommuntity;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.SysUserInfoDTO;
@@ -14,9 +13,6 @@ import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.qst.QstCommuntityService;
-import com.wj.core.service.qst.dto.QstResult;
-import com.wj.core.service.qst.dto.TenantstructuresIssuseDTO;
-import com.wj.core.service.qst.dto.TenantvillagesDTO;
 import com.wj.core.util.CommonUtils;
 import com.wj.core.util.base.CommunityUtil;
 import com.wj.core.util.mapper.JsonMapper;
@@ -27,7 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class BaseCommuntityService {
@@ -62,11 +61,6 @@ public class BaseCommuntityService {
     private BaseFamilyRepository baseFamilyRepository;
     @Autowired
     private QstCommuntityService qstCommuntityService;
-    @Autowired
-    private BaseStoreyRepository baseStoreyRepository;
-
-    static JsonMapper mapper = JsonMapper.defaultMapper();
-
 
     /**
      * 根据id查询社区信息
