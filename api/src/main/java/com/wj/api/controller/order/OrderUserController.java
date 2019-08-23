@@ -3,20 +3,17 @@ package com.wj.api.controller.order;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.message.Message;
-import com.wj.core.entity.message.SysMessageUser;
-import com.wj.core.entity.message.embeddable.MessageUser;
-import com.wj.core.entity.order.EbizOrderUser;
+import com.wj.core.entity.order.OrderUser;
 import com.wj.core.entity.order.OrderInfo;
-import com.wj.core.entity.order.embeddable.OrderUser;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
-import com.wj.core.entity.user.dto.SysUserInfoDTO;
 import com.wj.core.repository.message.MessageCommuntityRepository;
 import com.wj.core.repository.message.MessageUserRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
-import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.SendSms;
 import com.wj.core.service.base.BaseCommuntityService;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.message.MessageService;
 import com.wj.core.service.order.OrderService;
 import com.wj.core.service.order.OrderUserService;
@@ -24,8 +21,6 @@ import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +31,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Api(value = "/v1/orderUser", tags = "用户订单关系接口模块")
@@ -74,6 +68,10 @@ public class OrderUserController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
+        Integer count = orderUserService.findCountByOrderId(orderUser.getOrderId());
+        if (count > 0) {
+            throw new ServiceException("此订单已经有人接单", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         SysUserInfo userInfo = userInfoService.findUserInfo(userId);
         OrderInfo orderInfo = orderService.findOrderDetail(orderUser.getOrderId());
         Message message = new Message();
@@ -91,7 +89,7 @@ public class OrderUserController {
             e.printStackTrace();
         }
 
-        Integer count = orderService.updateOrderDelivery(userInfo.getNickName(), userInfo.getUserName(), orderUser.getOrderId());
+        orderService.updateOrderDelivery(userInfo.getNickName(), userInfo.getUserName(), orderUser.getOrderId());
         SysUserInfo user = userInfoService.findUserInfo(orderUser.getUserId());
         sendSms.sendDelivery(user.getUserName());
         orderUser.setUserId(userId);
@@ -114,13 +112,16 @@ public class OrderUserController {
 
     @ApiOperation(value = "用户订单分页列表", notes = "用户订单分页列表")
     @GetMapping("/findAll")
-    public ResponseMessage<Page<EbizOrderUser>> findAll(String status, String startDate, String endDate, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResponseMessage<Page<OrderUser>> findAll(String status, String startDate, String endDate, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
         if (pageNum == null) {
             pageNum = 1;
         }
         pageNum = pageNum - 1;
-        Pageable pageable = PageRequest.of(pageNum, pageSize);
-        Page<EbizOrderUser> page = orderUserService.findAll(status, startDate, endDate, pageable);
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Page<OrderUser> page = orderUserService.findAll(userId, status, startDate, endDate, pageable);
         return ResponseMessage.ok(page);
     }
 
