@@ -45,8 +45,10 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
-    @Autowired
-    private WxLoginService wxLoginService;
+    @Value("${wj.wx.appid}")
+    private String appid;
+    @Value("${wj.wx.secret}")
+    private String secret;
     @Autowired
     OssUploadService ossUploadService;
     @Value("${wj.oss.access}")
@@ -54,8 +56,8 @@ public class ActivityController {
     @ApiOperation(value = "生成小程序二维码", notes = "生成小程序二维码")
     @GetMapping("/generateQrCode")
     public ResponseMessage<String> generateQrCodeMini(Integer activityId) throws Exception {
-        String appid="wxb3a657fc1d81b5d9";//todo 由于我们的小程序还没有发布，我这里用了一个已发布的应用的
-        String secret="7197dc021b7ab2b8a934c69db45ea686";//todo 由于我们的小程序还没有发布，我这里用了一个已发布的应用的
+//        String appid="wxb3a657fc1d81b5d9";//todo 由于我们的小程序还没有发布，我这里用了一个已发布的应用的
+//        String secret="7197dc021b7ab2b8a934c69db45ea686";//todo 由于我们的小程序还没有发布，我这里用了一个已发布的应用的
         String accessUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential" +
                 "&appid=" + appid+
                 "&secret=" + secret
@@ -67,10 +69,10 @@ public class ActivityController {
         JSONObject json = JSON.parseObject(object.toString());
         String accessToken = json.getString("access_token");
         String url="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+accessToken;
-        Map<String,Object> paramMap=new HashMap<>();
+        Map<String,Object>paramMap=new HashMap<>();
         paramMap.put("scene",activityId);
-//        paramMap.put("page","pages/orderConfirm/index");
-        paramMap.put("page","pages/index/index");
+        paramMap.put("page","pages/orderConfirm/index");
+//        paramMap.put("page","pages/index/index");
 
         RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -80,7 +82,15 @@ public class ActivityController {
                 requestEntity, byte[].class, new Object[0]);
         byte[] result = entity.getBody();
         InputStream inputStream = new ByteArrayInputStream(result);
-        JSONObject jsonResult = JSON.parseObject(new String(result));
+        JSONObject jsonResult = null;
+        try {
+            jsonResult = JSON.parseObject(new String(result));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map map=new HashMap();
+            map.put("errcode",0);
+            jsonResult =new JSONObject(map);
+        }
         if(jsonResult.getInteger("errcode")==0){
             String path="images/wxapp/qrcode/orderConfirm";
             String fileName="activity_"+activityId+".png";
@@ -90,23 +100,6 @@ public class ActivityController {
             logger.error("getwxacodeunlimit :{}",jsonResult);
             throw new RuntimeException("获取小程序二维码失败");
         }
-
-
-
-
-//        String fileName="activity_"+activityId+".txt";
-//        File targetFile = new File(fileName);
-//        FileOutputStream out = new FileOutputStream(targetFile);
-//
-//        byte[] buffer = new byte[8192];
-//        int bytesRead = 0;
-//        while((bytesRead = inputStream.read(buffer, 0, 8192)) != -1) {
-//            out.write(buffer, 0, bytesRead);
-//        }
-//
-//        out.flush();
-//        out.close();
-//        return ResponseMessage.ok(targetFile.getAbsolutePath());
 
 
     }

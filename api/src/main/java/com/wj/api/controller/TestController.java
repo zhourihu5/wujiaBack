@@ -88,7 +88,15 @@ public class TestController {
                 requestEntity, byte[].class, new Object[0]);
         byte[] result = entity.getBody();
         InputStream inputStream = new ByteArrayInputStream(result);
-        JSONObject jsonResult = JSON.parseObject(new String(result));
+        JSONObject jsonResult = null;
+        try {
+            jsonResult = JSON.parseObject(new String(result));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map map=new HashMap();
+            map.put("errcode",0);
+            jsonResult =new JSONObject(map);
+        }
         if(jsonResult.getInteger("errcode")==0){
             String path="images/wxapp/qrcode/orderConfirm";
             String fileName="activity_"+activityId+".png";
