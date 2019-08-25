@@ -92,7 +92,7 @@ public class TestController {
         try {
             jsonResult = JSON.parseObject(new String(result));
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             Map map=new HashMap();
             map.put("errcode",0);
             jsonResult =new JSONObject(map);

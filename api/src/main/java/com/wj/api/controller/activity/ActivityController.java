@@ -8,6 +8,8 @@ import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
 import com.wj.core.service.activity.ActivityService;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.upload.OssUploadService;
 import com.wj.core.service.wx.WxLoginService;
 import com.wj.core.util.HttpClients;
@@ -86,7 +88,7 @@ public class ActivityController {
         try {
             jsonResult = JSON.parseObject(new String(result));
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             Map map=new HashMap();
             map.put("errcode",0);
             jsonResult =new JSONObject(map);
@@ -98,7 +100,7 @@ public class ActivityController {
             return ResponseMessage.ok(ossUrl+imgUrl);
         }else {
             logger.error("getwxacodeunlimit :{}",jsonResult);
-            throw new RuntimeException("获取小程序二维码失败");
+            throw new ServiceException("获取小程序二维码失败", ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
 
