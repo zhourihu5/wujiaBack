@@ -63,7 +63,7 @@ wj:
     key: LTAIBcmvGzaNrYGd
     secret: 0PWTcwRaXzlb7XWG9IflqCc9Y6xmfA
     bucket: wujia01
-    access: https://wujia01.oss-cn-beijing.aliyuncs.com
+    access: https://wujia01.oss-cn-beijing.aliyuncs.com/
   path:
     card: images/card/icon
     service: images/service/icon

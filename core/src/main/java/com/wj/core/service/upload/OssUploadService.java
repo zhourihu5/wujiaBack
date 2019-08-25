@@ -45,17 +45,21 @@ public class OssUploadService {
             if (!file.isEmpty()) {
                 String fileNames = RandomUtil.randomStringFixLength(6) + "." + StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
                 InputStream input = file.getInputStream();
-                // 创建OSSClient实例
-                OSSClient ossClient = new OSSClient(point, key, secret);
-                // 上传文件流
-                ossClient.putObject(bucket, path + "/" + fileNames, input);
-                ossClient.shutdown();
-                return path + "/" + fileNames;
+                return ossUpload(path, fileNames, input);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String ossUpload(String path, String fileNames, InputStream input) {
+        // 创建OSSClient实例
+        OSSClient ossClient = new OSSClient(point, key, secret);
+        // 上传文件流
+        ossClient.putObject(bucket, path + "/" + fileNames, input);
+        ossClient.shutdown();
+        return path + "/" + fileNames;
     }
 
 
