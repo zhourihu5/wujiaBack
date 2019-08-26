@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AddressService {
@@ -52,7 +53,8 @@ public class AddressService {
             BaseCommuntity baseCommuntity = baseCommuntityRepository.findByCommuntityId(communtityId);
             list.add(baseCommuntity);
         });
-        return list;
+        List newList = list.stream().distinct().collect(Collectors.toList());
+        return newList;
     }
 
     @Transactional
