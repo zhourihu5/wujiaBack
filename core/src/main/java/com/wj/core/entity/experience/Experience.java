@@ -18,7 +18,7 @@ public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ApiModelProperty(value = "优惠券名称")
+    @ApiModelProperty(value = "体验券名称")
     private String name;
     @ApiModelProperty(value = "社区ID,号分隔")
     private String communitys;
