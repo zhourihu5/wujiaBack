@@ -16,15 +16,15 @@ public class ExperienceCode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "体验券id")
-    private String experienceId;
+    private Integer experienceId;
     @ApiModelProperty(value = "体验券商家码")
     private String experienceCode;
     @ApiModelProperty(value = "用户id")
-    private String userId;
+    private Integer userId;
     @ApiModelProperty(value = "用户电话")
     private String userName;
     @ApiModelProperty(value = "昵称")
-    private Integer nickName;
+    private String nickName;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

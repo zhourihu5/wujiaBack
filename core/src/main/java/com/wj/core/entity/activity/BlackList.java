@@ -17,7 +17,7 @@ public class BlackList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ApiModelProperty(value = "用户ID")
-    private Integer userId;
+    private String userName;
     @ApiModelProperty(value = "优惠卷ID")
     private Integer couponId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

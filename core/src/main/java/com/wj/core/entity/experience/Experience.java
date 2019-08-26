@@ -44,7 +44,7 @@ public class Experience {
     private String img4;
     @ApiModelProperty(value = "体验券图片")
     private String img5;
-    @ApiModelProperty(value = "状态")
+    @ApiModelProperty(value = "状态 0.未发放 1.已发放")
     private String status;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startDate;
@@ -54,5 +54,7 @@ public class Experience {
     private Date createDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateDate;
+    @Transient
+    private String[] experienceCodes;
 
 }
