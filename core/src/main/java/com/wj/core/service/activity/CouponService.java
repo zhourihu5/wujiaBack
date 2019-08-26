@@ -51,4 +51,10 @@ public class CouponService {
         return page;
     }
 
+    @Transactional
+    public void updateCouponStatus(Coupon coupon) {
+        couponRepository.updateCouponStatus(coupon.getStatus(), new Date(), coupon.getId());
+    }
+
+
 }

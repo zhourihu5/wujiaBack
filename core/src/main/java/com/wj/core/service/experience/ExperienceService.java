@@ -83,8 +83,12 @@ public class ExperienceService {
 
     @Transactional
     public void updateExperienceCode(ExperienceCode experienceCode) {
-        experienceCode.setUpdateDate(new Date());
-        experienceCodeRepository.updateExperienceCode(experienceCode.getUserId(), experienceCode.getUserName(), experienceCode.getUpdateDate(), experienceCode.getId());
+        experienceCodeRepository.updateExperienceCode(experienceCode.getUserId(), experienceCode.getUserName(), new Date(), experienceCode.getId());
+    }
+
+    @Transactional
+    public void updateExperienceStatus(Experience experience) {
+        experienceRepository.updateExperienceStatus(experience.getStatus(), new Date(), experience.getId());
     }
 
 }
