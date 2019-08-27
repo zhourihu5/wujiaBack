@@ -39,9 +39,12 @@ public class ExperienceService {
         experience.setCreateDate(new Date());
         experience.setUpdateDate(new Date());
         Experience newEexperience = experienceRepository.save(experience);
-        // 未完待续
-        ExperienceCode experienceCode = new ExperienceCode();
-        experienceCodeRepository.save(experienceCode);
+        for (int i = 0; i < experience.getExperienceCodes().length; i++) {
+            ExperienceCode experienceCode = new ExperienceCode();
+            experienceCode.setExperienceCode(experience.getExperienceCodes()[i]);
+            experienceCode.setCreateDate(new Date());
+            experienceCodeRepository.save(experienceCode);
+        }
     }
 
     public Page<Experience> findAll(Integer pageNum, Integer pageSize, String startDate, String endDate, String status, String name) {
