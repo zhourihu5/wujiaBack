@@ -62,5 +62,9 @@ public class OssUploadService {
         return path + "/" + fileNames;
     }
 
-
+    public boolean exist(String path, String fileNames) {
+        // 创建OSSClient实例
+        OSSClient ossClient = new OSSClient(point, key, secret);
+        return ossClient.doesObjectExist(bucket, path + "/" + fileNames);
+    }
 }

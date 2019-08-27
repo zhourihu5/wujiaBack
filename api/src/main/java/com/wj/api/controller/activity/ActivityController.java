@@ -58,14 +58,18 @@ public class ActivityController {
     @ApiOperation(value = "生成小程序二维码", notes = "生成小程序二维码")
     @GetMapping("/generateQrCode")
     public ResponseMessage<String> generateQrCodeMini(Integer activityId) throws Exception {
-//        String appid="wxb3a657fc1d81b5d9";//todo 由于我们的小程序还没有发布，我这里用了一个已发布的应用的
-//        String secret="7197dc021b7ab2b8a934c69db45ea686";//todo 由于我们的小程序还没有发布，我这里用了一个已发布的应用的
+        String path="images/wxapp/qrcode/orderConfirm";
+        String fileName="activity_"+activityId+".png";
+        if(ossUploadService.exist(path,fileName)){
+            String imgUrl=  path + "/" + fileName;
+            return ResponseMessage.ok(ossUrl+imgUrl);
+        }
+
         String accessUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential" +
                 "&appid=" + appid+
                 "&secret=" + secret
                 ;
         Object object = HttpClients.getObjectClient(accessUrl);
-
 
 
         JSONObject json = JSON.parseObject(object.toString());
@@ -94,8 +98,7 @@ public class ActivityController {
             jsonResult =new JSONObject(map);
         }
         if(jsonResult.getInteger("errcode")==0){
-            String path="images/wxapp/qrcode/orderConfirm";
-            String fileName="activity_"+activityId+".png";
+
             String imgUrl= ossUploadService.ossUpload(path,fileName,inputStream);
             return ResponseMessage.ok(ossUrl+imgUrl);
         }else {
