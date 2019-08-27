@@ -51,7 +51,7 @@ public class MyCommonErrorController extends BasicErrorController {
         Map<String, Object> errorAttributes = this.getErrorAttributes(request, true);
         String message = (String) errorAttributes.get("message");
         Map<String, Object> body = new LinkedHashMap<>(16);
-        body.put("code", getCode(message));
+         body.put("code", getCode(message));
         body.put("message", message);
         body.put("data", null);
         if (getCode(message) < 0) {
