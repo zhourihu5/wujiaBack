@@ -5,19 +5,23 @@ import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
 import com.wj.core.entity.address.Address;
 import com.wj.core.entity.atta.AttaInfo;
+import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.entity.user.SysUserInfo;
+import com.wj.core.entity.user.dto.XcxLoginDTO;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.address.AddressRepository;
 import com.wj.core.repository.atta.AttaInfoRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.user.UserInfoRepository;
+import com.wj.core.service.address.AddressService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.job.JobService;
+import com.wj.core.service.message.MessageService;
 import com.wj.core.util.time.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,28 +46,29 @@ public class ActivityService {
 
     @Autowired
     private ActivityRepository activityRepository;
-
     @Autowired
     private CommodityRepository commodityRepository;
     @Value("${wj.oss.access}")
     private String url;
-
     @Autowired
     private OrderInfoRepository orderInfoRepository;
-
     @Autowired
     private UserInfoRepository userInfoRepository;
-
     @Autowired
     private AddressRepository addressRepository;
-
     @Autowired
     private AttaInfoRepository attaInfoRepository;
     @Autowired
     private JobService jobService;
+    @Autowired
+    private AddressService addressService;
+    @Autowired
+    private ActivityService activityService;
+    @Autowired
+    private MessageService messageService;
 
     public List<Activity> findList(Integer userId, Integer communityId) {
-        List<Activity> activityList = activityRepository.findByCommunityIdAndStatus(communityId, "1");
+        List<Activity> activityList = activityRepository.findByCommunityIdAndIsShow(communityId, "1");
         activityList.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
             if (userId != null) {
@@ -78,16 +83,16 @@ public class ActivityService {
         return activityList;
     }
 
-    public List<Activity> findList() {
-        List<Activity> activityList = activityRepository.findByStatus("1");
+    public List<Activity> findList(Integer communityId) {
+        List<Activity> activityList = activityRepository.findByIsShow("1", communityId);
         activityList.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
         });
         return activityList;
     }
 
-    public Page<Activity> findAll(Integer userId, Pageable pageable) {
-        Page<Activity> page = activityRepository.findAll("1", pageable);
+    public Page<Activity> findAll(Integer userId, Integer communityId, Pageable pageable) {
+        Page<Activity> page = activityRepository.findAll("1", communityId, pageable);
 //        page.forEach(Activity -> {
 //            Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
 //        });
@@ -110,7 +115,7 @@ public class ActivityService {
             activity.setIsShow("0"); // 未上架
             activity.setStatus("0");
         }
-        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains(activity.getCover(),"http://")) {
+        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains(activity.getCover(),"https://")) {
             activity.setCover(activity.getCover());
         } else {
             activity.setCover(url + activity.getCover());
@@ -134,6 +139,8 @@ public class ActivityService {
     @Transactional
     public void modityStatusEnd(Integer id) {
         activityRepository.modityStatus("3", id);
+        activityRepository.modityIsShow("0", id);
+
     }
 
     // 活动上架下架
@@ -223,8 +230,8 @@ public class ActivityService {
     }
 
 
-    public List<Activity> findOtherList(Integer userId) {
-        List<Activity> activityList = activityRepository.findByStatus("1");
+    public List<Activity> findOtherList(Integer userId, Integer communityId) {
+        List<Activity> activityList = activityRepository.findByIsShow("1", communityId);
 //        Scanner sc = new Scanner(System.in);
         Iterator it = activityList.iterator();
         while (it.hasNext()) {
@@ -272,5 +279,18 @@ public class ActivityService {
             activity.setAddress(addressList.get(0));
         }
         return activity;
+    }
+
+    public XcxLoginDTO wxIndex(Integer communityId, Integer userId) {
+        XcxLoginDTO loginDTO = new XcxLoginDTO();
+        List<BaseCommuntity> communtityList = addressService.findByUserId(userId);
+        loginDTO.setCommuntityList(communtityList);
+        Commodity commodity = commodityRepository.findByCommodityId(communityId);
+        loginDTO.setCommuntityName(commodity.getName());
+        List<Activity> activityList = activityService.findList(userId, communityId);
+        loginDTO.setActivityList(activityList);
+        loginDTO.setUnRead(messageService.isUnReadMessage(userId, 0));
+
+        return loginDTO;
     }
 }

@@ -15,14 +15,23 @@ import java.util.List;
 
 public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, JpaSpecificationExecutor<OrderInfo> {
 
-    @Query(value = "select * from ebiz_order_info", nativeQuery = true)
+    @Query(value = "select * from ebiz_order_info where user_id = ?1", nativeQuery = true)
     public Page<OrderInfo> findAll(Pageable pageable);
+
+    @Query(value = "select * from ebiz_order_info where user_id = ?1", nativeQuery = true)
+    public Page<OrderInfo> findAllByUserId(Integer userId, Pageable pageable);
 
     @Query(value = "select * from ebiz_order_info where status in (?1)", nativeQuery = true)
     public Page<OrderInfo> findAllByStatus(String status, Pageable pageable);
 
+    @Query(value = "select * from ebiz_order_info where user_id = ?1 and status in (?2)", nativeQuery = true)
+    public Page<OrderInfo> findAllByUserIdAndStatus(Integer userId, String status, Pageable pageable);
+
     @Query(value = "select * from ebiz_order_info where status in (2,5)", nativeQuery = true)
     public Page<OrderInfo> findAllByStatus(Pageable pageable);
+
+    @Query(value = "select * from ebiz_order_info where user_id = ?1 and status in (2,5)", nativeQuery = true)
+    public Page<OrderInfo> findAllByUserIdAndStatus(Integer userId, Pageable pageable);
 
     @Query(value = "select * from ebiz_order_info where status = ?1", nativeQuery = true)
     public Page<OrderInfo> findAllByStatusBD(String status, Pageable pageable);
@@ -64,8 +73,16 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Modifying
     void modityCode(String code, Integer id);
 
-    @Query("update OrderInfo o set o.code = ?2, o.payDate = ?3 where o.code = ?1")
+    @Query("update OrderInfo o set o.wxOrderCode = ?2, o.payDate = ?3 where o.code = ?1")
     @Modifying
     void updateWxOrderByCode(String code, String wxOrderCode, Date date);
+
+    @Query("update OrderInfo o set o.deliveryPerson = ?1, o.deliveryPhone = ?2 where o.id = ?3")
+    @Modifying
+    public Integer updateOrderDelivery(String nickName, String userName, Integer id);
+
+    @Query("update OrderInfo o set o.receiveDate = ?1, o.deliveryDate = ?1 where o.id = ?2")
+    @Modifying
+    public Integer updateOrdeReceiveDate(Date date, Integer id);
 
 }

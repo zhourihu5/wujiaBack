@@ -34,4 +34,6 @@ public class XcxLoginDTO {
 
     private List<OrderInfo> list;
 
+    private boolean unRead;
+
 }

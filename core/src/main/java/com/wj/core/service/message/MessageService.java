@@ -59,6 +59,11 @@ public class MessageService {
         messageUserRepository.save(messageUser);
     }
 
+    @Transactional
+    public void addMessageUser(Integer messageId, Integer userId, Integer familyId, Integer status) {
+        messageUserRepository.addMessageUser(messageId, userId, familyId, status, new Date());
+    }
+
     public Page<Message> findListByUserId(Integer userId, Integer familyId, Integer isRead, Integer type, Pageable pageable) {
         Page<Message> page = null;
         if (type != null && isRead != null) {
@@ -151,17 +156,23 @@ public class MessageService {
         sysMsg.setTypeNo("3");
         sysMsg.setTypeName("系统通知");
         sysMsg.setIcon("https://wujia01.oss-cn-beijing.aliyuncs.com/msg_system.png");
-        sysMsg.setUnReadList(messageRepository.findUserTypeMsg(userId, familyId, 3, "0"));
+        List<Message> messageList3 = messageRepository.findUserTypeMsg(userId, familyId, 3, "0");
+        sysMsg.setUnReadNum(messageList3.size());
+        sysMsg.setUnReadList(messageList3);
         MessageTypeDTO comMsg = new MessageTypeDTO();
         comMsg.setTypeNo("2");
         comMsg.setTypeName("社区通知");
-        comMsg.setUnReadList(messageRepository.findUserTypeMsg(userId, familyId, 2, "0"));
+        List<Message> messageList2 = messageRepository.findUserTypeMsg(userId, familyId, 2, "0");
+        comMsg.setUnReadNum(messageList2.size());
+        comMsg.setUnReadList(messageList2);
         comMsg.setIcon("https://wujia01.oss-cn-beijing.aliyuncs.com/msg_community.png");
         MessageTypeDTO orderMsg = new MessageTypeDTO();
         orderMsg.setTypeNo("4");
         orderMsg.setTypeName("订单通知");
         orderMsg.setIcon("https://wujia01.oss-cn-beijing.aliyuncs.com/msg_order.png");
-        orderMsg.setUnReadList(messageRepository.findUserTypeMsg(userId, familyId, 4, "0"));
+        List<Message> messageList4 = messageRepository.findUserTypeMsg(userId, familyId, 4, "0");
+        orderMsg.setUnReadNum(messageList4.size());
+        orderMsg.setUnReadList(messageList4);
         List<MessageTypeDTO> list = Lists.newArrayList(sysMsg, comMsg, orderMsg);
         return list;
     }

@@ -5,6 +5,7 @@ import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.user.embeddable.UserFamily;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ import java.util.Set;
  */
 @ApiModel(description = "用户家庭关联表")
 @Entity
+@Data
 @Table(name = "sys_user_family")
 public class SysUserFamily {
 
@@ -26,24 +28,5 @@ public class SysUserFamily {
     private UserFamily userFamily;
     @ApiModelProperty(value = "1、房产所有人 2、使用人")
     private Integer identity;
-//    @ApiModelProperty(value = "0、禁止使用 1、允许使用 ")
-//    private Integer status;
-
-    public UserFamily getUserFamily() {
-        return userFamily;
-    }
-
-    public void setUserFamily(UserFamily userFamily) {
-        this.userFamily = userFamily;
-    }
-
-    public int getIdentity() {
-        return identity;
-    }
-
-    public void setIdentity(int identity) {
-        this.identity = identity;
-    }
-
 
 }

@@ -20,6 +20,8 @@ public class Commodity {
     private String name;
     private String code;
     private String shopCode;
+    private Integer shopId;
+    private String shopName;
     private Integer userId;
     private String infos;
     private String safe;

@@ -75,4 +75,6 @@ public interface UserInfoRepository extends JpaRepository<SysUserInfo, Integer> 
     @Modifying
     @Query(value = "update sys_user_info set nick_name = ?2, sex = ?3, birthday = ?4 where id = ?1", nativeQuery = true)
     public void updateInfo(Integer userId, String nickName, String sex, String birthday);
+
+    Page<SysUserInfo> findByFlag(Integer flag, Pageable pageable);
 }

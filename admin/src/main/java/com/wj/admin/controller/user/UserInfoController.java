@@ -48,20 +48,6 @@ public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @Autowired
-    private BaseAreaService baseAreaService;
-
-    @Autowired
-    private BaseCommuntityService baseCommuntityService;
-
-    @Autowired
-    private UserFamilyService userFamilyService;
-
-    @Autowired
-    private BaseDeviceService baseDeviceService;
-
-    @Autowired
-    private BaseFamilyService baseFamilyService;
 
     @ApiOperation(value = "获取用户分页信息", notes = "获取用户分页信息")
     @GetMapping("findUserInfoByName")
@@ -101,6 +87,18 @@ public class UserInfoController {
         logger.info("删除用户接口:/v1/user/delUser userId=" + claims.get("userId"));
         userInfoService.delUser(user);
         return ResponseMessage.ok();
+    }
+
+    @ApiOperation(value = "获取商家用户列表")
+    @GetMapping("shopUser")
+    public ResponseMessage<Page<SysUserInfo>> delUser(Integer pageNum, Integer pageSize) {
+        return ResponseMessage.ok(userInfoService.getShopUserList(pageNum, pageSize));
+    }
+
+    @ApiOperation(value = "根据用户ID获取用户信息")
+    @GetMapping("getUserInfo")
+    public ResponseMessage<SysUserInfo> delUser(Integer userId) {
+        return ResponseMessage.ok(userInfoService.findUserInfo(userId));
     }
 
 }

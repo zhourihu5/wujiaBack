@@ -20,6 +20,11 @@ public class QstBindingUserService {
         requestParam.put("Mobile", userName);
         String url = Qst.URL9700 + "agentregister";
         String result = HttpClients.postObjectClientJsonHeaders(url, Qst.TOKEN, requestParam);
+        if (result.equals("405 Method Not Allowed")) {
+            Map<String, Object> map = Maps.newHashMap();
+            map.put("Code","201");
+            return map;
+        }
         Map<String, Object> qst = mapper.fromJson(result, Map.class);
         return qst;
     }

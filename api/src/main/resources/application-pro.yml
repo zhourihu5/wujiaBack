@@ -74,6 +74,8 @@ wj:
     version: 2017-05-25
     SignName: 吾家智工
     TemplateCode: SMS_166655952
+    TemplateCodeApply: SMS_172741768
+    TemplateCodeDelivery: SMS_172741776
   wx:
     appid: wx78aa6144c22e65ae
     secret: d83e174efd68752adcda38678e09f6ef
