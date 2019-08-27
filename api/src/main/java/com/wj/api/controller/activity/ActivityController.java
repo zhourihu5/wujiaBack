@@ -7,6 +7,7 @@ import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
+import com.wj.core.entity.user.dto.XcxLoginDTO;
 import com.wj.core.service.activity.ActivityService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
@@ -118,17 +119,17 @@ public class ActivityController {
      */
     @ApiOperation(value = "没参与过的活动列表", notes = "没参与过的活动列表")
     @GetMapping("findOtherList")
-    public ResponseMessage findOtherList() {
+    public ResponseMessage findOtherList(Integer communityId) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
-        List<Activity> list = activityService.findOtherList(userId);
+        List<Activity> list = activityService.findOtherList(userId, communityId);
         return ResponseMessage.ok(list);
     }
 
     @ApiOperation(value = "活动分页列表", notes = "活动分页列表")
     @GetMapping("/findAll")
-    public ResponseMessage<Page<Activity>> findAll(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResponseMessage<Page<Activity>> findAll(Integer communityId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
         }
@@ -137,14 +138,14 @@ public class ActivityController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
-        Page<Activity> page = activityService.findAll(userId, pageable);
+        Page<Activity> page = activityService.findAll(userId, communityId, pageable);
         return ResponseMessage.ok(page);
     }
 
     @ApiOperation(value = "活动全部列表", notes = "活动全部列表")
     @GetMapping("/findList")
-    public ResponseMessage<List<Activity>> findList() {
-        List<Activity> list = activityService.findList();
+    public ResponseMessage<List<Activity>> findList(Integer communityId) {
+        List<Activity> list = activityService.findList(communityId);
         return ResponseMessage.ok(list);
     }
 
@@ -161,6 +162,15 @@ public class ActivityController {
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
         return ResponseMessage.ok(activityService.isOrder(activityId, userId));
+    }
+
+    @ApiOperation(value = "小程序切换社区首页接口", notes = "小程序切换社区首页接口")
+    @GetMapping("/wxIndex")
+    public ResponseMessage<XcxLoginDTO> wxIndex(Integer communityId) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        return ResponseMessage.ok(activityService.wxIndex(communityId, userId));
     }
 
 }

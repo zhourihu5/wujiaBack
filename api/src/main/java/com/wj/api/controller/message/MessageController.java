@@ -4,6 +4,7 @@ import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.message.Message;
 import com.wj.core.entity.message.dto.MessageTypeDTO;
+import com.wj.core.entity.message.embeddable.MessageUser;
 import com.wj.core.service.message.MessageService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
@@ -62,6 +63,15 @@ public class MessageController {
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
         return ResponseMessage.ok(messageService.updateIsRead(messageId, userId, 1));
+    }
+
+    @ApiOperation(value="修改是否已读")
+    @PostMapping("/updateWxIsRead")
+    public ResponseMessage<Integer> updateWxIsRead(@RequestBody MessageUser messageUser) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        return ResponseMessage.ok(messageService.updateIsRead(messageUser.getMessageId(), userId, 1));
     }
 
     @ApiOperation(value="是否有未读消息")

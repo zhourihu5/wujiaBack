@@ -15,10 +15,12 @@ import com.wj.core.service.activity.ActivityTask;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.job.JobService;
+import com.wj.core.service.wx.PayUserService;
 import com.wj.core.util.CommonUtils;
 import com.wj.core.util.number.RandomUtil;
 import com.wj.core.util.time.ClockUtil;
 import com.wj.core.util.time.DateFormatUtil;
+import com.wj.core.util.wx.WechatConfig;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +34,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class OrderService {
@@ -53,6 +54,8 @@ public class OrderService {
     private JobService jobService;
     @Autowired
     private UserInfoRepository userInfoRepository;
+    @Autowired
+    private PayUserService payUserService;
 
     // 生成订单
     @Transactional
@@ -114,7 +117,8 @@ public class OrderService {
         orderInfo.setCreateDate(ClockUtil.currentDate());
         orderInfo.setUpdateDate(ClockUtil.currentDate());
         orderInfo.setPayEndDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
-        String code = DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + CommonUtils.getRandomStringByLength(24);
+        String code = WechatConfig.mch_id + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + CommonUtils.getRandomStringByLength(10);
+
         orderInfo.setCode(code);
         orderInfoRepository.save(orderInfo);
         boolean ex = jobService.checkExists("order_close_" + orderInfo.getId(), "order");
@@ -157,6 +161,24 @@ public class OrderService {
         return page;
     }
 
+    public Page<OrderInfo> findListByUserId(Integer userId, String status, Pageable pageable) {
+        Page<OrderInfo> page = null;
+        if (status == null) {
+            page = orderInfoRepository.findAllByUserId(userId, pageable);
+        } else {
+            if (status.equals("2,5")) {
+                page = orderInfoRepository.findAllByUserIdAndStatus(userId, pageable);
+            } else {
+                page = orderInfoRepository.findAllByUserIdAndStatus(userId, status, pageable);
+            }
+        }
+        for (OrderInfo orderInfo : page) {
+            orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
+            orderInfo.setActivity(activityRepository.findByActivityId(orderInfo.getActivityId()));
+        }
+        return page;
+    }
+
     public Page<OrderInfo> findListBD(String status, Pageable pageable) {
         Page<OrderInfo> page = null;
         if (status == null) {
@@ -176,6 +198,10 @@ public class OrderService {
         orderInfo.setCommodity(commodityRepository.findByCommodityId(orderInfo.getCommodityId()));
         orderInfo.setActivity(activityRepository.findByActivityId(orderInfo.getActivityId()));
         return orderInfo;
+    }
+
+    public OrderInfo getOrder(Integer orderId) {
+        return orderInfoRepository.findByOrderId(orderId);
     }
 
     public OrderInfo findOrderByCode(String code) {
@@ -235,6 +261,15 @@ public class OrderService {
         jobService.deleteTask(taskEntity);
     }
 
+    public void refundUserList(HttpServletRequest request, Integer activityId) {
+        List<OrderInfo> orderInfoList = orderInfoRepository.findByActivityId(activityId);
+        List<SysUserInfo> userInfoList = new ArrayList<>();
+        orderInfoList.forEach(OrderInfo -> {
+            SysUserInfo userInfo = userInfoRepository.findByUserId(OrderInfo.getUserId());
+            payUserService.wxPay(request, userInfo, OrderInfo);
+        });
+    }
+
 
     public static boolean isDateBefore(String date1, String date2) {
         try {
@@ -281,4 +316,13 @@ public class OrderService {
     }
 
 
+    @Transactional
+    public Integer updateOrderDelivery(String nickName, String userName, Integer orderId) {
+        return orderInfoRepository.updateOrderDelivery(nickName, userName, orderId);
+    }
+
+    @Transactional
+    public Integer updateOrdeReceiveDate(Integer orderId) {
+        return orderInfoRepository.updateOrdeReceiveDate(new Date(), orderId);
+    }
 }

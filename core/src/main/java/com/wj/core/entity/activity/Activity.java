@@ -43,6 +43,8 @@ public class Activity {
     private String city;
     private String area;
     private String remark;
+    private String padCover;
+    private String giftImg;
     @Transient
     private Commodity commodity;
     @Transient

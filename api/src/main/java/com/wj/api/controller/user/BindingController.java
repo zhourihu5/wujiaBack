@@ -24,6 +24,7 @@ import com.wj.core.service.base.BaseDeviceService;
 import com.wj.core.service.base.BaseFamilyService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.message.MessageService;
 import com.wj.core.service.user.BindingService;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
@@ -79,6 +80,9 @@ public class BindingController {
     @Autowired
     private ApplyLockService applyLockService;
 
+    @Autowired
+    private MessageService messageService;
+
 
     @ApiOperation(value = "绑定用户信息", notes = "绑定用户信息")
     @PostMapping("bindingUser")
@@ -100,7 +104,7 @@ public class BindingController {
             sysUserInfo.setNickName(bindingDTO.getNickName());
             sysUserInfo.setWxNickName(bindingDTO.getNickName());
             sysUserInfo.setWxOpenId(bindingDTO.getOpenid());
-            sysUserInfo.setStatus(4);
+            sysUserInfo.setFlag(4);
             sysUserInfo.setCreateDate(new Date());
             sysUserInfo = userInfoService.addUser(sysUserInfo);
             loginDTO.setUserInfo(sysUserInfo);
@@ -108,6 +112,7 @@ public class BindingController {
             loginDTO.setToken(jwtToken);
             loginDTO.setUserInfo(sysUserInfo);
             loginDTO.setIsBindingFamily("0");
+            loginDTO.setUnRead(messageService.isUnReadMessage(sysUserInfo.getId(), 0));
         } else {
             bindingService.bindingUser(bindingDTO.getUserName(), bindingDTO.getCover(), bindingDTO.getNickName(), bindingDTO.getOpenid());
             String jwtToken = JwtUtil.generateToken(userInfo);
@@ -132,6 +137,7 @@ public class BindingController {
                 loginDTO.setActivityList(activityList);
             }
             loginDTO.setIsBindingFamily("1");
+            loginDTO.setUnRead(messageService.isUnReadMessage(userInfo.getId(), 0));
         }
         return ResponseMessage.ok(loginDTO);
     }
@@ -178,6 +184,7 @@ public class BindingController {
                     loginDTO.setActivityList(activityList);
                 }
                 loginDTO.setIsBindingFamily("1");
+                loginDTO.setUnRead(messageService.isUnReadMessage(userInfo.getId(), 0));
             }
             loginDTO.setOpenid(openid);
         }
