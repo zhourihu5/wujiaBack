@@ -8,6 +8,7 @@ import com.wj.core.entity.commodity.Lables;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
 import com.wj.core.repository.commodity.LablesRepository;
+import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.service.atta.AttaService;
 import com.wj.core.util.number.RandomUtil;
 import com.wj.core.util.time.ClockUtil;
@@ -35,6 +36,8 @@ public class CommodityService {
     private LablesRepository lablesRepository;
     @Autowired
     private AttaService attaService;
+    @Autowired
+    private OrderInfoRepository orderInfoRepository;
     @Value("${wj.oss.access}")
     private String url;
 
@@ -70,6 +73,8 @@ public class CommodityService {
         if (commodity.getId() != null) {
             attaService.removeAtta(commodity.getId(), "COMM");
             commodity.setUpdateDate(ClockUtil.currentDate());
+            Integer count = orderInfoRepository.findByCommodityId(commodity.getId());
+            commodity.setSalesNum(count);
         } else {
             commodity.setCreateDate(ClockUtil.currentDate());
             commodity.setStatus("0");
