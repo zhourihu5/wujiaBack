@@ -85,4 +85,6 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>, 
     @Modifying
     public Integer updateOrdeReceiveDate(Date date, Integer id);
 
+    @Query(value = "select count(*) from ebiz_order_info where commodity_id = ?1 and status in (2,3,5)", nativeQuery = true)
+    public Integer findByCommodityId(Integer commodityId);
 }

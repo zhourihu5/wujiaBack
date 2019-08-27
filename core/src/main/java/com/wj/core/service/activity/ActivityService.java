@@ -120,6 +120,11 @@ public class ActivityService {
         } else {
             activity.setCover(url + activity.getCover());
         }
+        if (StringUtils.isNotBlank(activity.getGiftImg()) && StringUtils.contains(activity.getGiftImg(),"https://")) {
+            activity.setGiftImg(activity.getGiftImg());
+        } else {
+            activity.setGiftImg(url + activity.getGiftImg());
+        }
         activityRepository.save(activity);
         boolean ex = jobService.checkExists("activity_update_status_" + activity.getId(), "activity");
         TaskEntity taskEntity = new TaskEntity();
@@ -193,26 +198,26 @@ public class ActivityService {
     public ActivityUserDTO findByActivityId(Integer activityId) {
         ActivityUserDTO activityUserDTO = new ActivityUserDTO();
         Activity activity = activityRepository.findByActivityId(activityId);
-        String largeMoney = activity.getSaleRules().substring(activity.getSaleRules().lastIndexOf("|") + 1);
-        activity.setLargeMoney(largeMoney);
+//        String largeMoney = activity.getSaleRules().substring(activity.getSaleRules().lastIndexOf("|") + 1);
+//        activity.setLargeMoney(largeMoney);
         Commodity commodity = commodityRepository.findByCommodityId(activity.getCommodityId());
         String objType = "comm";
         List<AttaInfo> attaInfoList = attaInfoRepository.findByObjectIdAndObjectType(commodity.getId(), objType);
         commodity.setAttaInfos(attaInfoList);
         String[] strs = StringUtils.split(commodity.getFormatVal(),"|");
         String[] rules = StringUtils.split(activity.getSaleRules(), ",");
-        if (activity.getSaleType().equals("1")) {
+//        if (activity.getSaleType().equals("1")) {
             // 钱
-            for (String rule : rules) {
-                String[] r = StringUtils.split(rule, "|");
-                int salePersonNum = Integer.valueOf(r[0]);
-                if (commodity.getSalesNum() < salePersonNum) {
-                    activity.setSaleTip(salePersonNum - commodity.getSalesNum() + "," + r[1]);
-                    break;
-                }
-            }
+//            for (String rule : rules) {
+//                String[] r = StringUtils.split(rule, "|");
+//                int salePersonNum = Integer.valueOf(r[0]);
+//                if (commodity.getSalesNum() < salePersonNum) {
+//                    activity.setSaleTip(salePersonNum - commodity.getSalesNum() + "," + r[1]);
+//                    break;
+//                }
+//            }
             // TODO 后台去掉折暂时不判断
-        }
+//        }
         commodity.setFormatVals(strs);
         activity.setCommodity(commodity);
         Integer pageNum = 0;
