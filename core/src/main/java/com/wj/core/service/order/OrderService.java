@@ -163,7 +163,7 @@ public class OrderService {
 
     public Page<OrderInfo> findListByUserId(Integer userId, String status, Pageable pageable) {
         Page<OrderInfo> page = null;
-        if (status == null) {
+        if (StringUtils.isBlank(status)) {
             page = orderInfoRepository.findAllByUserId(userId, pageable);
         } else {
             if (status.equals("2,5")) {
