@@ -13,6 +13,7 @@ import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.upload.OssUploadService;
 import com.wj.core.service.wx.WxLoginService;
+import com.wj.core.service.wx.WxQrCodeService;
 import com.wj.core.util.HttpClients;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
@@ -47,68 +48,25 @@ public class ActivityController {
 
     @Autowired
     private ActivityService activityService;
-
-    @Value("${wj.wx.appid}")
-    private String appid;
-    @Value("${wj.wx.secret}")
-    private String secret;
     @Autowired
-    OssUploadService ossUploadService;
-    @Value("${wj.oss.access}")
-    private String ossUrl;
+    private WxQrCodeService wxQrCodeService;
+
+
     @ApiOperation(value = "生成小程序二维码", notes = "生成小程序二维码")
     @GetMapping("/generateQrCode")
     public ResponseMessage<String> generateQrCodeMini(Integer activityId) throws Exception {
         String path="images/wxapp/qrcode/orderConfirm";
         String fileName="activity_"+activityId+".png";
-        if(ossUploadService.exist(path,fileName)){
-            String imgUrl=  path + "/" + fileName;
-            return ResponseMessage.ok(ossUrl+imgUrl);
-        }
 
-        String accessUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential" +
-                "&appid=" + appid+
-                "&secret=" + secret
-                ;
-        Object object = HttpClients.getObjectClient(accessUrl);
+        String scene=activityId+"";
+        String page="pages/orderConfirm/index";
 
 
-        JSONObject json = JSON.parseObject(object.toString());
-        String accessToken = json.getString("access_token");
-        String url="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+accessToken;
-        Map<String,Object>paramMap=new HashMap<>();
-        paramMap.put("scene",activityId);
-        paramMap.put("page","pages/orderConfirm/index");
-//        paramMap.put("page","pages/index/index");
-
-        RestTemplate rest = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<String>(new Gson().toJson(paramMap), headers);
-        ResponseEntity<byte[]> entity = rest.exchange(url, HttpMethod.POST,
-                requestEntity, byte[].class, new Object[0]);
-        byte[] result = entity.getBody();
-        InputStream inputStream = new ByteArrayInputStream(result);
-        JSONObject jsonResult = null;
-        try {
-            jsonResult = JSON.parseObject(new String(result));
-        } catch (Exception e) {
-//            e.printStackTrace();
-            Map map=new HashMap();
-            map.put("errcode",0);
-            jsonResult =new JSONObject(map);
-        }
-        if(jsonResult.getInteger("errcode")==0){
-
-            String imgUrl= ossUploadService.ossUpload(path,fileName,inputStream);
-            return ResponseMessage.ok(ossUrl+imgUrl);
-        }else {
-            logger.error("getwxacodeunlimit :{}",jsonResult);
-            throw new ServiceException("获取小程序二维码失败", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-
+        String result= wxQrCodeService.generateWxappQrCode(path, fileName, scene, page);
+        return ResponseMessage.ok(result);
 
     }
+
 
     /**
      * 没参与过的活动列表

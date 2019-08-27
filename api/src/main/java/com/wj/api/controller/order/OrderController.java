@@ -8,6 +8,7 @@ import com.wj.core.entity.message.Message;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.service.activity.ActivityService;
 import com.wj.core.service.order.OrderService;
+import com.wj.core.service.wx.WxQrCodeService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -33,6 +34,22 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private WxQrCodeService wxQrCodeService;
+
+    @ApiOperation(value = "生成小程序二维码", notes = "生成小程序二维码")
+    @GetMapping("/generateQrCode")
+    public ResponseMessage<String> generateQrCodeMini(Integer id) throws Exception {
+        String path="images/wxapp/qrcode/orderDetail";
+        String fileName="order_"+id+".png";
+
+        String scene=id +"";
+        String page="pages/orderDetail/index";
+
+        String result= wxQrCodeService.generateWxappQrCode(path, fileName, scene, page);
+        return ResponseMessage.ok(result);
+
+    }
 
     @ApiOperation(value = "订单详情", notes = "订单详情")
     @GetMapping("findOrderDetail")
@@ -93,6 +110,14 @@ public class OrderController {
         orderService.cancelOrder(orderInfo.getId());
         return ResponseMessage.ok();
     }
+    @ApiOperation(value = "取消订单", notes = "取消订单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "orderInfo", dataType = "OrderInfo", value = "只给order.id就可以", required = true)})
+    @PostMapping("cancelOrderPad")
+    public ResponseMessage cancelOrderPad(Integer id) {
+        orderService.cancelOrder(id);
+        return ResponseMessage.ok();
+    }
 
     @ApiOperation(value = "确认收获订单", notes = "确认收获订单")
     @ApiImplicitParams({
@@ -100,6 +125,12 @@ public class OrderController {
     @PostMapping("receiveOrder")
     public ResponseMessage receiveOrder(@RequestBody OrderInfo orderInfo) {
         orderService.receiveOrder(orderInfo.getId());
+        return ResponseMessage.ok();
+    }
+    @ApiOperation(value = "确认收获订单", notes = "确认收获订单")
+    @PostMapping("receiveOrderPad")
+    public ResponseMessage receiveOrderPad(Integer id) {
+        orderService.receiveOrder(id);
         return ResponseMessage.ok();
     }
 
