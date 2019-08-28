@@ -55,6 +55,7 @@ public class WxQrCodeService {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("scene",scene);
         paramMap.put("page",page);
+        paramMap.put("is_hyaline",true);
 
         RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -81,6 +82,12 @@ public class WxQrCodeService {
             log.error("getwxacodeunlimit :{}",jsonResult);
             throw new ServiceException("获取小程序二维码失败", ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public String testWxappQrCode(String path, String fileName, String scene, String page) throws Exception{
+         appid="wxb3a657fc1d81b5d9";//todo 由于我们的小程序还没有发布，我这里用了一个已发布的应用的
+         secret="7197dc021b7ab2b8a934c69db45ea686";//todo 由于我们的小程序还没有发布，我这里用了一个已发布的应用的
+         return generateWxappQrCode(path,fileName,scene,page);
     }
 
 

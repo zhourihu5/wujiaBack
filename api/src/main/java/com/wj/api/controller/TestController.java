@@ -7,10 +7,14 @@ import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
+import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.user.dto.XcxLoginDTO;
+import com.wj.core.repository.activity.ActivityRepository;
+import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.service.activity.ActivityService;
 import com.wj.core.service.upload.OssUploadService;
 import com.wj.core.service.wx.WxLoginService;
+import com.wj.core.service.wx.WxQrCodeService;
 import com.wj.core.util.HttpClients;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
@@ -54,77 +58,85 @@ public class TestController {
     public final static Logger logger = LoggerFactory.getLogger(TestController.class);
 
     @Autowired
-    private WxLoginService wxLoginService;
-    @Autowired
     OssUploadService ossUploadService;
     @Value("${wj.oss.access}")
     private String ossUrl;
+    @Autowired
+    private WxQrCodeService wxQrCodeService;
+
+    @Autowired
+    private ActivityRepository activityRepository;
+    @Autowired
+    private OrderInfoRepository orderInfoRepository;
+
     @ApiOperation(value = "生成小程序二维码", notes = "生成小程序二维码")
-    @GetMapping("/generateQrCode")
+    @GetMapping("/activity/generateQrCode")
     public ResponseMessage<String> generateQrCodeMini(Integer activityId) throws Exception {
-        String appid="wxb3a657fc1d81b5d9";//todo 由于我们的小程序还没有发布，我这里用了一个已发布的应用的
-        String secret="7197dc021b7ab2b8a934c69db45ea686";//todo 由于我们的小程序还没有发布，我这里用了一个已发布的应用的
-        String accessUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential" +
-                "&appid=" + appid+
-                "&secret=" + secret
-                ;
-        Object object = HttpClients.getObjectClient(accessUrl);
+        String path="images/wxapp/qrcode/orderConfirm";
+        String fileName="activity_"+activityId+".png";
+
+        String scene=activityId+"";
+        String page="pages/orderConfirm/index";
 
 
+        String result= wxQrCodeService.testWxappQrCode(path, fileName, scene, page);
+        return ResponseMessage.ok(result);
 
-        JSONObject json = JSON.parseObject(object.toString());
-        String accessToken = json.getString("access_token");
-        String url="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+accessToken;
-        Map<String,Object>paramMap=new HashMap<>();
-        paramMap.put("scene",activityId);
-//        paramMap.put("page","pages/orderConfirm/index");
-        paramMap.put("page","pages/index/index");
+    }
+    @ApiOperation(value = "生成小程序二维码", notes = "生成小程序二维码")
+    @GetMapping("/order/generateQrCode")
+    public ResponseMessage<String> orderQrCode(Integer id) throws Exception {
+        String path="images/wxapp/qrcode/orderDetail";
+        String fileName="order_"+id+".png";
 
-        RestTemplate rest = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<String>(new Gson().toJson(paramMap), headers);
-        ResponseEntity<byte[]> entity = rest.exchange(url, HttpMethod.POST,
-                requestEntity, byte[].class, new Object[0]);
-        byte[] result = entity.getBody();
-        InputStream inputStream = new ByteArrayInputStream(result);
-        JSONObject jsonResult = null;
-        try {
-            jsonResult = JSON.parseObject(new String(result));
-        } catch (Exception e) {
-//            e.printStackTrace();
-            Map map=new HashMap();
-            map.put("errcode",0);
-            jsonResult =new JSONObject(map);
-        }
-        if(jsonResult.getInteger("errcode")==0){
-            String path="images/wxapp/qrcode/orderConfirm";
-            String fileName="activity_"+activityId+".png";
-            String imgUrl= ossUploadService.ossUpload(path,fileName,inputStream);
-            return ResponseMessage.ok(ossUrl+imgUrl);
-        }else {
-            logger.error("getwxacodeunlimit :{}",jsonResult);
-            throw new RuntimeException("获取小程序二维码失败");
-        }
+        String scene=id +"";
+        String page="pages/orderDetail/index";
 
-
-
-
-//        String fileName="activity_"+activityId+".txt";
-//        File targetFile = new File(fileName);
-//        FileOutputStream out = new FileOutputStream(targetFile);
-//
-//        byte[] buffer = new byte[8192];
-//        int bytesRead = 0;
-//        while((bytesRead = inputStream.read(buffer, 0, 8192)) != -1) {
-//            out.write(buffer, 0, bytesRead);
-//        }
-//
-//        out.flush();
-//        out.close();
-//        return ResponseMessage.ok(targetFile.getAbsolutePath());
-
+        String result= wxQrCodeService.generateWxappQrCode(path, fileName, scene, page);
+        return ResponseMessage.ok(result);
 
     }
 
+    @GetMapping("/deleteQrCode")
+    public void deleteQrCodeMini() throws Exception {
+        deleteActivityQrCode();
+        deleteOrderQrCode();
+
+    }
+
+    private void deleteActivityQrCode() {
+        int pageNum=0;
+        int pageSize=20;
+
+        String path="images/wxapp/qrcode/orderConfirm";
+        Pageable page = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Page<Activity> acList = activityRepository.findAll(page);
+        while (acList.hasNext()){
+            for(Activity ac:acList){
+                String fileName="activity_"+ac.getId()+".png";
+                ossUploadService.delete(path,fileName);
+            }
+            pageNum++;
+            page = PageRequest.of(pageNum , pageSize, Sort.Direction.DESC, "id");
+            acList = activityRepository.findAll(page);
+        }
+    }
+    private void deleteOrderQrCode() {
+        int pageNum=0;
+        int pageSize=20;
+
+        String path="images/wxapp/qrcode/orderDetail";
+
+        Pageable page = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Page<OrderInfo> acList = orderInfoRepository.findAll(page);
+        while (acList.hasNext()){
+            for(OrderInfo ac:acList){
+                String fileName="order_"+ac.getId()+".png";
+                ossUploadService.delete(path,fileName);
+            }
+            pageNum++;
+            page = PageRequest.of(pageNum , pageSize, Sort.Direction.DESC, "id");
+            acList = orderInfoRepository.findAll(page);
+        }
+    }
 }

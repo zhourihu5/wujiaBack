@@ -67,4 +67,8 @@ public class OssUploadService {
         OSSClient ossClient = new OSSClient(point, key, secret);
         return ossClient.doesObjectExist(bucket, path + "/" + fileNames);
     }
+    public void delete(String path, String fileNames){
+        OSSClient ossClient = new OSSClient(point, key, secret);
+         ossClient.deleteObject(bucket, path + "/" + fileNames);
+    }
 }
