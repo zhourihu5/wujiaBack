@@ -43,7 +43,7 @@ public class CouponController {
         return ResponseMessage.ok();
     }
 
-    @ApiOperation(value="删除优惠券")
+    @ApiOperation(value = "删除优惠券")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", dataType = "Integer", value = "主键ID")
     })
