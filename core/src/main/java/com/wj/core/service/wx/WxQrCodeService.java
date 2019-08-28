@@ -46,6 +46,8 @@ public class WxQrCodeService {
                 ;
         Object object = HttpClients.getObjectClient(accessUrl);
 
+        log.info("appid:{},secret:{}",appid,secret);
+
 
         JSONObject json = JSON.parseObject(object.toString());
         String accessToken = json.getString("access_token");

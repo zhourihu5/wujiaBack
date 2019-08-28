@@ -2,6 +2,7 @@ package com.wj.api.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
@@ -33,6 +34,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.persistence.criteria.Predicate;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -76,7 +79,8 @@ public class TestController {
         String fileName="activity_"+activityId+".png";
 
         String scene=activityId+"";
-        String page="pages/orderConfirm/index";
+//        String page="pages/orderConfirm/index";
+        String page="pages/index/index";
 
 
         String result= wxQrCodeService.testWxappQrCode(path, fileName, scene, page);
@@ -90,9 +94,10 @@ public class TestController {
         String fileName="order_"+id+".png";
 
         String scene=id +"";
-        String page="pages/orderDetail/index";
+//        String page="pages/orderDetail/index";
+        String page="pages/index/index";
 
-        String result= wxQrCodeService.generateWxappQrCode(path, fileName, scene, page);
+        String result= wxQrCodeService.testWxappQrCode(path, fileName, scene, page);
         return ResponseMessage.ok(result);
 
     }
@@ -111,7 +116,7 @@ public class TestController {
         String path="images/wxapp/qrcode/orderConfirm";
         Pageable page = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<Activity> acList = activityRepository.findAll(page);
-        while (acList.hasNext()){
+        do{
             for(Activity ac:acList){
                 String fileName="activity_"+ac.getId()+".png";
                 ossUploadService.delete(path,fileName);
@@ -119,7 +124,7 @@ public class TestController {
             pageNum++;
             page = PageRequest.of(pageNum , pageSize, Sort.Direction.DESC, "id");
             acList = activityRepository.findAll(page);
-        }
+        }while (acList.hasNext());
     }
     private void deleteOrderQrCode() {
         int pageNum=0;
@@ -128,15 +133,21 @@ public class TestController {
         String path="images/wxapp/qrcode/orderDetail";
 
         Pageable page = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
-        Page<OrderInfo> acList = orderInfoRepository.findAll(page);
-        while (acList.hasNext()){
+        Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = Lists.newArrayList();
+            String status="1";//待付款
+            predicates.add(criteriaBuilder.equal(root.get("status"), status));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+        Page<OrderInfo> acList =  orderInfoRepository.findAll(specification, page);
+        do{
             for(OrderInfo ac:acList){
                 String fileName="order_"+ac.getId()+".png";
                 ossUploadService.delete(path,fileName);
             }
             pageNum++;
             page = PageRequest.of(pageNum , pageSize, Sort.Direction.DESC, "id");
-            acList = orderInfoRepository.findAll(page);
-        }
+            acList = orderInfoRepository.findAll(specification, page);
+        }while (acList.hasNext());
     }
 }
