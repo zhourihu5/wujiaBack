@@ -25,6 +25,12 @@ public class HttpClients {
         ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, requestEntity, String.class);
         return response.getBody();
     }
+    public static byte[] getBytes(String url, HttpHeaders requestHeaders) {
+        RestTemplate template = new RestTemplate();
+        HttpEntity<String> requestEntity = new HttpEntity(null, requestHeaders);
+        ResponseEntity<byte[]> response = template.exchange(url, HttpMethod.GET, requestEntity, byte[].class);
+        return response.getBody();
+    }
 
 
     public static String postObjectClientJsonHeaders(String url, String accessToken, Map<String, Object> requestParam) {

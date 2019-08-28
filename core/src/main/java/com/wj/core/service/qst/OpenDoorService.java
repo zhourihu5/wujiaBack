@@ -1,8 +1,6 @@
 package com.wj.core.service.qst;
 
-import net.sf.json.JSONArray;
 import com.google.common.collect.Maps;
-import com.google.gson.JsonArray;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.base.BaseUnit;
@@ -11,15 +9,10 @@ import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.base.BaseUnitRepository;
 import com.wj.core.service.apply.ApplyLockService;
 import com.wj.core.service.base.BaseFamilyService;
-import com.wj.core.service.exception.ErrorCode;
-import com.wj.core.service.exception.ServiceException;
-import com.wj.core.service.qst.dto.QstResult;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.util.HttpClients;
 import com.wj.core.util.mapper.JsonMapper;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +46,25 @@ public class OpenDoorService {
         String url = Qst.URL21664 + "RemoteUnlock/OpenDoor?tenantCode=" + Qst.TC + "&devUserName=" + userName + "&deviceDirectory=" + deviceDirectory;
         String object = HttpClients.getObjectClientAndHeaders(url, requestHeaders);
         Map<String, Object> qst = mapper.fromJson(object, Map.class);
+        return qst;
+    }
+    //获取门禁出入记录
+    public Map<String, Object> accessRecords(String userName, String deviceDirectory, Integer pageNum) {
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.add("Authorization", "Bearer " + Qst.TOKEN);
+        String url = Qst.URL21664 + "accessrecords?tenantCode=" + Qst.TC
+                + "&devUserName=" + userName
+                + "&DeviceLocalDirectory=" + deviceDirectory
+                + "&pageNum=" + pageNum
+                ;
+//        String object = HttpClients.getObjectClientAndHeaders(url, requestHeaders);
+//        object=new String(object.getBytes(), new GBK());//乱码，转码试试？？
+
+        byte[]bytes= HttpClients.getBytes(url, requestHeaders);
+        String object=new String(bytes);
+
+        Map<String, Object> qst = mapper.fromJson(object, Map.class);
+        qst.put("imgUrl","http://www.zhfreeview.win:18008/");
         return qst;
     }
 
