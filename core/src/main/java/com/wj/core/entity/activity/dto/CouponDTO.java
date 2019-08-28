@@ -22,7 +22,7 @@ public class CouponDTO {
     @ApiModelProperty(value = "每人限制数量（只有平台优惠券有）")
     private Integer everyoneNum;
     @ApiModelProperty(value = "限制条件(0.无限制 其余的是限制金额)")
-    private Integer limit;
+    private Integer limitNum;
     @ApiModelProperty(value = "0代表全场通用， 其他存活动ID")
     private Integer activityId;
     @ApiModelProperty(value = "备注")
@@ -37,6 +37,7 @@ public class CouponDTO {
     private String status;
     private Date startDate;
     private Date endDate;
+    private Date updateDate;
     @Transient
     private String[] userNames;
 
