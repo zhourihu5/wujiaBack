@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Service
@@ -25,17 +26,30 @@ public class CouponService {
     @Transactional
     public void saveCoupon(Coupon coupon) {
         coupon.setCreateDate(new Date());
-        coupon.setUpdateDate(new Date());
-        Coupon newCoupon = couponRepository.save(coupon);
-        if (coupon.getStatus().equals("1")) {
-            for (int i = 0; i < coupon.getUserNames().length; i++) {
-                BlackList blackList = new BlackList();
-                blackList.setUserName(coupon.getUserNames()[i]);
-                blackList.setCouponId(newCoupon.getId());
-                blackList.setCreateDate(new Date());
-                blackListRepository.save(blackList);
-            }
+        if (coupon.getPlatform() == null) {
+            coupon.setPlatform("1");
         }
+        if (coupon.getActivityId() == null) {
+            coupon.setActivityId(0);
+        }
+        if (coupon.getStatus() == null) {
+            coupon.setStatus("0");
+        }
+        if (coupon.getGrantCount() == null) {
+            coupon.setGrantCount(0);
+        }
+        coupon.setCover("1");
+        coupon.setMoney(new BigDecimal("100"));
+        Coupon newCoupon = couponRepository.save(coupon);
+//        if (coupon.getStatus().equals("1")) {
+//            for (int i = 0; i < coupon.getUserNames().length; i++) {
+//                BlackList blackList = new BlackList();
+//                blackList.setUserName(coupon.getUserNames()[i]);
+//                blackList.setCouponId(newCoupon.getId());
+//                blackList.setCreateDate(new Date());
+//                blackListRepository.save(blackList);
+//            }
+//        }
 //        else if (coupon.getStatus().equals("2")) {
 //
 //        }
