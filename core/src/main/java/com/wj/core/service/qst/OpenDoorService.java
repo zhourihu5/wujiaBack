@@ -64,7 +64,7 @@ public class OpenDoorService {
         String object=new String(bytes);
 
         Map<String, Object> qst = mapper.fromJson(object, Map.class);
-        qst.put("imgUrl","http://www.zhfreeview.win:18008/");
+        qst.put("imgUrl",Qst.IMG_URL);
         return qst;
     }
 

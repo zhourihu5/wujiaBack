@@ -9,4 +9,7 @@ public class Qst {
     public final static String USERNAME = "AdminJXKJ";
     public final static String PASSWORD = "52c297b78d7f27c878e48dcdb7879dfb";
     public final static String UUID = "Q0U2RTkyQTAtNDdERS00NzRDLTk1ODgtMDg0M0M1QkFDN0VF";
+
+
+    public final static String IMG_URL = "http://39.97.233.20:18008/";
 }
