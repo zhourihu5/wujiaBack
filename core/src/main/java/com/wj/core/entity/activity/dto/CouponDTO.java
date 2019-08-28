@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 public class CouponDTO {
-
+    private Integer id;
     @ApiModelProperty(value = "优惠券名称")
     private String name;
     @ApiModelProperty(value = "优惠卷类型  1平台优惠券 2活动优惠券")

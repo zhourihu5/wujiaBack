@@ -9,6 +9,8 @@ import com.wj.core.entity.message.Message;
 import com.wj.core.repository.activity.BlackListRepository;
 import com.wj.core.repository.experience.ExperienceCodeRepository;
 import com.wj.core.repository.experience.ExperienceRepository;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.time.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +38,15 @@ public class ExperienceService {
 
     @Transactional
     public void saveExperience(Experience experience) {
+        if (experience.getStatus().equals("1")) {
+            throw new ServiceException("上架状态不能编辑", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         experience.setCreateDate(new Date());
         experience.setUpdateDate(new Date());
         Experience newEexperience = experienceRepository.save(experience);
+        if (experience.getId() != null) {
+            experienceCodeRepository.deleteByExperienceId(experience.getId());
+        }
         for (int i = 0; i < experience.getExperienceCodes().length; i++) {
             ExperienceCode experienceCode = new ExperienceCode();
             experienceCode.setExperienceCode(experience.getExperienceCodes()[i]);

@@ -10,12 +10,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Date;
+import java.util.List;
 
 public interface BlackListRepository extends JpaRepository<BlackList, Integer>, JpaSpecificationExecutor<BlackList> {
 
-    @Query(value = "select * from ediz_black_list where coupon_id = ?1", nativeQuery = true)
+    @Query(value = "select * from ebiz_black_list where coupon_id = ?1", nativeQuery = true)
     public Page<BlackList> findAllByCouponId(Integer couponId, Pageable pageable);
 
+    @Query(value = "select * from ebiz_black_list where coupon_id = ?1", nativeQuery = true)
+    public List<BlackList> findAllByCouponId(Integer couponId);
 
     @Modifying
     @Query("delete from BlackList b where b.couponId = ?1")

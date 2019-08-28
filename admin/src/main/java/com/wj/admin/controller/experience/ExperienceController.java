@@ -37,8 +37,8 @@ public class ExperienceController {
             @ApiImplicitParam(name = "id", dataType = "Integer", value = "主键ID")
     })
     @PostMapping("remove")
-    public ResponseMessage remove(Integer id) {
-        experienceService.removeExperience(id);
+    public ResponseMessage remove(@RequestBody Experience experience) {
+        experienceService.removeExperience(experience.getId());
         return ResponseMessage.ok();
     }
 

@@ -53,4 +53,6 @@ public class Coupon {
     private Date updateDate;
     @Transient
     private String[] userNames;
+    @Transient
+    private Activity activity;
 }

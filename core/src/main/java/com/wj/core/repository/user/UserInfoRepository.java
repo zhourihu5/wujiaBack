@@ -77,4 +77,7 @@ public interface UserInfoRepository extends JpaRepository<SysUserInfo, Integer> 
     public void updateInfo(Integer userId, String nickName, String sex, String birthday);
 
     Page<SysUserInfo> findByFlag(Integer flag, Pageable pageable);
+
+    @Query(value = "select * from sys_user_info where flag in (2,3,4) or wx_open_id is not null", nativeQuery = true)
+    public List<SysUserInfo> findListByFlag();
 }

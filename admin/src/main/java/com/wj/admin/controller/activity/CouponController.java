@@ -52,8 +52,8 @@ public class CouponController {
             @ApiImplicitParam(name = "id", dataType = "Integer", value = "主键ID")
     })
     @PostMapping("remove")
-    public ResponseMessage remove(Integer id) {
-        couponService.deleteCoupon(id);
+    public ResponseMessage remove(@RequestBody Coupon coupon) {
+        couponService.deleteCoupon(coupon.getId());
         return ResponseMessage.ok();
     }
 
@@ -72,6 +72,16 @@ public class CouponController {
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Page<Coupon> page = couponService.findAllByStatus(status, pageable);
         return ResponseMessage.ok(page);
+    }
+
+    @ApiOperation(value = "发放优惠券")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "coupon", dataType = "Coupon", value = "优惠券对象")
+    })
+    @PostMapping("updateStatus")
+    public ResponseMessage updateStatus(@RequestBody Coupon coupon) {
+        couponService.updateCouponStatus(coupon);
+        return ResponseMessage.ok();
     }
 
 
