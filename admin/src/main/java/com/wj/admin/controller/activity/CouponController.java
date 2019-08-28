@@ -4,11 +4,14 @@ import com.wj.admin.controller.base.BaseFamilyController;
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.admin.utils.JwtUtil;
 import com.wj.core.entity.activity.Coupon;
+import com.wj.core.entity.activity.dto.CouponDTO;
 import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.experience.Experience;
+import com.wj.core.entity.op.OpAdv;
 import com.wj.core.service.activity.CouponService;
 import com.wj.core.service.experience.ExperienceService;
+import com.wj.core.util.mapper.BeanMapper;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,12 +41,13 @@ public class CouponController {
             @ApiImplicitParam(name = "coupon", dataType = "Coupon", value = "优惠券对象")
     })
     @PostMapping("save")
-    public ResponseMessage save(@RequestBody Coupon coupon) {
+    public ResponseMessage save(@RequestBody CouponDTO couponDTO) {
+        Coupon coupon = BeanMapper.map(couponDTO, Coupon.class);
         couponService.saveCoupon(coupon);
         return ResponseMessage.ok();
     }
 
-    @ApiOperation(value="删除优惠券")
+    @ApiOperation(value = "删除优惠券")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", dataType = "Integer", value = "主键ID")
     })

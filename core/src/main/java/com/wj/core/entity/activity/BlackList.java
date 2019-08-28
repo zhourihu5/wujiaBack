@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "ediz_black_list")
+@Table(name = "ebiz_black_list")
 @Data
 public class BlackList {
 

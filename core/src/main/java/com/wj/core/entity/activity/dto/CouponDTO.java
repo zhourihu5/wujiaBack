@@ -1,24 +1,16 @@
-package com.wj.core.entity.activity;
+package com.wj.core.entity.activity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wj.core.entity.address.Address;
-import com.wj.core.entity.commodity.Commodity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Entity
-@Table(name = "ebiz_coupon")
 @Data
-public class Coupon {
+public class CouponDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     @ApiModelProperty(value = "优惠券名称")
     private String name;
     @ApiModelProperty(value = "优惠卷类型  1平台优惠券 2活动优惠券")
@@ -43,11 +35,9 @@ public class Coupon {
     private String cover;
     @ApiModelProperty(value = "状态")
     private String status;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date createDate;
+    @Transient
+    private String[] userNames;
 
 }
