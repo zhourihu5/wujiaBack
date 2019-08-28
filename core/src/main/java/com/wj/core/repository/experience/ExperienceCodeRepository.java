@@ -13,4 +13,7 @@ public interface ExperienceCodeRepository extends JpaRepository<ExperienceCode, 
     @Query("update ExperienceCode e set e.userId = ?1, e.userName = ?2, e.updateDate = ?3 where e.id = ?4")
     public void updateExperienceCode(Integer userId, String userName, Date date, Integer id);
 
+    @Modifying
+    @Query("delete from ExperienceCode e where e.experienceId = ?1")
+    public void deleteByExperienceId(Integer experienceId);
 }

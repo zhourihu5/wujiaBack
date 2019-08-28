@@ -35,9 +35,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -59,5 +59,11 @@ public class BlackListService {
             page = blackListRepository.findAll(pageable);
         }
         return page;
+    }
+
+
+    @Transactional
+    public void deleteBlackList(Integer couponId) {
+        blackListRepository.deleteByCouponId(couponId);
     }
 }

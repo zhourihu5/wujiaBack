@@ -1,6 +1,5 @@
 package com.wj.core.repository.activity;
 
-import com.wj.core.entity.activity.BlackList;
 import com.wj.core.entity.activity.Coupon;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +9,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Date;
-import java.util.List;
 
 public interface CouponRepository extends JpaRepository<Coupon, Integer>, JpaSpecificationExecutor<Coupon> {
 
@@ -21,6 +19,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Integer>, JpaSpe
     public Page<Coupon> findAllByStatus(Pageable pageable);
 
     @Modifying
-    @Query("update Coupon c set c.status = ?1 where c.id = ?3")
+    @Query("update Coupon c set c.status = ?1, c.updateDate = ?2 where c.id = ?3")
     public void updateCouponStatus(String status, Date date, Integer id);
 }
