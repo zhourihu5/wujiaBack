@@ -44,9 +44,9 @@ public class CouponService {
     public Page<Coupon> findAllByStatus(String status, Pageable pageable) {
         Page<Coupon> page = null;
         if (status != null) {
-            page = couponRepository.findAllByStatus(status, pageable);
+            page = couponRepository.findByStatus(status, pageable);
         } else {
-            page = couponRepository.findAll(pageable);
+            page = couponRepository.findAllByStatus(pageable);
         }
         return page;
     }
@@ -56,5 +56,9 @@ public class CouponService {
         couponRepository.updateCouponStatus(coupon.getStatus(), new Date(), coupon.getId());
     }
 
+    @Transactional
+    public void deleteCoupon(Integer id) {
+        couponRepository.deleteById(id);
+    }
 
 }

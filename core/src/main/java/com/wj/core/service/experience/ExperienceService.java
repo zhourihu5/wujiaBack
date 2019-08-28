@@ -47,7 +47,7 @@ public class ExperienceService {
         }
     }
 
-    public Page<Experience> findAll(Integer pageNum, Integer pageSize, String startDate, String endDate, String status, String name) {
+    public Page<Experience> getExperienceList(Integer pageNum, Integer pageSize, String startDate, String endDate, String status, String name) {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
 
             List<Predicate> predicates = Lists.newArrayList();
@@ -71,6 +71,8 @@ public class ExperienceService {
             if (StringUtils.isNotBlank(name)) {
                 predicates.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
             }
+            // 状态9是删除
+            predicates.add(criteriaBuilder.notEqual(root.get("status"), 9));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
         if (pageNum == null) {
@@ -94,4 +96,8 @@ public class ExperienceService {
         experienceRepository.updateExperienceStatus(experience.getStatus(), new Date(), experience.getId());
     }
 
+    @Transactional
+    public void removeExperience(Integer id) {
+        experienceRepository.deleteById(id);
+    }
 }

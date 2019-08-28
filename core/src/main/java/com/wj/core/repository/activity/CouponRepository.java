@@ -14,8 +14,11 @@ import java.util.List;
 
 public interface CouponRepository extends JpaRepository<Coupon, Integer>, JpaSpecificationExecutor<Coupon> {
 
-    @Query(value = "select * from ediz_coupon where status= ?1", nativeQuery = true)
-    public Page<Coupon> findAllByStatus(String status, Pageable pageable);
+    @Query(value = "select * from ediz_coupon where status = ?1 and status <> 9", nativeQuery = true)
+    public Page<Coupon> findByStatus(String status, Pageable pageable);
+
+    @Query(value = "select * from ediz_coupon where status = ?1 and status <> 9", nativeQuery = true)
+    public Page<Coupon> findAllByStatus(Pageable pageable);
 
     @Modifying
     @Query("update Coupon c set c.status = ?1, c.updateDate = ?2 where c.id = ?3")
