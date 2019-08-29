@@ -26,6 +26,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.HTTP;
+import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
+import org.hibernate.query.criteria.internal.predicate.InPredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -135,8 +138,17 @@ public class TestController {
         Pageable page = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = Lists.newArrayList();
-            String status="1";//待付款
-            predicates.add(criteriaBuilder.equal(root.get("status"), status));
+//            String status="1";//待付款
+//            predicates.add(criteriaBuilder.equal(root.get("status"), status));
+
+            CriteriaBuilder.In inStatus = criteriaBuilder.in(root.get("status"));
+            String[] statusArr={"1","2","3","4","5"};
+            for(String str:statusArr){
+                inStatus.value(str);
+            }
+            predicates.add(inStatus);
+
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
         Page<OrderInfo> acList =  orderInfoRepository.findAll(specification, page);
