@@ -16,6 +16,6 @@ public interface ExperienceRepository extends JpaRepository<Experience, Integer>
     public Page<Experience> findAllByStatus(String status, Pageable pageable);
 
     @Modifying
-    @Query("update Experience e set e.status = ?1, e.updateDate = ?2 where e.id = ?3")
-    public void updateExperienceStatus(String status, Date date, Integer id);
+    @Query("update Experience e set e.isShow = ?1, e.updateDate = ?2 where e.id = ?3")
+    public void updateExperienceIsShow(String isShow, Date date, Integer id);
 }

@@ -1,12 +1,8 @@
 package com.wj.core.service.experience;
 
 import com.google.common.collect.Lists;
-import com.wj.core.entity.activity.Activity;
-import com.wj.core.entity.activity.BlackList;
 import com.wj.core.entity.experience.Experience;
 import com.wj.core.entity.experience.ExperienceCode;
-import com.wj.core.entity.message.Message;
-import com.wj.core.repository.activity.BlackListRepository;
 import com.wj.core.repository.experience.ExperienceCodeRepository;
 import com.wj.core.repository.experience.ExperienceRepository;
 import com.wj.core.service.exception.ErrorCode;
@@ -38,8 +34,11 @@ public class ExperienceService {
 
     @Transactional
     public void saveExperience(Experience experience) {
-        if (experience.getStatus().equals("1")) {
+        if (experience.getId() != null && experience.getIsShow().equals("1")) {
             throw new ServiceException("上架状态不能编辑", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        if (experience.getStatus() == null) {
+            experience.setStatus("1");
         }
         experience.setCreateDate(new Date());
         experience.setUpdateDate(new Date());
@@ -80,7 +79,7 @@ public class ExperienceService {
                 predicates.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
             }
             // 状态9是删除
-            predicates.add(criteriaBuilder.notEqual(root.get("status"), 9));
+            predicates.add(criteriaBuilder.notEqual(root.get("isShow"), 9));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
         if (pageNum == null) {
@@ -94,18 +93,21 @@ public class ExperienceService {
         return page;
     }
 
+    // 领取后更新数据领取人是谁
     @Transactional
     public void updateExperienceCode(ExperienceCode experienceCode) {
         experienceCodeRepository.updateExperienceCode(experienceCode.getUserId(), experienceCode.getUserName(), new Date(), experienceCode.getId());
     }
 
     @Transactional
-    public void updateExperienceStatus(Experience experience) {
-        experienceRepository.updateExperienceStatus(experience.getStatus(), new Date(), experience.getId());
+    public void updateExperienceIsShow(Experience experience) {
+        experienceRepository.updateExperienceIsShow(experience.getStatus(), new Date(), experience.getId());
     }
 
     @Transactional
     public void removeExperience(Integer id) {
         experienceRepository.deleteById(id);
     }
+
+
 }

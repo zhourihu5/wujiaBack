@@ -39,8 +39,12 @@ public class ExperienceDTO {
     private String img5;
     @ApiModelProperty(value = "状态 0.未发放 1.已发放")
     private String status;
+    @ApiModelProperty(value = "9删除 0.未上架 1.上架")
+    private String isShow;
     private Date startDate;
     private Date endDate;
+    private Date createDate;
+    private Date updateDate;
     @Transient
     private String[] experienceCodes;
 
