@@ -22,6 +22,8 @@ public class Experience {
     private String name;
     @ApiModelProperty(value = "社区ID,号分隔")
     private String communitys;
+    @ApiModelProperty(value = "社区name")
+    private String communityNames;
     @ApiModelProperty(value = "活动banner")
     private String banner;
     @ApiModelProperty(value = "详情图片")
@@ -58,5 +60,9 @@ public class Experience {
     private Date updateDate;
     @Transient
     private String[] experienceCodes;
+    @Transient
+    private ExperienceCode experienceCode;
+    @Transient
+    private List<ExperienceCode> experienceCodeList;
 
 }
