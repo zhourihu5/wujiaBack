@@ -6,9 +6,11 @@ import com.wj.core.entity.activity.dto.ActivityUserDTO;
 import com.wj.core.entity.address.Address;
 import com.wj.core.entity.atta.AttaInfo;
 import com.wj.core.entity.base.BaseCommuntity;
+import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.task.TaskEntity;
+import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.XcxLoginDTO;
 import com.wj.core.repository.activity.ActivityRepository;
@@ -18,10 +20,12 @@ import com.wj.core.repository.commodity.CommodityRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.address.AddressService;
+import com.wj.core.service.base.BaseFamilyService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.job.JobService;
 import com.wj.core.service.message.MessageService;
+import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.util.time.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +70,10 @@ public class ActivityService {
     private ActivityService activityService;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private UserFamilyService userFamilyService;
+    @Autowired
+    private BaseFamilyService baseFamilyService;
 
     public List<Activity> findList(Integer userId, Integer communityId) {
         List<Activity> activityList = activityRepository.findByCommunityIdAndIsShow(communityId, "1");
@@ -295,7 +303,17 @@ public class ActivityService {
         List<Activity> activityList = activityService.findList(userId, communityId);
         loginDTO.setActivityList(activityList);
         loginDTO.setUnRead(messageService.isUnReadMessage(userId, 0));
-
+        List<BaseFamily> familyList = new ArrayList<>();
+        List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userId);
+        for (SysUserFamily sysUserFamily: userFamilyList) {
+            BaseFamily baseFamily = new BaseFamily();
+            baseFamily.setId(sysUserFamily.getUserFamily().getFamilyId());
+            BaseCommuntity baseCommuntity = baseFamilyService.findCommuntityByFamilyId1(sysUserFamily.getUserFamily().getFamilyId());
+            baseFamily.setName(baseCommuntity.getName());
+            baseFamily.setCommuntity(baseCommuntity);
+            familyList.add(baseFamily);
+        }
+        loginDTO.setFamilyList(familyList);
         return loginDTO;
     }
 }

@@ -120,7 +120,7 @@ public class ExperienceService {
 
     @Transactional
     public void updateExperienceIsShow(Experience experience) {
-        experienceRepository.updateExperienceIsShow(experience.getStatus(), new Date(), experience.getId());
+        experienceRepository.updateExperienceIsShow(experience.getIsShow(), new Date(), experience.getId());
     }
 
     @Transactional

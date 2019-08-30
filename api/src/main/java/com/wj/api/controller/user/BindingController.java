@@ -9,6 +9,7 @@ import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.apply.ApplyLock;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDevice;
+import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.BindingDTO;
@@ -41,10 +42,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Api(value = "/wx/binding", tags = "微信绑定用户接口模块")
 @RestController
@@ -82,6 +80,9 @@ public class BindingController {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private BaseFamilyService baseFamilyService;
 
 
     @ApiOperation(value = "绑定用户信息", notes = "绑定用户信息")
@@ -128,6 +129,16 @@ public class BindingController {
                 }
                 return ResponseMessage.ok(loginDTO);
             }
+            List<BaseFamily> familyList = new ArrayList<>();
+            for (SysUserFamily sysUserFamily: userFamilyList) {
+                BaseFamily baseFamily = new BaseFamily();
+                baseFamily.setId(sysUserFamily.getUserFamily().getFamilyId());
+                BaseCommuntity baseCommuntity = baseFamilyService.findCommuntityByFamilyId1(sysUserFamily.getUserFamily().getFamilyId());
+                baseFamily.setName(baseCommuntity.getName());
+                baseFamily.setCommuntity(baseCommuntity);
+                familyList.add(baseFamily);
+            }
+            loginDTO.setFamilyList(familyList);
             List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());
             if (communtityList.size() > 0) {
                 loginDTO.setCommuntityName(communtityList.get(0).getName());
@@ -171,10 +182,24 @@ public class BindingController {
                         loginDTO.setApplyLock(applyLockList.get(0));
                     }
                     return ResponseMessage.ok(loginDTO);
-                } else {
-                    //TODO 用户存在两个家庭的处理方式，现在默认取一个
-                    userInfo.setFid(userFamilyList.get(0).getUserFamily().getFamilyId());
                 }
+//                else {
+//                    BaseFamily baseFamily = new BaseFamily();
+//                    baseFamily.setId(userFamilyList.get(i));
+//                    //TODO 用户存在两个家庭的处理方式，现在默认取一个
+//                    userInfo.setFid(userFamilyList.get(0).getUserFamily().getFamilyId());
+//                }
+                List<BaseFamily> familyList = new ArrayList<>();
+                for (SysUserFamily sysUserFamily: userFamilyList) {
+                    BaseFamily baseFamily = new BaseFamily();
+                    baseFamily.setId(sysUserFamily.getUserFamily().getFamilyId());
+                    BaseCommuntity baseCommuntity = baseFamilyService.findCommuntityByFamilyId1(sysUserFamily.getUserFamily().getFamilyId());
+                    baseFamily.setName(baseCommuntity.getName());
+                    baseFamily.setCommuntity(baseCommuntity);
+                    familyList.add(baseFamily);
+                }
+                loginDTO.setFamilyList(familyList);
+
                 List<BaseCommuntity> communtityList = addressService.findByUserId(userInfo.getId());
                 if (communtityList.size() > 0) {
                     loginDTO.setCommuntityName(communtityList.get(0).getName());
