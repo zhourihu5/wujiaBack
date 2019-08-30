@@ -111,6 +111,10 @@ public class TestController {
         deleteOrderQrCode();
 
     }
+    @GetMapping("/sendMsg")
+    public void sendMsg(@RequestParam(defaultValue = "52")String userId,@RequestParam(defaultValue = "测试推送消息")String msg) throws Exception {
+        WebSocketServer.sendInfo(msg,userId);
+    }
 
     private void deleteActivityQrCode() {
         int pageNum=0;

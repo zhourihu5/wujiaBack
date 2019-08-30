@@ -1,5 +1,6 @@
 package com.wj.api.controller.order;
 
+import com.wj.api.controller.WebSocketServer;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.message.Message;
@@ -31,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Api(value = "/v1/orderUser", tags = "用户订单关系接口模块")
@@ -79,6 +81,11 @@ public class OrderUserController {
         message.setContent("您好，您购买的商品正在路上，配送员姓名:" + orderInfo.getDeliveryPerson() + "，配送员电话:" + orderInfo.getDeliveryPhone());
         message.setType(4);
         Message newMessage = messageService.saveMessage(message);
+        try {
+            WebSocketServer.sendInfo(message.getTitle(),userId+"");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(orderUser.getUserId());
         try {
             userFamilyList.forEach(SysUserFamily -> {

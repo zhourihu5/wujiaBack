@@ -135,7 +135,7 @@ public class ApplyLockController {
         }
         deviceLocalDirectory = deviceLocalDirectory+"-1";
         Map<String, Object> result = openDoorService.accessRecords(userName, deviceLocalDirectory,pageNum);
-        logger.info("accessRecords result: {}",result);
+        logger.info("accessRecords pageNum: {}",pageNum);
 //        if (Integer.valueOf(result.get("Code").toString()) != 200) {
 //            throw new ServiceException("数据异常", ErrorCode.QST_ERROR);
 //        }
