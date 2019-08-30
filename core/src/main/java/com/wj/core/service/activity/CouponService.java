@@ -102,6 +102,7 @@ public class CouponService {
                 CouponCode couponCode = new CouponCode();
                 couponCode.setCouponId(coupon.getId());
                 couponCode.setCouponType(coupon.getType());
+                couponCode.setActivityId(coupon.getActivityId());
                 couponCode.setUserId(userInfo.getId());
                 couponCode.setCreateDate(new Date());
                 couponCodeRepository.save(couponCode);
@@ -114,5 +115,14 @@ public class CouponService {
     public void deleteCoupon(Integer id) {
         couponRepository.deleteById(id);
     }
+
+//    public Page<Coupon> findListByType(String type, Pageable pageable) {
+//        Page<Coupon> page = couponRepository.findByType(type, pageable);
+//        page.forEach(Coupon -> {
+//            Coupon.setActivity(activityRepository.findByActivityId(Coupon.getActivityId()));
+//        });
+//        return page;
+//    }
+
 
 }
