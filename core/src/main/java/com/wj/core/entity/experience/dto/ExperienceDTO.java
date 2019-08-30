@@ -15,6 +15,8 @@ public class ExperienceDTO {
     private String name;
     @ApiModelProperty(value = "社区ID,号分隔")
     private String communitys;
+    @ApiModelProperty(value = "社区name")
+    private String communityNames;
     @ApiModelProperty(value = "活动banner")
     private String banner;
     @ApiModelProperty(value = "详情图片")

@@ -1,6 +1,8 @@
 package com.wj.core.service.experience;
 
 import com.google.common.collect.Lists;
+import com.wj.core.entity.activity.BlackList;
+import com.wj.core.entity.activity.Coupon;
 import com.wj.core.entity.experience.Experience;
 import com.wj.core.entity.experience.ExperienceCode;
 import com.wj.core.repository.experience.ExperienceCodeRepository;
@@ -40,6 +42,12 @@ public class ExperienceService {
         if (experience.getStatus() == null) {
             experience.setStatus("1");
         }
+        if (experience.getIsShow() == null) {
+            experience.setIsShow("0");
+        }
+        if (experience.getReceive() == null) {
+            experience.setReceive("2");
+        }
         experience.setCreateDate(new Date());
         experience.setUpdateDate(new Date());
         Experience newEexperience = experienceRepository.save(experience);
@@ -48,6 +56,7 @@ public class ExperienceService {
         }
         for (int i = 0; i < experience.getExperienceCodes().length; i++) {
             ExperienceCode experienceCode = new ExperienceCode();
+            experienceCode.setExperienceId(newEexperience.getId());
             experienceCode.setExperienceCode(experience.getExperienceCodes()[i]);
             experienceCode.setCreateDate(new Date());
             experienceCodeRepository.save(experienceCode);
@@ -90,6 +99,16 @@ public class ExperienceService {
         }
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize, Sort.Direction.DESC, "id");
         Page<Experience> page = experienceRepository.findAll(specification, pageable);
+        page.forEach(Experience -> {
+            List<ExperienceCode> experienceCodes = experienceCodeRepository.findByExperienceIdAndUserId(Experience.getId());
+            Experience.setExperienceCodeList(experienceCodes);
+            List<ExperienceCode> experienceCodeList = experienceCodeRepository.findByExperienceId(Experience.getId());
+            String arrStr[] = new String[experienceCodeList.size()];
+            for (int i = 0; i < experienceCodeList.size(); i++) {
+                arrStr[i] = experienceCodeList.get(i).getExperienceCode();
+            }
+            Experience.setExperienceCodes(arrStr);
+        });
         return page;
     }
 

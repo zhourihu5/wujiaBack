@@ -39,12 +39,12 @@ public class CouponCodeService {
     private ActivityRepository activityRepository;
 
 
-    public Page<CouponCode> findListByStatusAndType(String status, String type, Pageable pageable) {
+    public Page<CouponCode> findListByStatusAndType(String status, String type, Integer userId, Pageable pageable) {
         Page<CouponCode> page = null;
         if (status.equals("1,2")) {
-            page = couponCodeRepository.findByStatusAndType(type, pageable);
+            page = couponCodeRepository.findByStatusAndType(type, userId, pageable);
         } else {
-            page = couponCodeRepository.findByStatusAndType(status, type, pageable);
+            page = couponCodeRepository.findByStatusAndType(status, type, userId, pageable);
         }
         page.forEach(CouponCode -> {
             CouponCode.setActivity(activityRepository.findByActivityId(CouponCode.getActivityId()));
