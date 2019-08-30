@@ -1,11 +1,10 @@
 package com.wj.admin.controller.experience;
 
 import com.wj.admin.filter.ResponseMessage;
-import com.wj.admin.utils.JwtUtil;
-import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.experience.Experience;
-import com.wj.core.service.commodity.CommodityService;
+import com.wj.core.entity.experience.dto.ExperienceDTO;
 import com.wj.core.service.experience.ExperienceService;
+import com.wj.core.util.mapper.BeanMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,7 +26,8 @@ public class ExperienceController {
             @ApiImplicitParam(name = "experience", dataType = "Experience", value = "体验券对象")
     })
     @PostMapping("save")
-    public ResponseMessage save(@RequestBody Experience experience) {
+    public ResponseMessage save(@RequestBody ExperienceDTO experienceDTO) {
+        Experience experience = BeanMapper.map(experienceDTO, Experience.class);
         experienceService.saveExperience(experience);
         return ResponseMessage.ok();
     }
@@ -57,5 +57,15 @@ public class ExperienceController {
         return ResponseMessage.ok(experienceService.getExperienceList(pageNum, pageSize, startDate, endDate, status, name));
     }
 
+
+    @ApiOperation(value = "上架/下架")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "experience", dataType = "Experience", value = "体验券对象")
+    })
+    @PostMapping("updateIsShow")
+    public ResponseMessage updateIsShow(@RequestBody Experience experience) {
+        experienceService.updateExperienceIsShow(experience);
+        return ResponseMessage.ok();
+    }
 
 }

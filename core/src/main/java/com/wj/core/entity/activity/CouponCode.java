@@ -19,10 +19,16 @@ public class CouponCode {
     private Integer userId;
     @ApiModelProperty(value = "优惠券ID")
     private Integer couponId;
+    @ApiModelProperty(value = "活动ID")
+    private Integer activityId;
     @ApiModelProperty(value = "优惠卷类型  1平台优惠券 2活动优惠券")
     private String couponType;
+    @ApiModelProperty(value = "状态 0.未使用 1.已使用 2.已过期")
+    private String status;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date finishDate;
+    @Transient
+    private Activity activity;
 }

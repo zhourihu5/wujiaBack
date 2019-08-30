@@ -13,5 +13,9 @@ import java.util.Date;
 
 public interface CouponCodeRepository extends JpaRepository<CouponCode, Integer>, JpaSpecificationExecutor<CouponCode> {
 
+    @Query(value = "select * from ebiz_coupon_code where status = ?1 and coupon_type = ?2", nativeQuery = true)
+    public Page<CouponCode> findByStatusAndType(String status, String type, Pageable pageable);
 
+    @Query(value = "select * from ebiz_coupon_code where status in (1,2) and coupon_type = ?2", nativeQuery = true)
+    public Page<CouponCode> findByStatusAndType(String type, Pageable pageable);
 }

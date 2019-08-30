@@ -44,8 +44,10 @@ public class Experience {
     private String img4;
     @ApiModelProperty(value = "体验券图片")
     private String img5;
-    @ApiModelProperty(value = "状态 0.未发放 1.已发放")
+    @ApiModelProperty(value = "状态 1.未开始 2.进行中 3.已结束")
     private String status;
+    @ApiModelProperty(value = "9删除 0.未上架 1.上架")
+    private String isShow;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
