@@ -1,12 +1,10 @@
 package com.wj.core.entity.experience;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wj.core.entity.atta.AttaInfo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +32,10 @@ public class Experience {
     private String receive;
     @ApiModelProperty(value = "体验卷发放总数量")
     private Integer count;
+    @ApiModelProperty(value = "发出数量")
+    private Integer send_num;
+    @ApiModelProperty(value = "剩余数量")
+    private Integer surplus_num;
     @ApiModelProperty(value = "规则")
     private String rule;
     @ApiModelProperty(value = "体验券图片")
