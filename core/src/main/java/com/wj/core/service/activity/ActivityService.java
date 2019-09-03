@@ -2,6 +2,7 @@ package com.wj.core.service.activity;
 
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
+import com.wj.core.entity.activity.Coupon;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
 import com.wj.core.entity.address.Address;
 import com.wj.core.entity.atta.AttaInfo;
@@ -14,6 +15,8 @@ import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.XcxLoginDTO;
 import com.wj.core.repository.activity.ActivityRepository;
+import com.wj.core.repository.activity.CouponCodeRepository;
+import com.wj.core.repository.activity.CouponRepository;
 import com.wj.core.repository.address.AddressRepository;
 import com.wj.core.repository.atta.AttaInfoRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
@@ -74,6 +77,12 @@ public class ActivityService {
     private UserFamilyService userFamilyService;
     @Autowired
     private BaseFamilyService baseFamilyService;
+    @Autowired
+    private CouponRepository couponRepository;
+    @Autowired
+    private CouponCodeService couponCodeService;
+    @Autowired
+    private CouponCodeRepository couponCodeRepository;
 
     public List<Activity> findList(Integer userId, Integer communityId) {
         List<Activity> activityList = activityRepository.findByCommunityIdAndIsShow(communityId, "1");
@@ -203,7 +212,7 @@ public class ActivityService {
         return pageCard;
     }
 
-    public ActivityUserDTO findByActivityId(Integer activityId) {
+    public ActivityUserDTO findByActivityId(Integer userId, Integer activityId) {
         ActivityUserDTO activityUserDTO = new ActivityUserDTO();
         Activity activity = activityRepository.findByActivityId(activityId);
 //        String largeMoney = activity.getSaleRules().substring(activity.getSaleRules().lastIndexOf("|") + 1);
@@ -239,6 +248,15 @@ public class ActivityService {
         });
         activityUserDTO.setActivity(activity);
         activityUserDTO.setUserInfoList(userInfoList);
+        Coupon coupon = couponRepository.getByActivityId(activityId);
+        if (coupon != null) {
+            coupon.setUserCouponCount(0);
+            Integer count = couponCodeRepository.getCountByTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
+            if (count >= coupon.getLimitNum()) {
+                coupon.setUserCouponCount(count);
+            }
+            activityUserDTO.setCoupon(coupon);
+        }
         return activityUserDTO;
     }
 
@@ -291,6 +309,8 @@ public class ActivityService {
         if (addressList.size() > 0) {
             activity.setAddress(addressList.get(0));
         }
+        activity.setPlatformCouponCount(couponCodeService.yesCount(activityId, "1", userId));
+        activity.setActivityCouponCount(couponCodeService.yesCount(activityId, "2", userId));
         return activity;
     }
 

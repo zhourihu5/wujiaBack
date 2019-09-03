@@ -23,6 +23,8 @@ public class CouponDTO {
     private Integer everyoneNum;
     @ApiModelProperty(value = "限制条件(0.无限制 其余的是限制金额)")
     private Integer limitNum;
+    @ApiModelProperty(value = "限制地址")
+    private String limitAddress;
     @ApiModelProperty(value = "0代表全场通用， 其他存活动ID")
     private Integer activityId;
     @ApiModelProperty(value = "备注")

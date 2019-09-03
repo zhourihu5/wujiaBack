@@ -36,7 +36,7 @@ public class ExperienceCodeService {
     public Page<ExperienceCode> findByUserIdStart(Integer userId, Pageable pageable) {
         Page<ExperienceCode> page =  experienceCodeRepository.findByUserIdStart(userId, new Date(), pageable);
         page.forEach(ExperienceCode -> {
-            ExperienceCode.setExperience(experienceRepository.getOne(ExperienceCode.getId()));
+            ExperienceCode.setExperience(experienceRepository.getById(ExperienceCode.getExperienceId()));
         });
         return page;
     }
@@ -44,7 +44,7 @@ public class ExperienceCodeService {
     public Page<ExperienceCode> findByUserIdEnd(Integer userId, Pageable pageable) {
         Page<ExperienceCode> page =  experienceCodeRepository.findByUserIdEnd(userId, new Date(), pageable);
         page.forEach(ExperienceCode -> {
-            ExperienceCode.setExperience(experienceRepository.getOne(ExperienceCode.getId()));
+            ExperienceCode.setExperience(experienceRepository.getById(ExperienceCode.getExperienceId()));
         });
         return page;
     }

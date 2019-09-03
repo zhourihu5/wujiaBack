@@ -23,6 +23,8 @@ public class ExperienceDTO {
     private String cover;
     @ApiModelProperty(value = "每人限领次数")
     private Integer limitNum;
+    @ApiModelProperty(value = "限制地址")
+    private String limitAddress;
     @ApiModelProperty(value = "领取方式  1主动领取 2自动发放")
     private String receive;
     @ApiModelProperty(value = "体验卷发放总数量")

@@ -110,7 +110,10 @@ public class ActivityController {
     @ApiOperation(value = "活动详情", notes = "活动详情")
     @GetMapping("/findByActivityId")
     public ResponseMessage<ActivityUserDTO> findByActivityId(Integer activityId) {
-        return ResponseMessage.ok(activityService.findByActivityId(activityId));
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        return ResponseMessage.ok(activityService.findByActivityId(userId, activityId));
     }
 
     @ApiOperation(value = "确认订单", notes = "确认订单")

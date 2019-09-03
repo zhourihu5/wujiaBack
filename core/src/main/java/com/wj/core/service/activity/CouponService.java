@@ -12,7 +12,9 @@ import com.wj.core.repository.activity.CouponRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,8 @@ import java.util.List;
 
 @Service
 public class CouponService {
-
+    @Value("${wj.oss.access}")
+    private String url;
     @Autowired
     private CouponRepository couponRepository;
 
@@ -42,6 +45,15 @@ public class CouponService {
 
     @Transactional
     public void saveCoupon(Coupon coupon) {
+        if (coupon.getActivityId() == null) {
+            coupon.setActivityId(0);
+        }
+        if (coupon.getId() == null && coupon.getActivityId() != null) {
+            Coupon coupon1 = couponRepository.getByActivityId(coupon.getActivityId());
+            if (coupon1 != null) {
+                throw new ServiceException("此活动已经存在优惠券", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+        }
         if (coupon.getStatus() == null) {
             coupon.setStatus("0");
         }
@@ -51,11 +63,13 @@ public class CouponService {
         if (coupon.getPlatform() == null) {
             coupon.setPlatform("1");
         }
-        if (coupon.getActivityId() == null) {
-            coupon.setActivityId(0);
-        }
         if (coupon.getGrantCount() == null) {
             coupon.setGrantCount(0);
+        }
+        if (StringUtils.isNotBlank(coupon.getCover()) && StringUtils.contains(coupon.getCover(),"https://")) {
+            coupon.setCover(coupon.getCover());
+        } else {
+            coupon.setCover(url + coupon.getCover());
         }
         coupon.setCreateDate(new Date());
         coupon.setUpdateDate(new Date());
@@ -94,8 +108,14 @@ public class CouponService {
         return page;
     }
 
+    public Page<Coupon> findListByType(String type, Pageable pageable) {
+        Page<Coupon> page = couponRepository.findByType(type, pageable);
+        return page;
+    }
+
     @Transactional
     public void updateCouponStatus(Coupon coupon) {
+        Coupon coupon1 = couponRepository.getById(coupon.getId());
         if (coupon.getStatus().equals("1")) {
             List<SysUserInfo> userInfoList = userInfoRepository.findListByFlag();
             for (SysUserInfo userInfo : userInfoList) {
@@ -104,7 +124,12 @@ public class CouponService {
                 couponCode.setCouponType(coupon.getType());
                 couponCode.setActivityId(coupon.getActivityId());
                 couponCode.setUserId(userInfo.getId());
+                couponCode.setUserName(userInfo.getUserName());
+                couponCode.setMoney(coupon1.getMoney());
+                couponCode.setStatus("0");
                 couponCode.setCreateDate(new Date());
+                couponCode.setUpdateDate(new Date());
+                couponCode.setFinishDate(coupon1.getEndDate());
                 couponCodeRepository.save(couponCode);
             }
         }
@@ -116,13 +141,7 @@ public class CouponService {
         couponRepository.deleteById(id);
     }
 
-//    public Page<Coupon> findListByType(String type, Pageable pageable) {
-//        Page<Coupon> page = couponRepository.findByType(type, pageable);
-//        page.forEach(Coupon -> {
-//            Coupon.setActivity(activityRepository.findByActivityId(Coupon.getActivityId()));
-//        });
-//        return page;
-//    }
+
 
 
 }

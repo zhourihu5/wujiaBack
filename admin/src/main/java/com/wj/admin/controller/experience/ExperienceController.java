@@ -1,16 +1,25 @@
 package com.wj.admin.controller.experience;
 
 import com.wj.admin.filter.ResponseMessage;
+import com.wj.admin.utils.JwtUtil;
+import com.wj.core.entity.activity.Coupon;
 import com.wj.core.entity.experience.Experience;
+import com.wj.core.entity.experience.ExperienceCode;
 import com.wj.core.entity.experience.dto.ExperienceDTO;
+import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.service.experience.ExperienceService;
 import com.wj.core.util.mapper.BeanMapper;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 @Api(value = "/v1/experience", tags = "体验券模块")
@@ -68,4 +77,18 @@ public class ExperienceController {
         return ResponseMessage.ok();
     }
 
+
+    @ApiOperation(value="领取体验券用户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", dataType = "Integer", value = "页号"),
+            @ApiImplicitParam(name = "pageSize", dataType = "Integer", value = "大小"),
+    })
+    @GetMapping("receiveUserList")
+    public ResponseMessage<Page<ExperienceCode>> receiveUserList(Integer experienceId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        pageNum = pageNum - 1;
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        return ResponseMessage.ok(experienceService.findByExperienceIdAndUserId(experienceId, pageable));
+    }
 }
