@@ -31,13 +31,10 @@ public class BaseIssueService {
 
     @Autowired
     private BaseIssueRepository baseIssueRepository;
-
     @Autowired
     private BaseDistrictRepository baseDistrictRepository;
-
     @Autowired
     private BaseCommuntityRepository baseCommuntityRepository;
-
     @Autowired
     private BaseFloorRepository baseFloorRepository;
     @Autowired

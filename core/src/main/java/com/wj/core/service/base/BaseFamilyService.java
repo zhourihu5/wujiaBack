@@ -42,6 +42,12 @@ public class BaseFamilyService {
     @Autowired
     private UserInfoRepository userInfoRepository;
 
+    @Autowired
+    private BaseDistrictRepository baseDistrictRepository;
+
+    @Autowired
+    private BaseIssueRepository baseIssueRepository;
+
     /**
      * 保存家庭信息
      *
@@ -77,6 +83,51 @@ public class BaseFamilyService {
         BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(floor.getCommuntityId());
         if (communtity == null) throw new ServiceException("社区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
         communtity.setName(communtity.getName() + floor.getName() + unit.getUnitNo() + family.getNum());
+        return communtity;
+    }
+
+    public BaseCommuntity findCommuntityByFamilyId1(Integer fid) {
+        String floorName = "";
+        BaseFamily family = baseFamilyRepository.findByFamilyId(fid);
+        if (family == null || family.getUnitId() == null)
+            throw new ServiceException("家庭数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        BaseUnit unit = baseUnitRepository.findByUnitId(family.getUnitId());
+        if (unit == null || unit.getFloorId() == null)
+            throw new ServiceException("单元数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        BaseFloor floor = baseFloorRepository.findByFloorId(unit.getFloorId());
+        if (floor == null || floor.getCommuntityId() == null)
+            throw new ServiceException("楼数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        floorName = floor.getName() + unit.getUnitNo() + family.getNum();
+        Integer communtityId = 0;
+        String name = "";
+        if (floor.getDistrictId() == null) {
+            if (floor.getIssueId() != null) {
+                BaseIssue baseIssue = baseIssueRepository.findByIssueId(floor.getIssueId());
+                if (baseIssue == null || baseIssue.getCommuntityId() == null)
+                    throw new ServiceException("期数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+                communtityId = baseIssue.getCommuntityId();
+                name = baseIssue.getName() + floorName ;
+            } else {
+                communtityId = floor.getCommuntityId();
+                name = floorName;
+            }
+        } else {
+            BaseDistrict district = baseDistrictRepository.getOne(floor.getDistrictId());
+            name = district.getName() + floorName;
+            if (district.getIssueId() != null) {
+                BaseIssue baseIssue = baseIssueRepository.findByIssueId(floor.getIssueId());
+                if (baseIssue == null || baseIssue.getCommuntityId() == null)
+                    throw new ServiceException("期数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+                communtityId = baseIssue.getCommuntityId();
+                name = baseIssue.getName() + name;
+            } else {
+                communtityId = district.getCommuntityId();
+            }
+        }
+        BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(communtityId);
+        if (communtity == null) throw new ServiceException("社区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
+        name =  communtity.getName() + name;
+        communtity.setName(name);
         return communtity;
     }
 

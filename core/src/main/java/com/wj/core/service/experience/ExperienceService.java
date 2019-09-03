@@ -112,6 +112,38 @@ public class ExperienceService {
         return page;
     }
 
+
+    public Page<Experience> getExperienceListByCommunity(Integer community, Integer pageNum, Integer pageSize) {
+        Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
+
+            List<Predicate> predicates = Lists.newArrayList();
+            predicates.add(criteriaBuilder.equal(root.get("communitys"), community));
+            // 状态9是删除
+            predicates.add(criteriaBuilder.notEqual(root.get("isShow"), 9));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize, Sort.Direction.DESC, "id");
+        Page<Experience> page = experienceRepository.findAll(specification, pageable);
+//        page.forEach(Experience -> {
+//            List<ExperienceCode> experienceCodes = experienceCodeRepository.findByExperienceIdAndUserId(Experience.getId());
+//            Experience.setExperienceCodeList(experienceCodes);
+//            List<ExperienceCode> experienceCodeList = experienceCodeRepository.findByExperienceId(Experience.getId());
+//            String arrStr[] = new String[experienceCodeList.size()];
+//            for (int i = 0; i < experienceCodeList.size(); i++) {
+//                arrStr[i] = experienceCodeList.get(i).getExperienceCode();
+//            }
+//            Experience.setExperienceCodes(arrStr);
+//        });
+        return page;
+    }
+
+
     // 领取后更新数据领取人是谁
     @Transactional
     public void updateExperienceCode(ExperienceCode experienceCode) {
@@ -120,13 +152,19 @@ public class ExperienceService {
 
     @Transactional
     public void updateExperienceIsShow(Experience experience) {
-        experienceRepository.updateExperienceIsShow(experience.getStatus(), new Date(), experience.getId());
+        experienceRepository.updateExperienceIsShow(experience.getIsShow(), new Date(), experience.getId());
     }
 
     @Transactional
     public void removeExperience(Integer id) {
         experienceRepository.deleteById(id);
     }
+
+
+    public Experience getExperienceById(Integer id) {
+        return experienceRepository.getOne(id);
+    }
+
 
 
 }

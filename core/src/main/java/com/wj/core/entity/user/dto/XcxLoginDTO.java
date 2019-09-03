@@ -3,6 +3,7 @@ package com.wj.core.entity.user.dto;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.apply.ApplyLock;
 import com.wj.core.entity.base.BaseCommuntity;
+import com.wj.core.entity.base.BaseFamily;
 import com.wj.core.entity.base.dto.DeviceDTO;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.user.SysUserInfo;
@@ -33,6 +34,8 @@ public class XcxLoginDTO {
     private List<BaseCommuntity> communtityList;
 
     private List<OrderInfo> list;
+
+    private List<BaseFamily> familyList;
 
     private boolean unRead;
 

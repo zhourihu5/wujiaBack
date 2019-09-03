@@ -44,5 +44,4 @@ public interface BaseFloorRepository extends JpaRepository<BaseFloor, Integer> {
 
     int countByCodeLike(String code);
 
-
 }

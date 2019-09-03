@@ -59,5 +59,7 @@ public class BaseFamily {
     private List<SysUserInfo> userId;
     private String parentDirectory;
     private Integer structureId;
+    @Transient
+    private BaseCommuntity communtity;
 
 }

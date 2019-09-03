@@ -73,20 +73,20 @@ public class OrderService {
             throw new ServiceException("活动已经结束，您不能下单!", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         Integer count = orderInfoRepository.findCountByActivityId(activity.getCommodityId());
-        String[] rules = activity.getSaleRules().split(",");
+//        String[] rules = activity.getSaleRules().split(",");
         Integer amount = 0;
-        for (int i = 1; i < rules.length; i++) {
-            Integer number0 = Integer.valueOf(rules[i - 1].substring(0, rules[i - 1].indexOf("|")));
-            Integer number = Integer.valueOf(rules[i].substring(0, rules[i].indexOf("|")));//截取|之前的字符串
-            Integer money0 = Integer.valueOf(rules[i - 1].substring(rules[i - 1].lastIndexOf("|") + 1));
-            Integer money = Integer.valueOf(rules[i].substring(rules[i].lastIndexOf("|") + 1));
-            System.out.println(number0 + "---" + money0);
-            System.out.println(number + "---" + money);
-            if (count >= number0 && count < number) {
-                amount = money0;
-                break;
-            }
-        }
+//        for (int i = 1; i < rules.length; i++) {
+//            Integer number0 = Integer.valueOf(rules[i - 1].substring(0, rules[i - 1].indexOf("|")));
+//            Integer number = Integer.valueOf(rules[i].substring(0, rules[i].indexOf("|")));//截取|之前的字符串
+//            Integer money0 = Integer.valueOf(rules[i - 1].substring(rules[i - 1].lastIndexOf("|") + 1));
+//            Integer money = Integer.valueOf(rules[i].substring(rules[i].lastIndexOf("|") + 1));
+//            System.out.println(number0 + "---" + money0);
+//            System.out.println(number + "---" + money);
+//            if (count >= number0 && count < number) {
+//                amount = money0;
+//                break;
+//            }
+//        }
         // 优惠金额
         BigDecimal favPrice;
         // 实际支付金额
