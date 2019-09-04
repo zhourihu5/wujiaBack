@@ -1,26 +1,9 @@
 package com.wj.core.service.sendMessage;
 
-import com.alibaba.fastjson.JSONObject;
-import com.aliyuncs.CommonRequest;
-import com.aliyuncs.CommonResponse;
-import com.aliyuncs.DefaultAcsClient;
-import com.aliyuncs.IAcsClient;
-import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
-import com.aliyuncs.http.MethodType;
-import com.aliyuncs.profile.DefaultProfile;
-import com.google.common.collect.Maps;
-import com.wj.core.service.exception.ErrorCode;
-import com.wj.core.service.exception.ServiceException;
-import com.wj.core.service.qst.Qst;
-import com.wj.core.util.HttpClients;
 import com.wj.core.util.mapper.JsonMapper;
 import com.yunpian.sdk.YunpianClient;
 import com.yunpian.sdk.model.Result;
 import com.yunpian.sdk.model.SmsSingleSend;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
