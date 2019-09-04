@@ -16,6 +16,7 @@ import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.qst.QstBindingUserService;
+import com.wj.core.service.sendMessage.YunpianSendSms;
 import com.wj.core.util.time.ClockUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class ApplyLockService {
     private BaseFamilyRepository baseFamilyRepository;
     @Autowired
     private BaseUnitRepository baseUnitRepository;
+    @Autowired
+    private YunpianSendSms yunpianSendSms;
 
     @Transactional
     public void saveApplyLock(ApplyLock applyLock) {
@@ -84,7 +87,7 @@ public class ApplyLockService {
     }
 
     @Transactional
-    public void modityStatus(String status, String remark, Integer id) {
+    public void modityStatus(String status, String remark, Integer id, String address) {
         if (status.equals("1")) {
             ApplyLock applyLock = applyUnlockRepository.findByApplyId(id);
             SysUserFamily sysUserFamily = new SysUserFamily();
@@ -104,6 +107,7 @@ public class ApplyLockService {
                 throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
             }
             applyUnlockRepository.updateStatus(status, id);
+            yunpianSendSms.sendApply(userInfo.getUserName(), address);
         } else {
             applyUnlockRepository.updateStatusAndRemark(status, remark, id);
         }

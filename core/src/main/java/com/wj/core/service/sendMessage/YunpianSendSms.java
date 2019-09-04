@@ -34,7 +34,7 @@ public class YunpianSendSms {
         //发送短信API
         Map<String, String> param = clnt.newParam(2);
         param.put(YunpianClient.MOBILE, userName);
-        param.put(YunpianClient.TEXT, "【吾家】您申请入住的" + name + "已审核通过，快到吾家小程序中查看吧！");
+        param.put(YunpianClient.TEXT, "【吾家】您申请入住的社区已审核通过，快到吾家小程序中查看吧！");
         Result<SmsSingleSend> r = clnt.sms().single_send(param);
         clnt.close();
         return r.getCode();
