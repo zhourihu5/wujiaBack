@@ -40,7 +40,7 @@ public class ApplyController {
     private SendSms sendSms;
 
     @Autowired
-    private SendSms YunpianSendSms;
+    private YunpianSendSms yunpianSendSms;
 
     @ApiOperation(value = "审核接口")
     @ApiImplicitParams({
@@ -56,7 +56,7 @@ public class ApplyController {
         applyLockService.modityStatus(status, remark, id);
         if (status.equals("1")) {
 //            sendSms.sendApply(userName, address);
-            YunpianSendSms.sendApply(userName, address);
+            yunpianSendSms.sendApply(userName, address);
         }
         return ResponseMessage.ok();
     }
