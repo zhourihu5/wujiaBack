@@ -38,6 +38,8 @@ public class Experience {
     private Integer surplusNum;
     @ApiModelProperty(value = "规则")
     private String rule;
+    @ApiModelProperty(value = "是否点过上架 0.否 1.是")
+    private String dian;
     @ApiModelProperty(value = "限制地址")
     private String limitAddress;
     @ApiModelProperty(value = "体验券图片")
