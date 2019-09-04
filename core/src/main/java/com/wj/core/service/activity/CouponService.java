@@ -4,6 +4,7 @@ import com.wj.core.entity.activity.BlackList;
 import com.wj.core.entity.activity.Coupon;
 import com.wj.core.entity.activity.CouponCode;
 import com.wj.core.entity.experience.Experience;
+import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.activity.BlackListRepository;
@@ -12,6 +13,10 @@ import com.wj.core.repository.activity.CouponRepository;
 import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.job.JobService;
+import com.wj.core.service.order.OrderTask;
+import com.wj.core.util.time.DateFormatUtil;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,12 +48,15 @@ public class CouponService {
     @Autowired
     private ActivityRepository activityRepository;
 
+    @Autowired
+    private JobService jobService;
+
     @Transactional
     public void saveCoupon(Coupon coupon) {
         if (coupon.getActivityId() == null) {
             coupon.setActivityId(0);
         }
-        if (coupon.getId() == null && coupon.getActivityId() != null) {
+        if (coupon.getId() == null && coupon.getActivityId() != 0) {
             Coupon coupon1 = couponRepository.getByActivityId(coupon.getActivityId());
             if (coupon1 != null) {
                 throw new ServiceException("此活动已经存在优惠券", ErrorCode.INTERNAL_SERVER_ERROR);
@@ -85,6 +93,19 @@ public class CouponService {
                 blackList.setCreateDate(new Date());
                 blackListRepository.save(blackList);
             }
+        }
+        boolean ex = jobService.checkExists("coupon_close_" + coupon.getId(), "coupon");
+        // 添加定时任务
+        TaskEntity taskEntity = new TaskEntity();
+        taskEntity.setJobName("coupon_close_" + coupon.getId());
+        taskEntity.setJobGroup("coupon");
+        taskEntity.setJobClass(new CouponTask().getClass().getName());
+        taskEntity.setObjectId(coupon.getId());
+        taskEntity.setCronExpression(DateFormatUtil.formatDate(DateFormatUtil.CRON_DATE_FORMAT, coupon.getEndDate()));
+        if (!ex) {
+            jobService.addTask(taskEntity);
+        } else {
+            jobService.updateTask(taskEntity);
         }
 
     }
