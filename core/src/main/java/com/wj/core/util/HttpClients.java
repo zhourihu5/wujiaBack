@@ -62,5 +62,20 @@ public class HttpClients {
         return response.getBody();
     }
 
+    //通用post
+    public static String postObjectClient(String url, HttpHeaders requestHeaders, Map<String, Object> requestParam) {
+        RestTemplate template = new RestTemplate();
+        template.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        HttpEntity<String> requestEntity = new HttpEntity(requestParam, requestHeaders);
+        System.out.println(requestEntity);
+        ResponseEntity<String> response = null;
+        try {
+            response = template.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        } catch (RestClientException e) {
+            return e.getMessage();
+        }
+        return response.getBody();
+    }
+
 
 }
