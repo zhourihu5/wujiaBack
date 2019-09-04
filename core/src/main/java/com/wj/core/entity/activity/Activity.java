@@ -57,5 +57,9 @@ public class Activity {
     private BigDecimal paymentMoney;
     @Transient
     private String saleTip;
+    @Transient
+    private Integer platformCouponCount;
+    @Transient
+    private Integer activityCouponCount;
 
 }

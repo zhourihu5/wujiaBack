@@ -55,4 +55,6 @@ public class Coupon {
     private String[] userNames;
     @Transient
     private Activity activity;
+    @Transient
+    private Integer userCouponCount;
 }

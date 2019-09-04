@@ -3,8 +3,10 @@ package com.wj.core.service.experience;
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.BlackList;
 import com.wj.core.entity.activity.Coupon;
+import com.wj.core.entity.activity.dto.CouponMessageDTO;
 import com.wj.core.entity.experience.Experience;
 import com.wj.core.entity.experience.ExperienceCode;
+import com.wj.core.entity.experience.dto.ExperienceMessageDTO;
 import com.wj.core.repository.experience.ExperienceCodeRepository;
 import com.wj.core.repository.experience.ExperienceRepository;
 import com.wj.core.service.exception.ErrorCode;
@@ -12,6 +14,7 @@ import com.wj.core.service.exception.ServiceException;
 import com.wj.core.util.time.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +30,8 @@ import java.util.List;
 
 @Service
 public class ExperienceService {
+    @Value("${wj.oss.access}")
+    private String url;
 
     @Autowired
     private ExperienceRepository experienceRepository;
@@ -48,6 +53,26 @@ public class ExperienceService {
         if (experience.getReceive() == null) {
             experience.setReceive("2");
         }
+        if (StringUtils.isNotBlank(experience.getBanner()) && StringUtils.contains(experience.getBanner(),"https://")) {
+            experience.setBanner(experience.getBanner());
+        } else {
+            experience.setBanner(url + experience.getBanner());
+        }
+        if (StringUtils.isNotBlank(experience.getCover()) && StringUtils.contains(experience.getCover(),"https://")) {
+            experience.setCover(experience.getCover());
+        } else {
+            experience.setCover(url + experience.getCover());
+        }
+//        if (StringUtils.isNotBlank(experience.getImg1()) && StringUtils.contains(experience.getImg1(),"https://")) {
+//            experience.setImg1(experience.getImg1());
+//        } else {
+//            experience.setImg1(url + experience.getImg1());
+//        }
+//        if (StringUtils.isNotBlank(experience.getImg2()) && StringUtils.contains(experience.getImg2(),"https://")) {
+//            experience.setImg2(experience.getImg2());
+//        } else {
+//            experience.setImg2(url + experience.getImg2());
+//        }
         experience.setCreateDate(new Date());
         experience.setUpdateDate(new Date());
         Experience newEexperience = experienceRepository.save(experience);
@@ -59,6 +84,8 @@ public class ExperienceService {
             experienceCode.setExperienceId(newEexperience.getId());
             experienceCode.setExperienceCode(experience.getExperienceCodes()[i]);
             experienceCode.setCreateDate(new Date());
+            experienceCode.setUpdateDate(new Date());
+            experienceCode.setFinishDate(experience.getEndDate());
             experienceCodeRepository.save(experienceCode);
         }
     }
@@ -115,9 +142,9 @@ public class ExperienceService {
 
     public Page<Experience> getExperienceListByCommunity(Integer community, Integer pageNum, Integer pageSize) {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
-
             List<Predicate> predicates = Lists.newArrayList();
             predicates.add(criteriaBuilder.equal(root.get("communitys"), community));
+            predicates.add(criteriaBuilder.equal(root.get("status"), 1));
             // 状态9是删除
             predicates.add(criteriaBuilder.notEqual(root.get("isShow"), 9));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -130,25 +157,15 @@ public class ExperienceService {
         }
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize, Sort.Direction.DESC, "id");
         Page<Experience> page = experienceRepository.findAll(specification, pageable);
-//        page.forEach(Experience -> {
-//            List<ExperienceCode> experienceCodes = experienceCodeRepository.findByExperienceIdAndUserId(Experience.getId());
-//            Experience.setExperienceCodeList(experienceCodes);
-//            List<ExperienceCode> experienceCodeList = experienceCodeRepository.findByExperienceId(Experience.getId());
-//            String arrStr[] = new String[experienceCodeList.size()];
-//            for (int i = 0; i < experienceCodeList.size(); i++) {
-//                arrStr[i] = experienceCodeList.get(i).getExperienceCode();
-//            }
-//            Experience.setExperienceCodes(arrStr);
-//        });
         return page;
     }
 
 
-    // 领取后更新数据领取人是谁
-    @Transactional
-    public void updateExperienceCode(ExperienceCode experienceCode) {
-        experienceCodeRepository.updateExperienceCode(experienceCode.getUserId(), experienceCode.getUserName(), new Date(), experienceCode.getId());
-    }
+//    // 领取后更新数据领取人是谁
+//    @Transactional
+//    public void updateExperienceCode(ExperienceCode experienceCode) {
+//        experienceCodeRepository.updateExperienceCode(experienceCode.getUserId(), experienceCode.getUserName(), new Date(), experienceCode.getId());
+//    }
 
     @Transactional
     public void updateExperienceIsShow(Experience experience) {
@@ -158,13 +175,49 @@ public class ExperienceService {
     @Transactional
     public void removeExperience(Integer id) {
         experienceRepository.deleteById(id);
+        experienceCodeRepository.deleteByExperienceId(id);
     }
 
 
-    public Experience getExperienceById(Integer id) {
-        return experienceRepository.getOne(id);
+    public Experience getExperienceById(Integer userId, Integer id) {
+        Experience experience = experienceRepository.getById(id);
+        // 领取过的人数
+        Integer allCount = experienceCodeRepository.findCountByExperienceIdAndUserId(id);
+        experience.setSendNum(allCount);
+        experience.setSurplusNum(experience.getCount()-allCount);
+        experience.setUserExperienceCount(experienceCodeRepository.findCountByExperienceIdAndUserId(id, userId));
+        return experience;
     }
 
+    // 领取体验券
+    @Transactional
+    public ExperienceMessageDTO receiveExperience(Integer userId, String userName, Integer experienceId) {
+        ExperienceMessageDTO experienceMessageDTO = new ExperienceMessageDTO();
+        // 先验证每个人领取多少张的限制
+        Experience experience = experienceRepository.getById(experienceId);
+        Integer count = experienceCodeRepository.findCountByExperienceIdAndUserId(experienceId, userId);
+        if (count >= experience.getLimitNum()) {
+            throw new ServiceException("已领取", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        Integer allCount = experienceCodeRepository.findCountByExperienceIdAndUserId(experienceId);
+        if (allCount >= experience.getCount()) {
+            experienceMessageDTO.setFlag(false);
+        } else {
+            List<ExperienceCode> experienceCodes = experienceCodeRepository.findByUserIdNull(experienceId);
+            if (experienceCodes.size() > 0) {
+                experienceCodeRepository.updateExperienceCodeByCode(userId, userName, new Date(), experienceCodes.get(0).getExperienceCode());
+            } else {
+                experienceMessageDTO.setFlag(false);
+//            throw new ServiceException("很遗憾，已经被抢购一空", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+            experienceMessageDTO.setExperienceCode(experienceCodes.get(0));
+        }
+        return experienceMessageDTO;
+    }
 
-
+    // 领取体验券用户列表
+    public Page<ExperienceCode> findByExperienceIdAndUserId(Integer experienceId, Pageable pageable) {
+        Page<ExperienceCode> page = experienceCodeRepository.findByExperienceIdAndUserId(experienceId, pageable);
+        return page;
+    }
 }

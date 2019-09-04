@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -17,8 +18,12 @@ public class CouponCode {
     private Integer id;
     @ApiModelProperty(value = "用户ID")
     private Integer userId;
+    @ApiModelProperty(value = "用户手机号")
+    private String userName;
     @ApiModelProperty(value = "优惠券ID")
     private Integer couponId;
+    @ApiModelProperty(value = "优惠券金额")
+    private BigDecimal money;
     @ApiModelProperty(value = "活动ID")
     private Integer activityId;
     @ApiModelProperty(value = "优惠卷类型  1平台优惠券 2活动优惠券")
@@ -28,7 +33,11 @@ public class CouponCode {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date updateDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date finishDate;
     @Transient
     private Activity activity;
+    @Transient
+    private Coupon coupon;
 }

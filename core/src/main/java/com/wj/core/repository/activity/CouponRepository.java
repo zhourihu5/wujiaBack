@@ -22,6 +22,12 @@ public interface CouponRepository extends JpaRepository<Coupon, Integer>, JpaSpe
     @Query("update Coupon c set c.status = ?1, c.updateDate = ?2 where c.id = ?3")
     public void updateCouponStatus(String status, Date date, Integer id);
 
-    @Query(value = "select * from ebiz_coupon where type = ?1 and status <> 9", nativeQuery = true)
+    @Query(value = "select * from ebiz_coupon where type = ?1 and status = 1", nativeQuery = true)
     public Page<Coupon> findByType(String type, Pageable pageable);
+
+    @Query(value = "select * from ebiz_coupon where id = ?1", nativeQuery = true)
+    public Coupon getById(Integer id);
+
+    @Query(value = "select * from ebiz_coupon where activity_id = ?1", nativeQuery = true)
+    public Coupon getByActivityId(Integer activityId);
 }

@@ -2,10 +2,12 @@ package com.wj.core.service.order;
 
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
+import com.wj.core.entity.activity.CouponCode;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.repository.activity.ActivityRepository;
+import com.wj.core.repository.activity.CouponCodeRepository;
 import com.wj.core.repository.address.AddressRepository;
 import com.wj.core.repository.commodity.CommodityRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
@@ -56,6 +58,8 @@ public class OrderService {
     private UserInfoRepository userInfoRepository;
     @Autowired
     private PayUserService payUserService;
+    @Autowired
+    private CouponCodeRepository couponCodeRepository;
 
     // 生成订单
     @Transactional
@@ -73,8 +77,8 @@ public class OrderService {
             throw new ServiceException("活动已经结束，您不能下单!", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         Integer count = orderInfoRepository.findCountByActivityId(activity.getCommodityId());
-//        String[] rules = activity.getSaleRules().split(",");
         Integer amount = 0;
+//        String[] rules = activity.getSaleRules().split(",");
 //        for (int i = 1; i < rules.length; i++) {
 //            Integer number0 = Integer.valueOf(rules[i - 1].substring(0, rules[i - 1].indexOf("|")));
 //            Integer number = Integer.valueOf(rules[i].substring(0, rules[i].indexOf("|")));//截取|之前的字符串
@@ -95,15 +99,29 @@ public class OrderService {
             favPrice = new BigDecimal(amount);
             // 实际支付金额
             payMoney = activity.getPrice().subtract(favPrice);
+            if (orderInfo.getActivityCouponId() != null) {
+                CouponCode activityCoupon = couponCodeRepository.findByCouponId(orderInfo.getActivityCouponId());
+                if (activityCoupon == null) {
+                    throw new ServiceException("活动优惠券异常", ErrorCode.INTERNAL_SERVER_ERROR);
+                }
+                payMoney = payMoney.subtract(activityCoupon.getMoney());
+            }
+            if (orderInfo.getPlatformCouponId() != null) {
+                CouponCode platformCoupon = couponCodeRepository.findByCouponId(orderInfo.getPlatformCouponId());
+                if (platformCoupon == null) {
+                    throw new ServiceException("活动优惠券异常", ErrorCode.INTERNAL_SERVER_ERROR);
+                }
+                payMoney = payMoney.subtract(platformCoupon.getMoney());
+            }
             if (payMoney.doubleValue() <= 0) {
-                throw new ServiceException("系统异常", ErrorCode.INTERNAL_SERVER_ERROR);
+                throw new ServiceException("实际支付金额小于0", ErrorCode.INTERNAL_SERVER_ERROR);
             }
         } else {
             BigDecimal zhe = new BigDecimal(1 - amount / 100);
             favPrice = activity.getPrice().multiply(zhe);
             payMoney = activity.getPrice().subtract(favPrice);
             if (payMoney.doubleValue() <= 0) {
-                throw new ServiceException("系统异常", ErrorCode.INTERNAL_SERVER_ERROR);
+                throw new ServiceException("实际支付金额小于0", ErrorCode.INTERNAL_SERVER_ERROR);
             }
         }
         orderInfo.setPrice(activity.getPrice());
@@ -121,6 +139,15 @@ public class OrderService {
 
         orderInfo.setCode(code);
         orderInfoRepository.save(orderInfo);
+
+        //修改优惠券状态 变为已经使用
+        if (orderInfo.getActivityCouponId() != null) {
+            couponCodeRepository.updateStatusById("1", new Date(), orderInfo.getActivityCouponId());
+        }
+        if (orderInfo.getPlatformCouponId() != null) {
+            couponCodeRepository.updateStatusById("1", new Date(), orderInfo.getPlatformCouponId());
+        }
+
         boolean ex = jobService.checkExists("order_close_" + orderInfo.getId(), "order");
         // 添加定时任务，定时关闭为支付的订单
         TaskEntity taskEntity = new TaskEntity();

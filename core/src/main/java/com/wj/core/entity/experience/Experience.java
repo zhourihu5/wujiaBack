@@ -33,11 +33,13 @@ public class Experience {
     @ApiModelProperty(value = "体验卷发放总数量")
     private Integer count;
     @ApiModelProperty(value = "发出数量")
-    private Integer send_num;
+    private Integer sendNum;
     @ApiModelProperty(value = "剩余数量")
-    private Integer surplus_num;
+    private Integer surplusNum;
     @ApiModelProperty(value = "规则")
     private String rule;
+    @ApiModelProperty(value = "限制地址")
+    private String limitAddress;
     @ApiModelProperty(value = "体验券图片")
     private String img1;
     @ApiModelProperty(value = "体验券图片")
@@ -66,5 +68,7 @@ public class Experience {
     private ExperienceCode experienceCode;
     @Transient
     private List<ExperienceCode> experienceCodeList;
+    @Transient
+    private Integer userExperienceCount;
 
 }

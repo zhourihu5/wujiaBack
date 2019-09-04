@@ -68,4 +68,8 @@ public class OrderInfo {
     private Commodity commodity;
     @Transient
     private Activity activity;
+    @Transient
+    private Integer platformCouponId;
+    @Transient
+    private Integer activityCouponId;
 }
