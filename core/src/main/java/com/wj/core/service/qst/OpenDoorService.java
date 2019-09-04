@@ -9,6 +9,8 @@ import com.wj.core.repository.base.BaseFamilyRepository;
 import com.wj.core.repository.base.BaseUnitRepository;
 import com.wj.core.service.apply.ApplyLockService;
 import com.wj.core.service.base.BaseFamilyService;
+import com.wj.core.service.exception.ErrorCode;
+import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.util.HttpClients;
 import com.wj.core.util.mapper.JsonMapper;
@@ -44,7 +46,12 @@ public class OpenDoorService {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add("Authorization", "Bearer " + Qst.TOKEN);
         String url = Qst.URL21664 + "RemoteUnlock/OpenDoor?tenantCode=" + Qst.TC + "&devUserName=" + userName + "&deviceDirectory=" + deviceDirectory;
-        String object = HttpClients.getObjectClientAndHeaders(url, requestHeaders);
+        String object = null;
+        try {
+            object = HttpClients.getObjectClientAndHeaders(url, requestHeaders);
+        } catch (Exception e) {
+            throw new ServiceException("门口机未绑定", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         Map<String, Object> qst = mapper.fromJson(object, Map.class);
         return qst;
     }

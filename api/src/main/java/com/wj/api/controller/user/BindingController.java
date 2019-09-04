@@ -245,7 +245,7 @@ public class BindingController {
                     timer.cancel();
                     logger.info(userName + "的验证码已失效");
                 }
-            }, 5 * 60 * 1000);
+            }, 20 * 60 * 1000);
             if (result != 0) {
                 throw new ServiceException("发送失败", ErrorCode.INTERNAL_SERVER_ERROR);
             }
