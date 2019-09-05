@@ -17,6 +17,7 @@ import com.wj.core.service.base.BaseDeviceService;
 import com.wj.core.service.base.BaseFamilyService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.sendMessage.YunpianSendSms;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
 import com.wj.core.util.mapper.BeanMapper;
@@ -65,6 +66,8 @@ public class LoginController {
     @Autowired
     private SendSms sendSms;
 
+    @Autowired
+    private YunpianSendSms yunpianSendSms;
     /**
      * 获取验证码
      *
@@ -106,7 +109,7 @@ public class LoginController {
                 redisHelper.valuePut(userName, smsCode);
             }
             // 发送验证码
-//            String message = sendSms.send(userName, smsCode);
+            Integer result = yunpianSendSms.sendMessage(userName, smsCode);
             //TimerTask实现5分钟后从session中删除smsCode验证码
             final Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -116,9 +119,11 @@ public class LoginController {
                     timer.cancel();
                     logger.info(userName + "的验证码已失效");
                 }
-            }, 5 * 60 * 1000);
-//            return ResponseMessage.ok();
-            return ResponseMessage.ok(smsCode);
+            }, 20 * 60 * 1000);
+            if (result != 0) {
+                throw new ServiceException("发送失败", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+            return ResponseMessage.ok();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,11 +144,14 @@ public class LoginController {
         String smsCode = request.getParameter("smsCode");
         LoginDTO loginDTO = new LoginDTO();
         Object data = redisHelper.getValue(userName);
-        // TODO 测试期间0000放行
-        if (!smsCode.equals("0000") && StringUtils.isNotBlank(smsCode)) {
-            if (!String.valueOf(data).equals(smsCode)) {
-                throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
-            }
+//        // TODO 测试期间0000放行
+//        if (!smsCode.equals("0000") && StringUtils.isNotBlank(smsCode)) {
+//            if (!String.valueOf(data).equals(smsCode)) {
+//                throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
+//            }
+//        }
+        if (!String.valueOf(data).equals(smsCode)) {
+            throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         String key = request.getParameter("key");
         if (key == null) {

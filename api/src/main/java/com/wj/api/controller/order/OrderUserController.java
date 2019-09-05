@@ -18,6 +18,7 @@ import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.message.MessageService;
 import com.wj.core.service.order.OrderService;
 import com.wj.core.service.order.OrderUserService;
+import com.wj.core.service.sendMessage.YunpianSendSms;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
 import io.jsonwebtoken.Claims;
@@ -62,7 +63,8 @@ public class OrderUserController {
     private UserFamilyService userFamilyService;
     @Autowired
     private SendSms sendSms;
-
+    @Autowired
+    private YunpianSendSms yunpianSendSms;
 
     @ApiOperation(value = "保存配送员订单关系", notes = "保存配送员订单关系")
     @PostMapping("saveOrderUser")
@@ -98,7 +100,7 @@ public class OrderUserController {
 
         orderService.updateOrderDelivery(userInfo.getNickName(), userInfo.getUserName(), orderUser.getOrderId());
         SysUserInfo user = userInfoService.findUserInfo(orderUser.getUserId());
-        sendSms.sendDelivery(user.getUserName());
+        yunpianSendSms.sendDelivery(user.getUserName(), orderInfo.getCommodity().getName());
         orderUser.setUserId(userId);
         orderUserService.saveOrderUser(orderUser);
         return ResponseMessage.ok();

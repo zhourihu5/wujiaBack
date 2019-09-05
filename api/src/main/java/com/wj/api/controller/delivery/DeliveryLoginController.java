@@ -21,6 +21,7 @@ import com.wj.core.service.apply.ApplyLockService;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
 import com.wj.core.service.order.OrderService;
+import com.wj.core.service.sendMessage.YunpianSendSms;
 import com.wj.core.service.user.BindingService;
 import com.wj.core.service.user.UserFamilyService;
 import com.wj.core.service.user.UserInfoService;
@@ -74,16 +75,22 @@ public class DeliveryLoginController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private YunpianSendSms yunpianSendSms;
+
 
     @ApiOperation(value = "绑定用户信息", notes = "绑定用户信息")
     @PostMapping("bindingUser")
     public ResponseMessage<XcxLoginDTO> bindingUser(@RequestBody BindingDTO bindingDTO) {
         Object data = redisHelper.getValue(bindingDTO.getUserName());
-        // TODO 测试期间0000放行
-        if (!bindingDTO.getSmsCode().equals("0000") && StringUtils.isNotBlank(bindingDTO.getSmsCode())) {
-            if (!String.valueOf(data).equals(bindingDTO.getSmsCode())) {
-                throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
-            }
+//        // TODO 测试期间0000放行
+//        if (!bindingDTO.getSmsCode().equals("0000") && StringUtils.isNotBlank(bindingDTO.getSmsCode())) {
+//            if (!String.valueOf(data).equals(bindingDTO.getSmsCode())) {
+//                throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
+//            }
+//        }
+        if (!String.valueOf(data).equals(bindingDTO.getSmsCode())) {
+            throw new ServiceException("验证码不正确", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         XcxLoginDTO loginDTO = new XcxLoginDTO();
         SysUserInfo userInfo = userInfoService.findByName(bindingDTO.getUserName());
@@ -138,7 +145,7 @@ public class DeliveryLoginController {
                 redisHelper.valuePut(userName, smsCode);
             }
             // 发送验证码
-//            String message = sendSms.send(userName, smsCode);
+            Integer result = yunpianSendSms.sendMessage(userName, smsCode);
             //TimerTask实现5分钟后从session中删除smsCode验证码
             final Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -148,9 +155,11 @@ public class DeliveryLoginController {
                     timer.cancel();
                     logger.info(userName + "的验证码已失效");
                 }
-            }, 5 * 60 * 1000);
-//            return ResponseMessage.ok();
-            return ResponseMessage.ok(smsCode);
+            }, 20 * 60 * 1000);
+            if (result != 0) {
+                throw new ServiceException("发送失败", ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+            return ResponseMessage.ok();
         } catch (Exception e) {
             e.printStackTrace();
         }

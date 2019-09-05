@@ -10,6 +10,7 @@ import com.wj.core.entity.card.dto.CreateCardDTO;
 import com.wj.core.service.SendSms;
 import com.wj.core.service.apply.ApplyLockService;
 import com.wj.core.service.card.CardService;
+import com.wj.core.service.sendMessage.YunpianSendSms;
 import com.wj.core.util.CommonUtils;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
@@ -35,9 +36,6 @@ public class ApplyController {
     @Autowired
     private ApplyLockService applyLockService;
 
-    @Autowired
-    private SendSms sendSms;
-
     @ApiOperation(value = "审核接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "status", dataType = "String", value = "审核是否通过 0.待审核 1.通过 2.不通过"),
@@ -49,10 +47,7 @@ public class ApplyController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         String userName = (String) claims.get("userName");
-        applyLockService.modityStatus(status, remark, id);
-        if (status.equals("1")) {
-            sendSms.sendApply(userName, address);
-        }
+        applyLockService.modityStatus(status, remark, id, address);
         return ResponseMessage.ok();
     }
 
