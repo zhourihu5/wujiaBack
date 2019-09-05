@@ -141,7 +141,7 @@ public class BindingController {
                 BaseFamily baseFamily = new BaseFamily();
                 baseFamily.setId(sysUserFamily.getUserFamily().getFamilyId());
                 BaseCommuntity baseCommuntity = baseFamilyService.findCommuntityByFamilyId1(sysUserFamily.getUserFamily().getFamilyId());
-                baseFamily.setName(baseCommuntity.getName());
+                baseFamily.setName(baseCommuntity.getAllName());
                 baseFamily.setCommuntity(baseCommuntity);
                 familyList.add(baseFamily);
             }
@@ -201,7 +201,7 @@ public class BindingController {
                     BaseFamily baseFamily = new BaseFamily();
                     baseFamily.setId(sysUserFamily.getUserFamily().getFamilyId());
                     BaseCommuntity baseCommuntity = baseFamilyService.findCommuntityByFamilyId1(sysUserFamily.getUserFamily().getFamilyId());
-                    baseFamily.setName(baseCommuntity.getName());
+                    baseFamily.setName(baseCommuntity.getAllName());
                     baseFamily.setCommuntity(baseCommuntity);
                     familyList.add(baseFamily);
                 }

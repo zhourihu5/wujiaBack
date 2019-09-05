@@ -139,13 +139,13 @@ public class OrderUserController {
 
     @ApiOperation(value = "用户订单分页列表", notes = "用户订单分页列表")
     @GetMapping("/findAllCount")
-    public ResponseMessage<Object> findAllCount(String status, String startDate, String endDate, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResponseMessage<Object> findAllCount() {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         Integer userId = (Integer) claims.get("userId");
         Map<String, Integer> map = new HashMap<>();
-        Integer oneCount = orderUserService.findAllCount(userId, status);
-        Integer twoCount = orderUserService.findAllCount(userId, status);
+        Integer oneCount = orderUserService.findAllCount(userId, "0");
+        Integer twoCount = orderUserService.findAllCount(userId, "1");
         map.put("waiting", oneCount);
         map.put("end", twoCount);
         return ResponseMessage.ok(map);

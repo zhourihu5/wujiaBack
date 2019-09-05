@@ -48,6 +48,8 @@ public class BaseCommuntity {
     private Integer structureId;
     private String directory;
     private String villageName;
+    @Transient
+    private String allName;
 
 
 }

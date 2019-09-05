@@ -124,10 +124,11 @@ public class BaseFamilyService {
                 communtityId = district.getCommuntityId();
             }
         }
-        BaseCommuntity communtity = baseCommuntityRepository.findByCommuntityId(communtityId);
+        BaseCommuntity communtity = new BaseCommuntity();
+        communtity = baseCommuntityRepository.findByCommuntityId(communtityId);
         if (communtity == null) throw new ServiceException("社区数据异常", ErrorCode.INTERNAL_SERVER_ERROR);
         name =  communtity.getName() + name;
-        communtity.setName(name);
+        communtity.setAllName(name);
         return communtity;
     }
 
