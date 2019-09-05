@@ -33,4 +33,8 @@ public interface OrderUserRepository extends JpaRepository<OrderUser, Integer> {
 
     @Query(value = "select count(*) from ebiz_order_user where order_id = ?1", nativeQuery = true)
     public Integer findCountByOrderId(Integer orderId);
+
+    @Query(value = "select count(*) from ebiz_order_user where user_id = ?1 and status = ?2", nativeQuery = true)
+    public Integer findAllCountByStatus(Integer userId, String status);
+
 }

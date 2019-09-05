@@ -58,6 +58,9 @@ public class OrderUserService {
         return page;
     }
 
+    public Integer findAllCount(Integer userId, String status) {
+        return orderUserRepository.findAllCountByStatus(userId, status);
+    }
 
     public Integer findCountByOrderId(Integer orderId) {
         return orderUserRepository.findCountByOrderId(orderId);

@@ -24,7 +24,9 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -195,6 +197,14 @@ public class ExperienceService {
         ExperienceMessageDTO experienceMessageDTO = new ExperienceMessageDTO();
         // 先验证每个人领取多少张的限制
         Experience experience = experienceRepository.getById(experienceId);
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTime = formatter.format(date);
+        String endDate = formatter.format(experience.getEndDate());
+        boolean isafter = isDateAfter(currentTime, endDate);
+        if (isafter) {
+            throw new ServiceException("活动优惠券已经结束，您不能领取!", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         Integer count = experienceCodeRepository.findCountByExperienceIdAndUserId(experienceId, userId);
         if (count >= experience.getLimitNum()) {
             throw new ServiceException("已领取", ErrorCode.INTERNAL_SERVER_ERROR);
@@ -219,5 +229,15 @@ public class ExperienceService {
     public Page<ExperienceCode> findByExperienceIdAndUserId(Integer experienceId, Pageable pageable) {
         Page<ExperienceCode> page = experienceCodeRepository.findByExperienceIdAndUserId(experienceId, pageable);
         return page;
+    }
+
+    public static boolean isDateAfter(String date1, String date2) {
+        try {
+            DateFormat df = DateFormat.getDateTimeInstance();
+            return df.parse(date1).after(df.parse(date2));
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 }

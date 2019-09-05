@@ -32,9 +32,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+import sun.jvm.hotspot.opto.HaltNode;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Api(value = "/v1/orderUser", tags = "用户订单关系接口模块")
 @RestController
@@ -134,5 +137,18 @@ public class OrderUserController {
         return ResponseMessage.ok(page);
     }
 
+    @ApiOperation(value = "用户订单分页列表", notes = "用户订单分页列表")
+    @GetMapping("/findAllCount")
+    public ResponseMessage<Object> findAllCount(String status, String startDate, String endDate, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        Map<String, Integer> map = new HashMap<>();
+        Integer oneCount = orderUserService.findAllCount(userId, status);
+        Integer twoCount = orderUserService.findAllCount(userId, status);
+        map.put("waiting", oneCount);
+        map.put("end", twoCount);
+        return ResponseMessage.ok(map);
+    }
 
 }
