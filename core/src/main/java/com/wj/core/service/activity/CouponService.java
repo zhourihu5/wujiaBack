@@ -94,14 +94,14 @@ public class CouponService {
                 blackListRepository.save(blackList);
             }
         }
-        boolean ex = jobService.checkExists("coupon_close_" + coupon.getId(), "coupon");
+        boolean ex = jobService.checkExists("coupon_close_" + newCoupon.getId(), "coupon");
         // 添加定时任务
         TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setJobName("coupon_close_" + coupon.getId());
+        taskEntity.setJobName("coupon_close_" + newCoupon.getId());
         taskEntity.setJobGroup("coupon");
         taskEntity.setJobClass(new CouponTask().getClass().getName());
-        taskEntity.setObjectId(coupon.getId());
-        taskEntity.setCronExpression(DateFormatUtil.formatDate(DateFormatUtil.CRON_DATE_FORMAT, coupon.getEndDate()));
+        taskEntity.setObjectId(newCoupon.getId());
+        taskEntity.setCronExpression(DateFormatUtil.formatDate(DateFormatUtil.CRON_DATE_FORMAT, newCoupon.getEndDate()));
         if (!ex) {
             jobService.addTask(taskEntity);
         } else {

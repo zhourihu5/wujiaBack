@@ -7,10 +7,13 @@ import com.wj.core.entity.activity.dto.CouponMessageDTO;
 import com.wj.core.entity.experience.Experience;
 import com.wj.core.entity.experience.ExperienceCode;
 import com.wj.core.entity.experience.dto.ExperienceMessageDTO;
+import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.repository.experience.ExperienceCodeRepository;
 import com.wj.core.repository.experience.ExperienceRepository;
+import com.wj.core.service.activity.CouponTask;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.service.job.JobService;
 import com.wj.core.util.CommonUtils;
 import com.wj.core.util.time.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +44,9 @@ public class ExperienceService {
 
     @Autowired
     private ExperienceCodeRepository experienceCodeRepository;
+
+    @Autowired
+    private JobService jobService;
 
     @Transactional
     public void saveExperience(Experience experience) {
@@ -90,6 +96,19 @@ public class ExperienceService {
             experienceCode.setUpdateDate(new Date());
             experienceCode.setFinishDate(experience.getEndDate());
             experienceCodeRepository.save(experienceCode);
+        }
+        boolean ex = jobService.checkExists("experience_close_" + newEexperience.getId(), "experience");
+        // 添加定时任务
+        TaskEntity taskEntity = new TaskEntity();
+        taskEntity.setJobName("experience_close_" + newEexperience.getId());
+        taskEntity.setJobGroup("experience");
+        taskEntity.setJobClass(new ExperienceTask().getClass().getName());
+        taskEntity.setObjectId(newEexperience.getId());
+        taskEntity.setCronExpression(DateFormatUtil.formatDate(DateFormatUtil.CRON_DATE_FORMAT, newEexperience.getEndDate()));
+        if (!ex) {
+            jobService.addTask(taskEntity);
+        } else {
+            jobService.updateTask(taskEntity);
         }
     }
 
