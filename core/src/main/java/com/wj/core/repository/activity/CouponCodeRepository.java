@@ -32,6 +32,9 @@ public interface CouponCodeRepository extends JpaRepository<CouponCode, Integer>
     @Query(value = "select count(*) from ebiz_coupon_code where activity_id = ?1 and coupon_type = ?2 and user_id = ?3", nativeQuery = true)
     public Integer getCountByTypeAndUserId(Integer activityId, String type, Integer userId);
 
+    @Query(value = "select * from ebiz_coupon_code where activity_id = ?1 and coupon_type = ?2 and user_id = ?3", nativeQuery = true)
+    public List<CouponCode> getByActivityIdAndTypeAndUserId(Integer activityId, String type, Integer userId);
+
     @Query(value = "select count(*) from ebiz_coupon_code where activity_id = ?1 and coupon_type = ?2 and user_id is not null", nativeQuery = true)
     public Integer getCountByTypeAndActivityId(Integer activityId, String type);
 

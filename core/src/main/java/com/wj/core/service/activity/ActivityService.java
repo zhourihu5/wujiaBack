@@ -3,6 +3,7 @@ package com.wj.core.service.activity;
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.Coupon;
+import com.wj.core.entity.activity.CouponCode;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
 import com.wj.core.entity.address.Address;
 import com.wj.core.entity.atta.AttaInfo;
@@ -41,7 +42,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Transient;
 import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -251,9 +251,18 @@ public class ActivityService {
         Coupon coupon = couponRepository.getByActivityId(activityId);
         if (coupon != null) {
             coupon.setUserCouponCount(0);
-            Integer count = couponCodeRepository.getCountByTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
+//            Integer count = couponCodeRepository.getCountByTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
+            List<CouponCode>statusList= couponCodeRepository.getByActivityIdAndTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
+            Integer count =statusList.size();
             if (count >= coupon.getLimitNum()) {
                 coupon.setUserCouponCount(count);
+                coupon.setValid(false);
+                for(CouponCode couponCode:statusList){
+                    if("0".equals(couponCode.getStatus())){
+                        coupon.setValid(true);
+                        break;
+                    }
+                }
             }
             activityUserDTO.setCoupon(coupon);
         }
