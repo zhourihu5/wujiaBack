@@ -57,4 +57,6 @@ public class Coupon {
     private Activity activity;
     @Transient
     private Integer userCouponCount;
+    @Transient
+    private boolean isValid;
 }
