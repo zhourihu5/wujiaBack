@@ -1,5 +1,7 @@
 package com.wj.core.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Random;
 
 /**
@@ -62,6 +64,26 @@ public class CommonUtils {
             sb.append(base.charAt(number));
         }
         return sb.toString();
+    }
+
+    public static boolean isDateBefore(String date1, String date2) {
+        try {
+            DateFormat df = DateFormat.getDateTimeInstance();
+            return df.parse(date1).before(df.parse(date2));
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean isDateAfter(String date1, String date2) {
+        try {
+            DateFormat df = DateFormat.getDateTimeInstance();
+            return df.parse(date1).after(df.parse(date2));
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
     // 阿里天气预报接口地址

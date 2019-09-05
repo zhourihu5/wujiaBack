@@ -11,6 +11,7 @@ import com.wj.core.repository.experience.ExperienceCodeRepository;
 import com.wj.core.repository.experience.ExperienceRepository;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
+import com.wj.core.util.CommonUtils;
 import com.wj.core.util.time.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,7 +202,7 @@ public class ExperienceService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String currentTime = formatter.format(date);
         String endDate = formatter.format(experience.getEndDate());
-        boolean isafter = isDateAfter(currentTime, endDate);
+        boolean isafter = CommonUtils.isDateAfter(currentTime, endDate);
         if (isafter) {
             throw new ServiceException("活动优惠券已经结束，您不能领取!", ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -231,13 +232,4 @@ public class ExperienceService {
         return page;
     }
 
-    public static boolean isDateAfter(String date1, String date2) {
-        try {
-            DateFormat df = DateFormat.getDateTimeInstance();
-            return df.parse(date1).after(df.parse(date2));
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
 }

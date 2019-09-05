@@ -71,8 +71,7 @@ public class OrderService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String currentTime = formatter.format(date);
         String endDate = formatter.format(activity.getEndDate());
-//        boolean isbefore = isDateBefore(currentTime,endDate);
-        boolean isafter = isDateAfter(currentTime, endDate);
+        boolean isafter = CommonUtils.isDateAfter(currentTime, endDate);
         if (isafter) {
             throw new ServiceException("活动已经结束，您不能下单!", ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -295,27 +294,6 @@ public class OrderService {
             SysUserInfo userInfo = userInfoRepository.findByUserId(OrderInfo.getUserId());
             payUserService.wxPay(request, userInfo, OrderInfo);
         });
-    }
-
-
-    public static boolean isDateBefore(String date1, String date2) {
-        try {
-            DateFormat df = DateFormat.getDateTimeInstance();
-            return df.parse(date1).before(df.parse(date2));
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
-
-    public static boolean isDateAfter(String date1, String date2) {
-        try {
-            DateFormat df = DateFormat.getDateTimeInstance();
-            return df.parse(date1).after(df.parse(date2));
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
     }
 
     @Transactional
