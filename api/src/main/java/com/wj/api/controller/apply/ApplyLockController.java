@@ -102,6 +102,7 @@ public class ApplyLockController {
         deviceLocalDirectory = deviceLocalDirectory+"-1";
         Map<String, Object> result = openDoorService.accessRecords(userName, deviceLocalDirectory,pageNum);
         logger.info("accessRecords pageNum: {}",pageNum);
+
         return ResponseMessage.ok(result);
     }
 
