@@ -76,21 +76,12 @@ public class OpenDoorService {
     }
 
     //临时密码开锁
-    public Map<String, Object> SecretCodeWithOpenDoor(String communtityCode, Integer userId, String userName) {
-        String deviceLocalDirectory = "";
-        String address = "";
-        List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userId);
-        for (SysUserFamily userFamily : userFamilyList) {
-            List<BaseFamily> baseFamilyList = baseFamilyRepository.findByFamilyIdAndCodeLike(userFamily.getUserFamily().getFamilyId(), communtityCode);
-            if (baseFamilyList.size() > 0) {
-                BaseCommuntity communtity = baseFamilyService.findCommuntityByFamilyId(baseFamilyList.get(0).getId());
-                address = communtity.getName();
-                String unitCode = baseFamilyList.get(0).getCode().substring(0, 16);
-                BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
-                deviceLocalDirectory = baseUnit.getDirectory();
-                break;
-            }
-        }
+    public Map<String, Object> SecretCodeWithOpenDoor(String communtityCode, Integer fid, Integer userId, String userName) {
+        BaseFamily family = baseFamilyRepository.findByFamilyId(fid);
+        BaseUnit unit = baseUnitRepository.findByUnitId(family.getUnitId());
+        String deviceLocalDirectory = unit.getDirectory();
+        BaseCommuntity communtity = baseFamilyService.findCommuntityByFamilyId(fid);
+        String address = communtity.getName();
         String appaccesstokenUrl = Qst.URL9700 + "appaccesstoken?devUserName=" + userName;
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add("Authorization", "Basic " + Qst.UUID);

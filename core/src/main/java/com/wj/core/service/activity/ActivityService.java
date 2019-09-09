@@ -328,7 +328,9 @@ public class ActivityService {
         List<BaseCommuntity> communtityList = addressService.findByUserId(userId);
         loginDTO.setCommuntityList(communtityList);
         Commodity commodity = commodityRepository.findByCommodityId(communityId);
-        loginDTO.setCommuntityName(commodity.getName());
+        if (commodity != null) {
+            loginDTO.setCommuntityName(commodity.getName());
+        }
         List<Activity> activityList = activityService.findList(userId, communityId);
         loginDTO.setActivityList(activityList);
         loginDTO.setUnRead(messageService.isUnReadMessage(userId, 0));
