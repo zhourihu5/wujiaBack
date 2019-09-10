@@ -89,39 +89,20 @@ public class ApplyLockController {
     }
     @ApiOperation(value = "获取门禁出入记录", notes = "获取门禁出入记录")
     @GetMapping("accessRecords")
-    public ResponseMessage accessRecords(String communtityCode,@RequestParam(defaultValue = "1") Integer pageNum) {
+    public ResponseMessage accessRecords(Integer fid,@RequestParam(defaultValue = "1") Integer pageNum) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
-        Integer userId = (Integer) claims.get("userId");
         String userName = (String) claims.get("userName");
-        String deviceLocalDirectory = "";
-        List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userId);
-        //全视通
-        for (SysUserFamily userFamily : userFamilyList) {
-            List<BaseFamily> baseFamilyList = baseFamilyRepository.findByFamilyIdAndCodeLike(userFamily.getUserFamily().getFamilyId(), communtityCode);
-            if (baseFamilyList.size() > 0) {
-                String unitCode = baseFamilyList.get(0).getCode().substring(0, 16);
-                BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
-                deviceLocalDirectory = baseUnit.getDirectory();
-                break;
-            }
-//            BaseFamily baseFamily = familyService.findByFamilyId(userFamily.getUserFamily().getFamilyId());
-//            String unitCode = baseFamily.getCode().substring(0, 16);
-//            BaseUnit baseUnit = baseUnitRepository.findByUnitCode(unitCode);
-//            Map<String, Object> result = openDoorService.openDoor(userName, baseUnit.getDirectory());
-//            if (Integer.valueOf(result.get("Code").toString()) != 200) {
-//                throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
-//            }
-        }
+        BaseFamily family = familyService.findByFamilyId(fid);
+        BaseUnit unit = baseUnitRepository.findByUnitId(family.getUnitId());
+        String deviceLocalDirectory = unit.getDirectory();
         if (deviceLocalDirectory == "") {
             throw new ServiceException("系统异常", ErrorCode.QST_ERROR);
         }
         deviceLocalDirectory = deviceLocalDirectory+"-1";
         Map<String, Object> result = openDoorService.accessRecords(userName, deviceLocalDirectory,pageNum);
         logger.info("accessRecords pageNum: {}",pageNum);
-//        if (Integer.valueOf(result.get("Code").toString()) != 200) {
-//            throw new ServiceException("数据异常", ErrorCode.QST_ERROR);
-//        }
+
         return ResponseMessage.ok(result);
     }
 
