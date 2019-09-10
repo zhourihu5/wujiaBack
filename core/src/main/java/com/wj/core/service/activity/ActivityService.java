@@ -103,6 +103,9 @@ public class ActivityService {
     public List<Activity> getTop3Activity() {
         Pageable pageable = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
         Page<Activity> page = activityRepository.findByIsShow("1", pageable);
+        page.forEach(Activity -> {
+            Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
+        });
         return page.getContent();
     }
 
