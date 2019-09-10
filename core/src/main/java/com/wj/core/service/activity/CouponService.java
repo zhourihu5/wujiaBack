@@ -56,7 +56,7 @@ public class CouponService {
         if (coupon.getActivityId() == null) {
             coupon.setActivityId(0);
         }
-        if (coupon.getId() == null && coupon.getActivityId() != 0) {
+        if (coupon.getActivityId() != 0) {
             Coupon coupon1 = couponRepository.getByActivityId(coupon.getActivityId());
             if (coupon1 != null) {
                 throw new ServiceException("此活动已经存在优惠券", ErrorCode.INTERNAL_SERVER_ERROR);
