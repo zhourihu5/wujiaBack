@@ -100,6 +100,12 @@ public class ActivityService {
         return activityList;
     }
 
+    public List<Activity> getTop3Activity() {
+        Pageable pageable = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
+        Page<Activity> page = activityRepository.findByIsShow("1", pageable);
+        return page.getContent();
+    }
+
     public List<Activity> findList(Integer communityId) {
         List<Activity> activityList = activityRepository.findByIsShow("1", communityId);
         activityList.forEach(Activity -> {
@@ -109,22 +115,23 @@ public class ActivityService {
     }
 
     public Page<Activity> findAll(Integer userId, Integer communityId, Pageable pageable) {
-        Page<Activity> page = activityRepository.findAll("1", communityId, pageable);
-//        page.forEach(Activity -> {
-//            Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
-//        });
-        page.forEach(Activity -> {
-            Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
-            if (userId != null) {
-                OrderInfo orderInfo = orderInfoRepository.findByUserIdAndActivityId(userId, Activity.getId());
-                if (orderInfo != null) {
-                    Activity.setIsJoin(1);
-                } else {
-                    Activity.setIsJoin(0);
+        if (communityId != null) {
+            Page<Activity> page = activityRepository.findAll("1", communityId, pageable);
+            page.forEach(Activity -> {
+                Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
+                if (userId != null) {
+                    OrderInfo orderInfo = orderInfoRepository.findByUserIdAndActivityId(userId, Activity.getId());
+                    if (orderInfo != null) {
+                        Activity.setIsJoin(1);
+                    } else {
+                        Activity.setIsJoin(0);
+                    }
                 }
-            }
-        });
-        return page;
+            });
+            return page;
+        } else {
+            return activityRepository.findByIsShow("1", pageable);
+        }
     }
 
     public void saveActivity(@NotNull(message = "实体未空") Activity activity) {
@@ -328,10 +335,16 @@ public class ActivityService {
         List<BaseCommuntity> communtityList = addressService.findByUserId(userId);
         loginDTO.setCommuntityList(communtityList);
         Commodity commodity = commodityRepository.findByCommodityId(communityId);
+        List<Activity> activityList;
         if (commodity != null) {
             loginDTO.setCommuntityName(commodity.getName());
         }
-        List<Activity> activityList = activityService.findList(userId, communityId);
+        if (communityId != null) {
+            activityList = activityService.findList(userId, communityId);
+        } else {
+            // modity sun 用户未登录请看下返回前三条
+            activityList = activityService.getTop3Activity();
+        }
         loginDTO.setActivityList(activityList);
         loginDTO.setUnRead(messageService.isUnReadMessage(userId, 0));
         List<BaseFamily> familyList = new ArrayList<>();
