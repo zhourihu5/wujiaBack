@@ -1,7 +1,6 @@
 package com.wj.core.repository.activity;
 
 import com.wj.core.entity.activity.Activity;
-import com.wj.core.entity.order.OrderInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,4 +31,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer>, Jp
 
     @Query(value = "select * from ebiz_activity where is_show = ?1 and community_id = ?2", nativeQuery = true)
     public Page<Activity> findAll(String isShow, Integer communityId, Pageable pageable);
+
+    Page<Activity> findByIsShow(String isSHow, Pageable pageable);
 }

@@ -137,7 +137,7 @@ public class BindingController {
                 return ResponseMessage.ok(loginDTO);
             }
             List<BaseFamily> familyList = new ArrayList<>();
-            for (SysUserFamily sysUserFamily: userFamilyList) {
+            for (SysUserFamily sysUserFamily : userFamilyList) {
                 BaseFamily baseFamily = new BaseFamily();
                 baseFamily.setId(sysUserFamily.getUserFamily().getFamilyId());
                 BaseCommuntity baseCommuntity = baseFamilyService.findCommuntityByFamilyId1(sysUserFamily.getUserFamily().getFamilyId());
@@ -173,7 +173,6 @@ public class BindingController {
         Object object = wxLoginService.wxLogin(code);
         JSONObject json = JSON.parseObject(object.toString());
         String openid = json.getString("openid");
-        String session_key = json.getString("session_key");
         XcxLoginDTO loginDTO = new XcxLoginDTO();
         if (openid != null) {
             SysUserInfo userInfo = bindingService.findByOpenId(openid);
@@ -197,7 +196,7 @@ public class BindingController {
 //                    userInfo.setFid(userFamilyList.get(0).getUserFamily().getFamilyId());
 //                }
                 List<BaseFamily> familyList = new ArrayList<>();
-                for (SysUserFamily sysUserFamily: userFamilyList) {
+                for (SysUserFamily sysUserFamily : userFamilyList) {
                     BaseFamily baseFamily = new BaseFamily();
                     baseFamily.setId(sysUserFamily.getUserFamily().getFamilyId());
                     BaseCommuntity baseCommuntity = baseFamilyService.findCommuntityByFamilyId1(sysUserFamily.getUserFamily().getFamilyId());
@@ -217,6 +216,9 @@ public class BindingController {
                 }
                 loginDTO.setIsBindingFamily("1");
                 loginDTO.setUnRead(messageService.isUnReadMessage(userInfo.getId(), 0));
+            } else {
+                List<Activity> activityList = activityService.getTop3Activity();
+                loginDTO.setActivityList(activityList);
             }
             loginDTO.setOpenid(openid);
         }
