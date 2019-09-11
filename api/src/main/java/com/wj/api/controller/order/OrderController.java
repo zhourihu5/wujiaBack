@@ -27,7 +27,6 @@ import java.util.List;
 
 @Api(value = "/v1/order", tags = "订单接口模块")
 @RestController
-@RequestMapping("/v1/order/")
 public class OrderController {
 
     public final static Logger logger = LoggerFactory.getLogger(OrderController.class);
@@ -38,7 +37,7 @@ public class OrderController {
     private WxQrCodeService wxQrCodeService;
 
     @ApiOperation(value = "生成小程序二维码", notes = "生成小程序二维码")
-    @GetMapping("/generateQrCode")
+    @GetMapping("/v1/order/generateQrCode")
     public ResponseMessage<String> generateQrCodeMini(Integer id) throws Exception {
         String path="images/wxapp/qrcode/orderDetail";
         String fileName="order_"+id+".png";
@@ -52,13 +51,13 @@ public class OrderController {
     }
 
     @ApiOperation(value = "订单详情", notes = "订单详情")
-    @GetMapping("findOrderDetail")
+    @GetMapping("/v1/order/findOrderDetail")
     public ResponseMessage<OrderInfo> findOrderDetail(Integer orderId) {
         return ResponseMessage.ok(orderService.findOrderDetail(orderId));
     }
 
     @ApiOperation(value = "订单分页列表", notes = "订单分页列表")
-    @GetMapping("/findList")
+    @GetMapping("/v1/order/findList")
     public ResponseMessage<Page<OrderInfo>> findList(String status, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
@@ -73,7 +72,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "BD订单分页列表", notes = "订单分页列表")
-    @GetMapping("/findListBD")
+    @GetMapping("/order/findListBD")
     public ResponseMessage<Page<OrderInfo>> findListBD(String status, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
@@ -85,7 +84,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "下单", notes = "下单")
-    @PostMapping("saveOrder")
+    @PostMapping("/v1/order/saveOrder")
     public ResponseMessage<OrderInfo> saveOrder(@RequestBody OrderInfo orderInfo) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
@@ -94,7 +93,7 @@ public class OrderController {
         return ResponseMessage.ok(orderService.saveOrder(orderInfo));
     }
     @ApiOperation(value = "删除订单", notes = "删除订单")
-    @PostMapping("deleteOrder")
+    @PostMapping("/v1/order/deleteOrder")
     public ResponseMessage<OrderInfo> deleteOrder(@RequestBody OrderInfo orderInfo) {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
@@ -106,7 +105,7 @@ public class OrderController {
 
 
     @ApiOperation(value = "支付", notes = "支付")
-    @PostMapping("payOrder")
+    @PostMapping("/v1/order/payOrder")
     public ResponseMessage payOrder(@RequestBody OrderInfo orderInfo) {
         orderService.payOrder(orderInfo);
         return ResponseMessage.ok();
@@ -115,7 +114,7 @@ public class OrderController {
     @ApiOperation(value = "取消订单", notes = "取消订单")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderInfo", dataType = "OrderInfo", value = "只给order.id就可以", required = true)})
-    @PostMapping("cancelOrder")
+    @PostMapping("/v1/order/cancelOrder")
     public ResponseMessage cancelOrder(@RequestBody OrderInfo orderInfo) {
         orderService.cancelOrder(orderInfo.getId());
         return ResponseMessage.ok();
@@ -123,7 +122,7 @@ public class OrderController {
     @ApiOperation(value = "取消订单", notes = "取消订单")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderInfo", dataType = "OrderInfo", value = "只给order.id就可以", required = true)})
-    @PostMapping("cancelOrderPad")
+    @PostMapping("/v1/order/cancelOrderPad")
     public ResponseMessage cancelOrderPad(Integer id) {
         orderService.cancelOrder(id);
         return ResponseMessage.ok();
@@ -132,13 +131,13 @@ public class OrderController {
     @ApiOperation(value = "确认收获订单", notes = "确认收获订单")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderInfo", dataType = "OrderInfo", value = "只给order.id就可以", required = true)})
-    @PostMapping("receiveOrder")
+    @PostMapping("/v1/order/receiveOrder")
     public ResponseMessage receiveOrder(@RequestBody OrderInfo orderInfo) {
         orderService.receiveOrder(orderInfo.getId());
         return ResponseMessage.ok();
     }
     @ApiOperation(value = "确认收获订单", notes = "确认收获订单")
-    @PostMapping("receiveOrderPad")
+    @PostMapping("/v1/order/receiveOrderPad")
     public ResponseMessage receiveOrderPad(Integer id) {
         orderService.receiveOrder(id);
         return ResponseMessage.ok();
