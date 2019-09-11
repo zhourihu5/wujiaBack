@@ -64,6 +64,10 @@ public class AddressService {
         }
         addressRepository.save(address);
     }
+    @Transactional
+    public void deleteAddress(Address address) {
+        addressRepository.deleteById(address.getId());
+    }
 
     public Address findByAddressId(Integer userId) {
         return addressRepository.findByAddressId(userId);
