@@ -93,6 +93,16 @@ public class OrderController {
         orderInfo.setUserId(userId);
         return ResponseMessage.ok(orderService.saveOrder(orderInfo));
     }
+    @ApiOperation(value = "删除订单", notes = "删除订单")
+    @PostMapping("deleteOrder")
+    public ResponseMessage<OrderInfo> deleteOrder(@RequestBody OrderInfo orderInfo) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        orderInfo.setUserId(userId);
+        orderService.deleteOrder(orderInfo.getId());
+        return ResponseMessage.ok();
+    }
 
 
     @ApiOperation(value = "支付", notes = "支付")

@@ -168,6 +168,10 @@ public class OrderService {
     public void closeOrder(Integer id) {
         orderInfoRepository.modityStatus("4", id);
     }
+    @Transactional
+    public void deleteOrder(Integer id) {
+        orderInfoRepository.deleteById(id);
+    }
 
     public Page<OrderInfo> findList(String status, Pageable pageable) {
         Page<OrderInfo> page = null;

@@ -74,4 +74,14 @@ public class AddressController {
         addressService.saveAddress(address);
         return ResponseMessage.ok();
     }
+    @ApiOperation(value = "删除地址", notes = "删除地址")
+    @PostMapping("deleteAddress")
+    public ResponseMessage deleteAddress(@RequestBody Address address) {
+        String token = JwtUtil.getJwtToken();
+        Claims claims = JwtUtil.parseJwt(token);
+        Integer userId = (Integer) claims.get("userId");
+        address.setUserId(userId);
+        addressService.deleteAddress(address);
+        return ResponseMessage.ok();
+    }
 }
