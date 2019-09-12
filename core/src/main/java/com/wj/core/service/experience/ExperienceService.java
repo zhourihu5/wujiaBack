@@ -167,8 +167,9 @@ public class ExperienceService {
             List<Predicate> predicates = Lists.newArrayList();
             predicates.add(criteriaBuilder.equal(root.get("communitys"), community));
             predicates.add(criteriaBuilder.equal(root.get("status"), 1));
+            predicates.add(criteriaBuilder.equal(root.get("isShow"), "1"));
             // 状态9是删除
-            predicates.add(criteriaBuilder.notEqual(root.get("isShow"), 9));
+//            predicates.add(criteriaBuilder.notEqual(root.get("isShow"), 9));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
         if (pageNum == null) {
