@@ -140,18 +140,21 @@ public class CouponService {
         if (coupon.getStatus().equals("1")) {
             List<SysUserInfo> userInfoList = userInfoRepository.findListByFlag();
             for (SysUserInfo userInfo : userInfoList) {
-                CouponCode couponCode = new CouponCode();
-                couponCode.setCouponId(coupon.getId());
-                couponCode.setCouponType(coupon.getType());
-                couponCode.setActivityId(coupon.getActivityId());
-                couponCode.setUserId(userInfo.getId());
-                couponCode.setUserName(userInfo.getUserName());
-                couponCode.setMoney(coupon1.getMoney());
-                couponCode.setStatus("0");
-                couponCode.setCreateDate(new Date());
-                couponCode.setUpdateDate(new Date());
-                couponCode.setFinishDate(coupon1.getEndDate());
-                couponCodeRepository.save(couponCode);
+                for(int i=0;i<coupon.getEveryoneNum();i++){
+                    CouponCode couponCode = new CouponCode();
+                    couponCode.setCouponId(coupon.getId());
+                    couponCode.setCouponType(coupon.getType());
+                    couponCode.setActivityId(coupon.getActivityId());
+                    couponCode.setUserId(userInfo.getId());
+                    couponCode.setUserName(userInfo.getUserName());
+                    couponCode.setMoney(coupon1.getMoney());
+                    couponCode.setStatus("0");
+                    couponCode.setCreateDate(new Date());
+                    couponCode.setUpdateDate(new Date());
+                    couponCode.setFinishDate(coupon1.getEndDate());
+                    couponCodeRepository.save(couponCode);
+                }
+
             }
         }
         couponRepository.updateCouponStatus(coupon.getStatus(), new Date(), coupon.getId());
