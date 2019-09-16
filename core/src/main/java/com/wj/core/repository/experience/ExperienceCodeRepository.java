@@ -53,4 +53,9 @@ public interface ExperienceCodeRepository extends JpaRepository<ExperienceCode, 
     // 根据用户id和体验券id查询领取张数
     @Query(value = "select count(*) from ebiz_experience_code where experience_id = ?1 and user_id = ?2", nativeQuery = true)
     public Integer findCountByExperienceIdAndUserId(Integer experienceId, Integer userId);
+
+
+    @Query(value = "select * from ebiz_experience_code where experience_code = ?1", nativeQuery = true)
+    public ExperienceCode findExperienceByCode(String experienceCode);
+
 }

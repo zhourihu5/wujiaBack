@@ -8,6 +8,7 @@ import com.wj.core.entity.experience.Experience;
 import com.wj.core.entity.experience.ExperienceCode;
 import com.wj.core.entity.experience.dto.ExperienceMessageDTO;
 import com.wj.core.entity.task.TaskEntity;
+import com.wj.core.helper.impl.RedisHelperImpl;
 import com.wj.core.repository.experience.ExperienceCodeRepository;
 import com.wj.core.repository.experience.ExperienceRepository;
 import com.wj.core.service.activity.CouponTask;
@@ -48,26 +49,32 @@ public class ExperienceService {
     @Autowired
     private JobService jobService;
 
+    @Autowired
+    private RedisHelperImpl redisHelper;
+
     @Transactional
     public void saveExperience(Experience experience) {
         if (experience.getId() != null && experience.getIsShow().equals("1")) {
             throw new ServiceException("上架状态不能编辑", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         if (experience.getStatus() == null) {
-            experience.setStatus("1");
+            experience.setStatus("0");
         }
         if (experience.getIsShow() == null) {
             experience.setIsShow("0");
         }
+        if (experience.getDian() == null) {
+            experience.setDian("0");
+        }
         if (experience.getReceive() == null) {
             experience.setReceive("2");
         }
-        if (StringUtils.isNotBlank(experience.getBanner()) && StringUtils.contains(experience.getBanner(),"https://")) {
+        if (StringUtils.isNotBlank(experience.getBanner()) && StringUtils.contains(experience.getBanner(), "https://")) {
             experience.setBanner(experience.getBanner());
         } else {
             experience.setBanner(url + experience.getBanner());
         }
-        if (StringUtils.isNotBlank(experience.getCover()) && StringUtils.contains(experience.getCover(),"https://")) {
+        if (StringUtils.isNotBlank(experience.getCover()) && StringUtils.contains(experience.getCover(), "https://")) {
             experience.setCover(experience.getCover());
         } else {
             experience.setCover(url + experience.getCover());
@@ -87,6 +94,7 @@ public class ExperienceService {
         Experience newEexperience = experienceRepository.save(experience);
         if (experience.getId() != null) {
             experienceCodeRepository.deleteByExperienceId(experience.getId());
+            redisHelper.remove("experience_" + experience.getId());
         }
         for (int i = 0; i < experience.getExperienceCodes().length; i++) {
             ExperienceCode experienceCode = new ExperienceCode();
@@ -95,7 +103,8 @@ public class ExperienceService {
             experienceCode.setCreateDate(new Date());
             experienceCode.setUpdateDate(new Date());
             experienceCode.setFinishDate(experience.getEndDate());
-            experienceCodeRepository.save(experienceCode);
+            ExperienceCode newExperienceCode = experienceCodeRepository.save(experienceCode);
+            redisHelper.listPush("experience_" + experience.getId(), newExperienceCode.getExperienceCode().replaceAll("\"","&quot;"));
         }
         boolean ex = jobService.checkExists("experience_close_" + newEexperience.getId(), "experience");
         // 添加定时任务
@@ -109,6 +118,20 @@ public class ExperienceService {
             jobService.addTask(taskEntity);
         } else {
             jobService.updateTask(taskEntity);
+        }
+
+        boolean ex1 = jobService.checkExists("experience_starting_" + newEexperience.getId(), "experience");
+        // 添加定时任务
+        TaskEntity taskEntity1 = new TaskEntity();
+        taskEntity1.setJobName("experience_starting_" + newEexperience.getId());
+        taskEntity1.setJobGroup("experience");
+        taskEntity1.setJobClass(new ExperienceStartingTask().getClass().getName());
+        taskEntity1.setObjectId(newEexperience.getId());
+        taskEntity1.setCronExpression(DateFormatUtil.formatDate(DateFormatUtil.CRON_DATE_FORMAT, newEexperience.getStartDate()));
+        if (!ex1) {
+            jobService.addTask(taskEntity1);
+        } else {
+            jobService.updateTask(taskEntity1);
         }
     }
 
@@ -166,7 +189,8 @@ public class ExperienceService {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = Lists.newArrayList();
             predicates.add(criteriaBuilder.equal(root.get("communitys"), community));
-            predicates.add(criteriaBuilder.equal(root.get("status"), 1));
+//            predicates.add(criteriaBuilder.equal(root.get("status"), 1));
+            predicates.add(criteriaBuilder.equal(root.get("isShow"), 1));
             // 状态9是删除
             predicates.add(criteriaBuilder.notEqual(root.get("isShow"), 9));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -206,7 +230,7 @@ public class ExperienceService {
         // 领取过的人数
         Integer allCount = experienceCodeRepository.findCountByExperienceIdAndUserId(id);
         experience.setSendNum(allCount);
-        experience.setSurplusNum(experience.getCount()-allCount);
+        experience.setSurplusNum(experience.getCount() - allCount);
         experience.setUserExperienceCount(experienceCodeRepository.findCountByExperienceIdAndUserId(id, userId));
         return experience;
     }
@@ -233,14 +257,20 @@ public class ExperienceService {
         if (allCount >= experience.getCount()) {
             experienceMessageDTO.setFlag(false);
         } else {
-            List<ExperienceCode> experienceCodes = experienceCodeRepository.findByUserIdNull(experienceId);
-            if (experienceCodes.size() > 0) {
-                experienceCodeRepository.updateExperienceCodeByCode(userId, userName, new Date(), experienceCodes.get(0).getExperienceCode());
-            } else {
-                experienceMessageDTO.setFlag(false);
-//            throw new ServiceException("很遗憾，已经被抢购一空", ErrorCode.INTERNAL_SERVER_ERROR);
-            }
-            experienceMessageDTO.setExperienceCode(experienceCodes.get(0));
+            String code = (String) redisHelper.listLPop("experience_" + experienceId);
+            String newCode = code.replaceAll("\"","");
+            ExperienceCode newExperienceCode = experienceCodeRepository.findExperienceByCode(newCode);
+            experienceCodeRepository.updateExperienceCodeByCode(userId, userName, new Date(), newCode);
+            experienceMessageDTO.setExperienceCode(newExperienceCode);
+//            List<ExperienceCode> experienceCodes = experienceCodeRepository.findByUserIdNull(experienceId);
+//            if (experienceCodes.size() > 0) {
+//                experienceCodeRepository.updateExperienceCodeByCode(userId, userName, new Date(), code);
+////                experienceCodeRepository.updateExperienceCodeByCode(userId, userName, new Date(), experienceCodes.get(0).getExperienceCode());
+//            } else {
+//                experienceMessageDTO.setFlag(false);
+////            throw new ServiceException("很遗憾，已经被抢购一空", ErrorCode.INTERNAL_SERVER_ERROR);
+//            }
+//            experienceMessageDTO.setExperienceCode(experienceCodes.get(0));
         }
         return experienceMessageDTO;
     }
@@ -250,5 +280,11 @@ public class ExperienceService {
         Page<ExperienceCode> page = experienceCodeRepository.findByExperienceIdAndUserId(experienceId, pageable);
         return page;
     }
+
+    @Transactional
+    public void updateExperienceIsShowAndStatus(String isShow, String status, Date date, Integer id) {
+        experienceRepository.updateExperienceIsShowAndStatus(isShow, status, date, id);
+    }
+
 
 }

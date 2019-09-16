@@ -103,7 +103,7 @@ public class LoginController {
         final HttpSession httpSession = request.getSession();
         Object code = httpSession.getAttribute(userName);
         String smsCode = String.valueOf(code);
-        try {
+//        try {
             if (code == null) {
                 smsCode = CommonUtils.createRandomNum(4);// 生成随机数
                 redisHelper.valuePut(userName, smsCode);
@@ -124,10 +124,10 @@ public class LoginController {
                 throw new ServiceException("发送失败", ErrorCode.INTERNAL_SERVER_ERROR);
             }
             return ResponseMessage.ok();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseMessage.ok();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return ResponseMessage.ok();
     }
 
     /**

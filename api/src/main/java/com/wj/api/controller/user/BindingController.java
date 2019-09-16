@@ -231,31 +231,31 @@ public class BindingController {
         String userName = request.getParameter("userName");
         Object code = redisHelper.getValue(userName);
         String smsCode = String.valueOf(code);
-        try {
-            if (code == null) {
-                smsCode = CommonUtils.createRandomNum(6);// 生成随机数
-                redisHelper.valuePut(userName, smsCode);
+//        try {
+        if (code == null) {
+            smsCode = CommonUtils.createRandomNum(6);// 生成随机数
+            redisHelper.valuePut(userName, smsCode);
+        }
+        // 发送验证码
+        Integer result = yunpianSendSms.sendMessage(userName, smsCode);
+        //TimerTask实现5分钟后从session中删除smsCode验证码
+        final Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                redisHelper.remove(userName);
+                timer.cancel();
+                logger.info(userName + "的验证码已失效");
             }
-            // 发送验证码
-            Integer result = yunpianSendSms.sendMessage(userName, smsCode);
-            //TimerTask实现5分钟后从session中删除smsCode验证码
-            final Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    redisHelper.remove(userName);
-                    timer.cancel();
-                    logger.info(userName + "的验证码已失效");
-                }
-            }, 20 * 60 * 1000);
-            if (result != 0) {
-                throw new ServiceException("发送失败", ErrorCode.INTERNAL_SERVER_ERROR);
-            }
-            return ResponseMessage.ok();
-        } catch (Exception e) {
-            e.printStackTrace();
+        }, 20 * 60 * 1000);
+        if (result != 0) {
+            throw new ServiceException("发送失败", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         return ResponseMessage.ok();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return ResponseMessage.ok();
     }
 
 }
