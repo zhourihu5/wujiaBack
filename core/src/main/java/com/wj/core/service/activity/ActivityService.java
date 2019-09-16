@@ -15,6 +15,7 @@ import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.XcxLoginDTO;
+import com.wj.core.helper.impl.RedisHelperImpl;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.activity.CouponCodeRepository;
 import com.wj.core.repository.activity.CouponRepository;
@@ -83,6 +84,8 @@ public class ActivityService {
     private CouponCodeService couponCodeService;
     @Autowired
     private CouponCodeRepository couponCodeRepository;
+    @Autowired
+    private RedisHelperImpl redisHelper;
 
     public List<Activity> findList(Integer userId, Integer communityId) {
         List<Activity> activityList = activityRepository.findByCommunityIdAndIsShow(communityId, "1");
@@ -142,6 +145,7 @@ public class ActivityService {
             activity.setIsShow("0"); // 未上架
             activity.setStatus("0");
         }
+
         if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains(activity.getCover(),"https://")) {
             activity.setCover(activity.getCover());
         } else {
@@ -262,6 +266,7 @@ public class ActivityService {
         if (coupon != null) {
             coupon.setUserCouponCount(0);
 //            Integer count = couponCodeRepository.getCountByTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
+
             List<CouponCode>statusList= couponCodeRepository.getByActivityIdAndTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
             Integer count =statusList.size();
             if (count >= coupon.getLimitNum()) {
@@ -304,8 +309,8 @@ public class ActivityService {
         Activity activity = activityRepository.findByActivityId(activityId);
         activity.setCommodity(commodityRepository.findByCommodityId(activity.getCommodityId()));
         Integer count = orderInfoRepository.findCountByActivityId(activityId);
-//        String[] rules = activity.getSaleRules().split(",");
         Integer amount = 0;
+//        String[] rules = activity.getSaleRules().split(",");
 //        for (int i = 1; i < rules.length; i++) {
 //            Integer number0 = Integer.valueOf(rules[i-1].substring(0, rules[i-1].indexOf("|")));
 //            Integer number = Integer.valueOf(rules[i].substring(0, rules[i].indexOf("|")));//截取|之前的字符串

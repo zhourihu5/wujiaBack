@@ -79,16 +79,6 @@ public class ExperienceService {
         } else {
             experience.setCover(url + experience.getCover());
         }
-//        if (StringUtils.isNotBlank(experience.getImg1()) && StringUtils.contains(experience.getImg1(),"https://")) {
-//            experience.setImg1(experience.getImg1());
-//        } else {
-//            experience.setImg1(url + experience.getImg1());
-//        }
-//        if (StringUtils.isNotBlank(experience.getImg2()) && StringUtils.contains(experience.getImg2(),"https://")) {
-//            experience.setImg2(experience.getImg2());
-//        } else {
-//            experience.setImg2(url + experience.getImg2());
-//        }
         experience.setCreateDate(new Date());
         experience.setUpdateDate(new Date());
         Experience newEexperience = experienceRepository.save(experience);
@@ -258,10 +248,12 @@ public class ExperienceService {
             experienceMessageDTO.setFlag(false);
         } else {
             String code = (String) redisHelper.listLPop("experience_" + experienceId);
-            String newCode = code.replaceAll("\"","");
-            ExperienceCode newExperienceCode = experienceCodeRepository.findExperienceByCode(newCode);
-            experienceCodeRepository.updateExperienceCodeByCode(userId, userName, new Date(), newCode);
-            experienceMessageDTO.setExperienceCode(newExperienceCode);
+            if (code != null) {
+                String newCode = code.replaceAll("\"","");
+                ExperienceCode newExperienceCode = experienceCodeRepository.findExperienceByCode(newCode);
+                experienceCodeRepository.updateExperienceCodeByCode(userId, userName, new Date(), newCode);
+                experienceMessageDTO.setExperienceCode(newExperienceCode);
+            }
 //            List<ExperienceCode> experienceCodes = experienceCodeRepository.findByUserIdNull(experienceId);
 //            if (experienceCodes.size() > 0) {
 //                experienceCodeRepository.updateExperienceCodeByCode(userId, userName, new Date(), code);

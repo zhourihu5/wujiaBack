@@ -2,8 +2,10 @@ package com.wj.core.entity.task;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class TaskEntity {
+public class TaskEntity implements Serializable {
 
     private final Long serialVersion = -12654128415L;
     private Long id; //ID

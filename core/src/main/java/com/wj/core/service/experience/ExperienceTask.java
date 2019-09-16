@@ -22,6 +22,6 @@ public class ExperienceTask implements Job {
     public void execute(JobExecutionContext jobExecutionContext) {
         JobDataMap map = jobExecutionContext.getJobDetail().getJobDataMap();
         Integer objId = (Integer) map.get("objectId");
-        experienceService.updateExperienceIsShowAndStatus("1", "2", new Date(), objId);
+        experienceService.updateExperienceIsShowAndStatus("1", "3", new Date(), objId);
     }
 }

@@ -107,7 +107,6 @@ public class CouponService {
         } else {
             jobService.updateTask(taskEntity);
         }
-
     }
 
     public Page<Coupon> findAllByStatus(String status, Pageable pageable) {
@@ -137,7 +136,7 @@ public class CouponService {
     @Transactional
     public void updateCouponStatus(Coupon coupon) {
         Coupon coupon1 = couponRepository.getById(coupon.getId());
-        if (coupon.getStatus().equals("1")) {
+        if (coupon.getType().equals("1")) {
             List<SysUserInfo> userInfoList = userInfoRepository.findListByFlag();
             for (SysUserInfo userInfo : userInfoList) {
                 CouponCode couponCode = new CouponCode();
