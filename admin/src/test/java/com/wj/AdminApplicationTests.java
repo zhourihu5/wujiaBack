@@ -12,6 +12,8 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
+import com.wj.core.entity.experience.ExperienceCode;
+import com.wj.core.helper.impl.RedisHelperImpl;
 import com.wj.core.service.qst.Qst;
 import com.wj.core.util.HttpClients;
 import com.wj.core.util.mapper.JsonMapper;
@@ -30,25 +32,44 @@ import java.util.Map;
 @SpringBootTest
 public class AdminApplicationTests {
     static JsonMapper mapper = JsonMapper.defaultMapper();
+    @Autowired
+    private RedisHelperImpl redisHelper;
     @Test
     public void contextLoads() {
-        String userName = "18310800479";
-        Map<String, Object> requestParam = Maps.newHashMap();
-        requestParam.put("DevUserName",userName);
-        requestParam.put("Mobile",userName);
-        String url = Qst.URL9700 + "agentregister";
-        String result = null;
-        try {
-            result = HttpClients.postObjectClientJsonHeaders(url, Qst.TOKEN, requestParam);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (result.equals("405 Method Not Allowed")) {
-            System.out.println("进来了");
-        }
-        Map<String, Object> qst = mapper.fromJson(result, Map.class);
-        System.out.println(qst);
-        System.out.println("111111111");
+//        redisHelper.remove("experience_5");
+//        for (int i = 0; i < 1; i++) {
+//        ExperienceCode experienceCode = new ExperienceCode();
+//        String a = "1111111111";
+//        String b = "2222222222";
+//        String c = "3333333333";
+//        redisHelper.listPush("experience_5", a);
+//        redisHelper.listPush("experience_5", b);
+//        redisHelper.listPush("experience_5", c);
+//        }
+        Object obj = redisHelper.listFindAll("experience_9");
+        System.out.println(obj);
+        String code = (String) redisHelper.listLPop("experience_9");
+        System.out.println(code);
+        System.out.println(code.replaceAll("\"",""));
+//        Object o = redisHelper.listLPop("experience_1");
+//        System.out.println(o);
+//        String userName = "18310800479";
+//        Map<String, Object> requestParam = Maps.newHashMap();
+//        requestParam.put("DevUserName",userName);
+//        requestParam.put("Mobile",userName);
+//        String url = Qst.URL9700 + "agentregister";
+//        String result = null;
+//        try {
+//            result = HttpClients.postObjectClientJsonHeaders(url, Qst.TOKEN, requestParam);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        if (result.equals("405 Method Not Allowed")) {
+//            System.out.println("进来了");
+//        }
+//        Map<String, Object> qst = mapper.fromJson(result, Map.class);
+//        System.out.println(qst);
+//        System.out.println("111111111");
     }
 
 //    @Value("${wj.oss.key}")
