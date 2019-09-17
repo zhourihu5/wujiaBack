@@ -36,7 +36,7 @@ public class ShopService {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = Lists.newArrayList();
             if (StringUtils.isNotBlank(shopName)) {
-
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + shopName + "%"));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
