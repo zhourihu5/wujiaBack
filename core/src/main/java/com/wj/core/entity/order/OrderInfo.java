@@ -52,10 +52,10 @@ public class OrderInfo {
     private String deliveryPhone;
     private Integer deliveryHour;
     private String wxOrderCode;
-    @ApiModelProperty(value = "平台优惠券id")
-    private String platform_coupon_id;
-    @ApiModelProperty(value = "活动优惠券id")
-    private String activity_coupon_id;
+//    @ApiModelProperty(value = "平台优惠券id")
+//    private String platform_coupon_id;
+//    @ApiModelProperty(value = "活动优惠券id")
+//    private String activity_coupon_id;
     //确认收货时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date receiveDate;
@@ -68,8 +68,10 @@ public class OrderInfo {
     private Commodity commodity;
     @Transient
     private Activity activity;
-    @Transient
+//    @Transient
     private Integer platformCouponId;
-    @Transient
+//    @Transient
     private Integer activityCouponId;
+    private BigDecimal platformCouponMoney;
+    private BigDecimal activityCouponMoney;
 }

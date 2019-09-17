@@ -104,6 +104,9 @@ public class OrderService {
                     throw new ServiceException("活动优惠券异常", ErrorCode.INTERNAL_SERVER_ERROR);
                 }
                 payMoney = payMoney.subtract(activityCoupon.getMoney());
+                favPrice = favPrice.subtract(activityCoupon.getMoney());
+                orderInfo.setActivityCouponId(orderInfo.getActivityCouponId());
+                orderInfo.setActivityCouponMoney(activityCoupon.getMoney());
             }
             if (orderInfo.getPlatformCouponId() != null) {
                 CouponCode platformCoupon = couponCodeRepository.findByCouponId(orderInfo.getPlatformCouponId());
@@ -111,10 +114,14 @@ public class OrderService {
                     throw new ServiceException("活动优惠券异常", ErrorCode.INTERNAL_SERVER_ERROR);
                 }
                 payMoney = payMoney.subtract(platformCoupon.getMoney());
+                favPrice = favPrice.subtract(platformCoupon.getMoney());
+                orderInfo.setPlatformCouponId(orderInfo.getPlatformCouponId());
+                orderInfo.setPlatformCouponMoney(platformCoupon.getMoney());
             }
             if (payMoney.doubleValue() <= 0) {
                 throw new ServiceException("实际支付金额小于0", ErrorCode.INTERNAL_SERVER_ERROR);
             }
+
         } else {
             BigDecimal zhe = new BigDecimal(1 - amount / 100);
             favPrice = activity.getPrice().multiply(zhe);
@@ -135,7 +142,6 @@ public class OrderService {
         orderInfo.setUpdateDate(ClockUtil.currentDate());
         orderInfo.setPayEndDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
         String code = WechatConfig.mch_id + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE_SS, ClockUtil.currentDate()) + CommonUtils.getRandomIntByLength(4);
-
         orderInfo.setCode(code);
         orderInfoRepository.save(orderInfo);
 

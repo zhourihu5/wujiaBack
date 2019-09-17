@@ -147,12 +147,12 @@ public class ActivityService {
             activity.setStatus("0");
         }
 
-        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains(activity.getCover(),"https://")) {
+        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains(activity.getCover(), "https://")) {
             activity.setCover(activity.getCover());
         } else {
             activity.setCover(url + activity.getCover());
         }
-        if (StringUtils.isNotBlank(activity.getGiftImg()) && StringUtils.contains(activity.getGiftImg(),"https://")) {
+        if (StringUtils.isNotBlank(activity.getGiftImg()) && StringUtils.contains(activity.getGiftImg(), "https://")) {
             activity.setGiftImg(activity.getGiftImg());
         } else {
             activity.setGiftImg(url + activity.getGiftImg());
@@ -210,7 +210,7 @@ public class ActivityService {
                 predicates.add(criteriaBuilder.equal(root.get("status"), status));
             }
             if (StringUtils.isNotBlank(title)) {
-                predicates.add(criteriaBuilder.equal(root.get("title"), title));
+                predicates.add(criteriaBuilder.like(root.get("title"), "%" + title + "%"));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
@@ -237,10 +237,10 @@ public class ActivityService {
         String objType = "comm";
         List<AttaInfo> attaInfoList = attaInfoRepository.findByObjectIdAndObjectType(commodity.getId(), objType);
         commodity.setAttaInfos(attaInfoList);
-        String[] strs = StringUtils.split(commodity.getFormatVal(),"|");
+        String[] strs = StringUtils.split(commodity.getFormatVal(), "|");
         String[] rules = StringUtils.split(activity.getSaleRules(), ",");
 //        if (activity.getSaleType().equals("1")) {
-            // 钱
+        // 钱
 //            for (String rule : rules) {
 //                String[] r = StringUtils.split(rule, "|");
 //                int salePersonNum = Integer.valueOf(r[0]);
@@ -249,7 +249,7 @@ public class ActivityService {
 //                    break;
 //                }
 //            }
-            // TODO 后台去掉折暂时不判断
+        // TODO 后台去掉折暂时不判断
 //        }
         commodity.setFormatVals(strs);
         activity.setCommodity(commodity);
@@ -269,13 +269,13 @@ public class ActivityService {
             coupon.setUserCouponCount(0);
 //            Integer count = couponCodeRepository.getCountByTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
 
-            List<CouponCode>statusList= couponCodeRepository.getByActivityIdAndTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
-            Integer count =statusList.size();
+            List<CouponCode> statusList = couponCodeRepository.getByActivityIdAndTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
+            Integer count = statusList.size();
             if (count >= coupon.getLimitNum()) {
                 coupon.setUserCouponCount(count);
                 coupon.setValid(false);
-                for(CouponCode couponCode:statusList){
-                    if("0".equals(couponCode.getStatus())){
+                for (CouponCode couponCode : statusList) {
+                    if ("0".equals(couponCode.getStatus())) {
                         coupon.setValid(true);
                         break;
                     }
@@ -301,7 +301,7 @@ public class ActivityService {
                 }
             });
         }
-         activityList.forEach(Activity -> {
+        activityList.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
         });
         return activityList;
@@ -359,7 +359,7 @@ public class ActivityService {
         loginDTO.setUnRead(messageService.isUnReadMessage(userId, 0));
         List<BaseFamily> familyList = new ArrayList<>();
         List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userId);
-        for (SysUserFamily sysUserFamily: userFamilyList) {
+        for (SysUserFamily sysUserFamily : userFamilyList) {
             BaseFamily baseFamily = new BaseFamily();
             baseFamily.setId(sysUserFamily.getUserFamily().getFamilyId());
             BaseCommuntity baseCommuntity = baseFamilyService.findCommuntityByFamilyId1(sysUserFamily.getUserFamily().getFamilyId());
