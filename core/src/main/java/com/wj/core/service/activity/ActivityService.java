@@ -141,6 +141,7 @@ public class ActivityService {
     }
 
     public void saveActivity(@NotNull(message = "实体未空") Activity activity) {
+
         if (activity.getId() == null) {
             activity.setIsShow("0"); // 未上架
             activity.setStatus("0");
@@ -156,6 +157,7 @@ public class ActivityService {
         } else {
             activity.setGiftImg(url + activity.getGiftImg());
         }
+        activity.setCreateDate(new Date());
         activityRepository.save(activity);
         boolean ex = jobService.checkExists("activity_update_status_" + activity.getId(), "activity");
         TaskEntity taskEntity = new TaskEntity();
@@ -192,14 +194,14 @@ public class ActivityService {
             List<Predicate> predicates = Lists.newArrayList();
             if (StringUtils.isNotBlank(startDate)) {
                 try {
-                    predicates.add(criteriaBuilder.equal(root.get("startDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, startDate)));
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, startDate)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
             if (StringUtils.isNotBlank(endDate)) {
                 try {
-                    predicates.add(criteriaBuilder.equal(root.get("endDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, endDate)));
+                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, endDate)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

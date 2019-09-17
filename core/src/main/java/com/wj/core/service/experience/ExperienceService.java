@@ -131,14 +131,14 @@ public class ExperienceService {
             List<Predicate> predicates = Lists.newArrayList();
             if (StringUtils.isNotBlank(startDate)) {
                 try {
-                    predicates.add(criteriaBuilder.equal(root.get("startDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, startDate)));
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, startDate)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
             if (StringUtils.isNotBlank(endDate)) {
                 try {
-                    predicates.add(criteriaBuilder.equal(root.get("endDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, endDate)));
+                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, endDate)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

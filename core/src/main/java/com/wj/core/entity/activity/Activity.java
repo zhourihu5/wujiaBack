@@ -45,6 +45,9 @@ public class Activity {
     private String remark;
     private String padCover;
     private String giftImg;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createDate;
     @Transient
     private Commodity commodity;
     @Transient
