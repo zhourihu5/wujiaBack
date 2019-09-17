@@ -34,8 +34,7 @@ public class DateFormatUtil {
 	public static final String PATTERN_DEFAULT_ON_SECOND = "yyyy-MM-dd HH:mm:ss";
 	public static final String PATTERN_DEFALT_DATE = "yyyyMMdd";
     public static final String CRON_DATE_FORMAT = "ss mm HH dd MM ? yyyy";
-
-
+	public static final String PATTERN_DEFALT_DATE_SS = "yyyyMMddHHmmss";
 	// 使用工厂方法FastDateFormat.getInstance(), 从缓存中获取实例
 
 	// 以T分隔日期和时间，并带时区信息，符合ISO8601规范

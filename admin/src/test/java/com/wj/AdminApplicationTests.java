@@ -15,8 +15,11 @@ import com.google.gson.JsonObject;
 import com.wj.core.entity.experience.ExperienceCode;
 import com.wj.core.helper.impl.RedisHelperImpl;
 import com.wj.core.service.qst.Qst;
+import com.wj.core.util.CommonUtils;
 import com.wj.core.util.HttpClients;
 import com.wj.core.util.mapper.JsonMapper;
+import com.wj.core.util.time.ClockUtil;
+import com.wj.core.util.time.DateFormatUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,9 @@ public class AdminApplicationTests {
     private RedisHelperImpl redisHelper;
     @Test
     public void contextLoads() {
+        System.out.println(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()));
+        System.out.println(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE_SS, ClockUtil.currentDate()));
+        System.out.println(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE_SS, ClockUtil.currentDate()) + CommonUtils.getRandomIntByLength(4));
 //        redisHelper.remove("experience_5");
 //        for (int i = 0; i < 1; i++) {
 //        ExperienceCode experienceCode = new ExperienceCode();
@@ -46,11 +52,11 @@ public class AdminApplicationTests {
 //        redisHelper.listPush("experience_5", b);
 //        redisHelper.listPush("experience_5", c);
 //        }
-        Object obj = redisHelper.listFindAll("experience_9");
-        System.out.println(obj);
-        String code = (String) redisHelper.listLPop("experience_9");
-        System.out.println(code);
-        System.out.println(code.replaceAll("\"",""));
+//        Object obj = redisHelper.listFindAll("experience_9");
+//        System.out.println(obj);
+//        String code = (String) redisHelper.listLPop("experience_9");
+//        System.out.println(code);
+//        System.out.println(code.replaceAll("\"",""));
 //        Object o = redisHelper.listLPop("experience_1");
 //        System.out.println(o);
 //        String userName = "18310800479";

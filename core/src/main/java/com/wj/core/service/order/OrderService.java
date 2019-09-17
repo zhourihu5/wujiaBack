@@ -134,7 +134,7 @@ public class OrderService {
         orderInfo.setCreateDate(ClockUtil.currentDate());
         orderInfo.setUpdateDate(ClockUtil.currentDate());
         orderInfo.setPayEndDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
-        String code = WechatConfig.mch_id + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + CommonUtils.getRandomStringByLength(10);
+        String code = WechatConfig.mch_id + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE_SS, ClockUtil.currentDate()) + CommonUtils.getRandomIntByLength(4);
 
         orderInfo.setCode(code);
         orderInfoRepository.save(orderInfo);
