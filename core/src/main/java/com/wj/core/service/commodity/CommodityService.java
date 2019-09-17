@@ -25,6 +25,7 @@ import sun.misc.ConditionLock;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -80,6 +81,7 @@ public class CommodityService {
             commodity.setStatus("0");
             commodity.setSalesNum(0);
             commodity.setCode("C" + ClockUtil.currentTimeMillis());
+            commodity.setCreateDate(new Date());
         }
         commodity.setUserId(userId);
         Commodity comm = commodityRepository.save(commodity);
