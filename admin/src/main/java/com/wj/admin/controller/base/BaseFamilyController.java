@@ -17,6 +17,7 @@ import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,15 @@ public class BaseFamilyController {
         String token = JwtUtil.getJwtToken();
         Claims claims = JwtUtil.parseJwt(token);
         logger.info("保存家庭内容接口:/v1/family/addUserAndFamily userId=" + claims.get("userId"));
+        userFamilyService.delByFamilyId(userFamily.getUserFamily().getFamilyId());
+        userFamily.setIdentity(1); // 默认是1户主
         userFamilyService.addUserAndFamily(userFamily);
+        String[] userIds = StringUtils.split(userFamily.getUserFamily().getUserIds(), ",");
+        for (String id : userIds) {
+            userFamily.setIdentity(0);
+            userFamily.getUserFamily().setUserId(Integer.valueOf(id));
+            userFamilyService.addUserAndFamily(userFamily);
+        }
         return ResponseMessage.ok();
     }
 

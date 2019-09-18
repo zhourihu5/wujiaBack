@@ -111,7 +111,7 @@ public class UserFamilyService {
      */
     @Transactional
     public void addUserAndFamily(SysUserFamily userFamily) {
-        userFamilyRepository.deleteByUserFamily_FamilyIdAndIdentity(userFamily.getUserFamily().getFamilyId(), 1);
+//        userFamilyRepository.deleteByUserFamily_FamilyIdAndIdentity(userFamily.getUserFamily().getFamilyId(), userFamily.getIdentity());
         if (UserIdentity.Owner.equals(userFamily.getIdentity())) {
             Integer count = userFamilyRepository.findByFamilyIdAndIdentity(userFamily.getUserFamily().getFamilyId(), userFamily.getIdentity());
             if (count > 0)
@@ -137,6 +137,12 @@ public class UserFamilyService {
             throw new ServiceException("同步全视通数据错误", ErrorCode.QST_ERROR);
         }
     }
+
+    @Transactional
+    public void delByFamilyId(Integer familyId) {
+        userFamilyRepository.deleteByFamilyId(familyId);
+    }
+
 
     /**
      * 解绑用户和家庭关系
@@ -172,6 +178,12 @@ public class UserFamilyService {
         Integer userId = userFamilyRepository.getUserId(familyId, 1);
         SysUserInfo userInfo = userInfoRepository.findByUserId(userId);
         fbd.setUser(userInfo);
+        List<SysUserFamily> userFamilyList = userFamilyRepository.findListByFamilyIdAndIdentity(familyId, 0);
+        List<SysUserInfo> userInfoList = new ArrayList<>();
+        for(SysUserFamily userFamily : userFamilyList) {
+            userInfoList.add(userInfoRepository.findByUserId(userFamily.getUserFamily().getUserId()));
+        }
+        fbd.setUserInfoList(userInfoList);
         return fbd;
     }
 

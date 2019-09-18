@@ -46,11 +46,11 @@ public class CommodityController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", dataType = "Integer", value = "页号"),
             @ApiImplicitParam(name = "pageSize", dataType = "Integer", value = "大小"),
-            @ApiImplicitParam(name = "code", dataType = "String", value = "商品code")
+            @ApiImplicitParam(name = "name", dataType = "String", value = "商品名称")
     })
     @GetMapping("list")
-    public ResponseMessage<Page<Commodity>> list(Integer pageNum, Integer pageSize, String code) {
-        return ResponseMessage.ok(commodityService.getCommodityList(code, pageNum, pageSize));
+    public ResponseMessage<Page<Commodity>> list(Integer pageNum, Integer pageSize, String name) {
+        return ResponseMessage.ok(commodityService.getCommodityList(name, pageNum, pageSize));
     }
 
 

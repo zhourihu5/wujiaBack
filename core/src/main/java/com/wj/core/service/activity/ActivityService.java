@@ -15,6 +15,7 @@ import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.XcxLoginDTO;
+import com.wj.core.helper.impl.RedisHelperImpl;
 import com.wj.core.repository.activity.ActivityRepository;
 import com.wj.core.repository.activity.CouponCodeRepository;
 import com.wj.core.repository.activity.CouponRepository;
@@ -83,6 +84,8 @@ public class ActivityService {
     private CouponCodeService couponCodeService;
     @Autowired
     private CouponCodeRepository couponCodeRepository;
+    @Autowired
+    private RedisHelperImpl redisHelper;
 
     public List<Activity> findList(Integer userId, Integer communityId) {
         List<Activity> activityList = activityRepository.findByCommunityIdAndIsShow(communityId, "1");
@@ -138,20 +141,23 @@ public class ActivityService {
     }
 
     public void saveActivity(@NotNull(message = "实体未空") Activity activity) {
+
         if (activity.getId() == null) {
             activity.setIsShow("0"); // 未上架
             activity.setStatus("0");
         }
-        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains(activity.getCover(),"https://")) {
+
+        if (StringUtils.isNotBlank(activity.getCover()) && StringUtils.contains(activity.getCover(), "https://")) {
             activity.setCover(activity.getCover());
         } else {
             activity.setCover(url + activity.getCover());
         }
-        if (StringUtils.isNotBlank(activity.getGiftImg()) && StringUtils.contains(activity.getGiftImg(),"https://")) {
+        if (StringUtils.isNotBlank(activity.getGiftImg()) && StringUtils.contains(activity.getGiftImg(), "https://")) {
             activity.setGiftImg(activity.getGiftImg());
         } else {
             activity.setGiftImg(url + activity.getGiftImg());
         }
+        activity.setCreateDate(new Date());
         activityRepository.save(activity);
         boolean ex = jobService.checkExists("activity_update_status_" + activity.getId(), "activity");
         TaskEntity taskEntity = new TaskEntity();
@@ -188,14 +194,14 @@ public class ActivityService {
             List<Predicate> predicates = Lists.newArrayList();
             if (StringUtils.isNotBlank(startDate)) {
                 try {
-                    predicates.add(criteriaBuilder.equal(root.get("startDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, startDate)));
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, startDate)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
             if (StringUtils.isNotBlank(endDate)) {
                 try {
-                    predicates.add(criteriaBuilder.equal(root.get("endDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, endDate)));
+                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), DateFormatUtil.parseDate(DateFormatUtil.PATTERN_ISO_ON_DATE, endDate)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -204,7 +210,7 @@ public class ActivityService {
                 predicates.add(criteriaBuilder.equal(root.get("status"), status));
             }
             if (StringUtils.isNotBlank(title)) {
-                predicates.add(criteriaBuilder.equal(root.get("title"), title));
+                predicates.add(criteriaBuilder.like(root.get("title"), "%" + title + "%"));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
@@ -231,10 +237,10 @@ public class ActivityService {
         String objType = "comm";
         List<AttaInfo> attaInfoList = attaInfoRepository.findByObjectIdAndObjectType(commodity.getId(), objType);
         commodity.setAttaInfos(attaInfoList);
-        String[] strs = StringUtils.split(commodity.getFormatVal(),"|");
+        String[] strs = StringUtils.split(commodity.getFormatVal(), "|");
         String[] rules = StringUtils.split(activity.getSaleRules(), ",");
 //        if (activity.getSaleType().equals("1")) {
-            // 钱
+        // 钱
 //            for (String rule : rules) {
 //                String[] r = StringUtils.split(rule, "|");
 //                int salePersonNum = Integer.valueOf(r[0]);
@@ -243,7 +249,7 @@ public class ActivityService {
 //                    break;
 //                }
 //            }
-            // TODO 后台去掉折暂时不判断
+        // TODO 后台去掉折暂时不判断
 //        }
         commodity.setFormatVals(strs);
         activity.setCommodity(commodity);
@@ -262,13 +268,14 @@ public class ActivityService {
         if (coupon != null) {
             coupon.setUserCouponCount(0);
 //            Integer count = couponCodeRepository.getCountByTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
-            List<CouponCode>statusList= couponCodeRepository.getByActivityIdAndTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
-            Integer count =statusList.size();
+
+            List<CouponCode> statusList = couponCodeRepository.getByActivityIdAndTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
+            Integer count = statusList.size();
             if (count >= coupon.getLimitNum()) {
                 coupon.setUserCouponCount(count);
                 coupon.setValid(false);
-                for(CouponCode couponCode:statusList){
-                    if("0".equals(couponCode.getStatus())){
+                for (CouponCode couponCode : statusList) {
+                    if ("0".equals(couponCode.getStatus())) {
                         coupon.setValid(true);
                         break;
                     }
@@ -294,7 +301,7 @@ public class ActivityService {
                 }
             });
         }
-         activityList.forEach(Activity -> {
+        activityList.forEach(Activity -> {
             Activity.setCommodity(commodityRepository.findByCommodityId(Activity.getCommodityId()));
         });
         return activityList;
@@ -304,8 +311,8 @@ public class ActivityService {
         Activity activity = activityRepository.findByActivityId(activityId);
         activity.setCommodity(commodityRepository.findByCommodityId(activity.getCommodityId()));
         Integer count = orderInfoRepository.findCountByActivityId(activityId);
-//        String[] rules = activity.getSaleRules().split(",");
         Integer amount = 0;
+//        String[] rules = activity.getSaleRules().split(",");
 //        for (int i = 1; i < rules.length; i++) {
 //            Integer number0 = Integer.valueOf(rules[i-1].substring(0, rules[i-1].indexOf("|")));
 //            Integer number = Integer.valueOf(rules[i].substring(0, rules[i].indexOf("|")));//截取|之前的字符串
@@ -352,7 +359,7 @@ public class ActivityService {
         loginDTO.setUnRead(messageService.isUnReadMessage(userId, 0));
         List<BaseFamily> familyList = new ArrayList<>();
         List<SysUserFamily> userFamilyList = userFamilyService.findByUserId(userId);
-        for (SysUserFamily sysUserFamily: userFamilyList) {
+        for (SysUserFamily sysUserFamily : userFamilyList) {
             BaseFamily baseFamily = new BaseFamily();
             baseFamily.setId(sysUserFamily.getUserFamily().getFamilyId());
             BaseCommuntity baseCommuntity = baseFamilyService.findCommuntityByFamilyId1(sysUserFamily.getUserFamily().getFamilyId());

@@ -25,6 +25,7 @@ import sun.misc.ConditionLock;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -47,9 +48,7 @@ public class CommodityService {
 
 
     public void saveLables(Lables lables) {
-        if (lables.getId() == null) {
-            lables.setCreateDate(ClockUtil.currentDate());
-        }
+        lables.setCreateDate(ClockUtil.currentDate());
         lablesRepository.save(lables);
     }
 
@@ -80,6 +79,7 @@ public class CommodityService {
             commodity.setStatus("0");
             commodity.setSalesNum(0);
             commodity.setCode("C" + ClockUtil.currentTimeMillis());
+            commodity.setCreateDate(new Date());
         }
         commodity.setUserId(userId);
         Commodity comm = commodityRepository.save(commodity);
@@ -101,11 +101,11 @@ public class CommodityService {
         }
     }
 
-    public Page<Commodity> getCommodityList(String code, Integer pageNum, Integer pageSize) {
+    public Page<Commodity> getCommodityList(String name, Integer pageNum, Integer pageSize) {
         Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = Lists.newArrayList();
-            if (StringUtils.isNotBlank(code)) {
-                predicates.add(criteriaBuilder.like(root.get("code"), code + "%"));
+            if (StringUtils.isNotBlank(name)) {
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
@@ -127,7 +127,6 @@ public class CommodityService {
     public void removeCommodity(Integer id) {
         commodityRepository.deleteById(id);
     }
-
 
 
 }

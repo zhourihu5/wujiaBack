@@ -3,6 +3,7 @@ package com.wj.core.service.order;
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.CouponCode;
+import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.entity.user.SysUserInfo;
@@ -75,6 +76,10 @@ public class OrderService {
         if (isafter) {
             throw new ServiceException("活动已经结束，您不能下单!", ErrorCode.INTERNAL_SERVER_ERROR);
         }
+        Commodity commodity = commodityRepository.findByCommodityId(activity.getCommodityId());
+        if (commodity.getRepertoryNum() - commodity.getSalesNum() <= 0) {
+            throw new ServiceException("库存不足!", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         Integer count = orderInfoRepository.findCountByActivityId(activity.getCommodityId());
         Integer amount = 0;
 //        String[] rules = activity.getSaleRules().split(",");
@@ -104,6 +109,9 @@ public class OrderService {
                     throw new ServiceException("活动优惠券异常", ErrorCode.INTERNAL_SERVER_ERROR);
                 }
                 payMoney = payMoney.subtract(activityCoupon.getMoney());
+                favPrice = favPrice.subtract(activityCoupon.getMoney());
+                orderInfo.setActivityCouponId(orderInfo.getActivityCouponId());
+                orderInfo.setActivityCouponMoney(activityCoupon.getMoney());
             }
             if (orderInfo.getPlatformCouponId() != null) {
                 CouponCode platformCoupon = couponCodeRepository.findByCouponId(orderInfo.getPlatformCouponId());
@@ -111,10 +119,14 @@ public class OrderService {
                     throw new ServiceException("活动优惠券异常", ErrorCode.INTERNAL_SERVER_ERROR);
                 }
                 payMoney = payMoney.subtract(platformCoupon.getMoney());
+                favPrice = favPrice.subtract(platformCoupon.getMoney());
+                orderInfo.setPlatformCouponId(orderInfo.getPlatformCouponId());
+                orderInfo.setPlatformCouponMoney(platformCoupon.getMoney());
             }
             if (payMoney.doubleValue() <= 0) {
                 throw new ServiceException("实际支付金额小于0", ErrorCode.INTERNAL_SERVER_ERROR);
             }
+
         } else {
             BigDecimal zhe = new BigDecimal(1 - amount / 100);
             favPrice = activity.getPrice().multiply(zhe);
@@ -134,8 +146,7 @@ public class OrderService {
         orderInfo.setCreateDate(ClockUtil.currentDate());
         orderInfo.setUpdateDate(ClockUtil.currentDate());
         orderInfo.setPayEndDate(DateUtils.addMinutes(orderInfo.getCreateDate(), 15));
-        String code = WechatConfig.mch_id + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE, ClockUtil.currentDate()) + CommonUtils.getRandomStringByLength(10);
-
+        String code = WechatConfig.mch_id + DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFALT_DATE_SS, ClockUtil.currentDate()) + CommonUtils.getRandomIntByLength(4);
         orderInfo.setCode(code);
         orderInfoRepository.save(orderInfo);
 
@@ -168,6 +179,7 @@ public class OrderService {
     public void closeOrder(Integer id) {
         orderInfoRepository.modityStatus("4", id);
     }
+
     @Transactional
     public void deleteOrder(Integer id) {
         orderInfoRepository.deleteById(id);

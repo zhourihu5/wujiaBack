@@ -80,6 +80,7 @@ public class JobService {
             scheduler.scheduleJob(jobDetail, triggerSet, true);
             return true;
         } catch (SchedulerException e) {
+            e.printStackTrace();
             throw new ServiceException("类名不存在或执行表达式错误", ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
