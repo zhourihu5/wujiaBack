@@ -3,6 +3,7 @@ package com.wj.core.service.order;
 import com.google.common.collect.Lists;
 import com.wj.core.entity.activity.Activity;
 import com.wj.core.entity.activity.CouponCode;
+import com.wj.core.entity.commodity.Commodity;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.entity.user.SysUserInfo;
@@ -74,6 +75,10 @@ public class OrderService {
         boolean isafter = CommonUtils.isDateAfter(currentTime, endDate);
         if (isafter) {
             throw new ServiceException("活动已经结束，您不能下单!", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        Commodity commodity = commodityRepository.findByCommodityId(activity.getCommodityId());
+        if (commodity.getRepertoryNum() - commodity.getSalesNum() <= 0) {
+            throw new ServiceException("库存不足!", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         Integer count = orderInfoRepository.findCountByActivityId(activity.getCommodityId());
         Integer amount = 0;
@@ -174,6 +179,7 @@ public class OrderService {
     public void closeOrder(Integer id) {
         orderInfoRepository.modityStatus("4", id);
     }
+
     @Transactional
     public void deleteOrder(Integer id) {
         orderInfoRepository.deleteById(id);
