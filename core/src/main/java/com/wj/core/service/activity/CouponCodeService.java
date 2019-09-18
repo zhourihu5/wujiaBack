@@ -73,12 +73,22 @@ public class CouponCodeService {
             Activity activity = activityRepository.findByActivityId(activityId);
             List<CouponCode> couponCodes = couponCodeRepository.findByTypeAndUserId(type, userId);
             for (CouponCode couponCode: couponCodes) {
-                couponCode.setCoupon(couponRepository.getById(couponCode.getCouponId()));
-                if (activity.getPrice().doubleValue() >= couponCode.getMoney().doubleValue()) {
-                    yesList.add(couponCode);
+                Coupon coupon = couponRepository.getById(couponCode.getCouponId());
+                couponCode.setCoupon(coupon);
+                if (coupon.getLimitNum() == 0) {
+                    if (activity.getPrice().doubleValue() >= couponCode.getMoney().doubleValue()) {
+                        yesList.add(couponCode);
+                    } else {
+                        noList.add(couponCode);
+                    }
                 } else {
-                    noList.add(couponCode);
+                    if (coupon.getLimitNum().doubleValue() <= activity.getPrice().doubleValue()) {
+                        yesList.add(couponCode);
+                    } else {
+                        noList.add(couponCode);
+                    }
                 }
+
             }
             couponCodeDTO.setYesList(yesList);
             couponCodeDTO.setNoList(noList);
