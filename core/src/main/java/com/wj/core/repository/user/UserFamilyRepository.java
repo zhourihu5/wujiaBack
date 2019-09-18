@@ -71,4 +71,11 @@ public interface UserFamilyRepository extends JpaRepository<SysUserFamily, Integ
 
     void deleteByUserFamily_FamilyIdAndIdentity(Integer familyId, Integer identity);
 
+    @Modifying
+    @Query(value = "delete from sys_user_family where family_id = ?1", nativeQuery = true)
+    public void deleteByFamilyId(Integer familyId);
+
+    @Query(value = "select * from sys_user_family where family_id = ?1 and identity = ?2", nativeQuery = true)
+    public List<SysUserFamily> findListByFamilyIdAndIdentity(Integer familyId, Integer identity);
+
 }
