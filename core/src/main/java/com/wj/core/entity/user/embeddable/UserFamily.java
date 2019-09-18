@@ -19,6 +19,5 @@ public class UserFamily implements Serializable {
 
     private Integer userId;
     private Integer familyId;
-    private String userIds;
 
 }
