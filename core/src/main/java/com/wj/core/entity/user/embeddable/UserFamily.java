@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -19,5 +20,7 @@ public class UserFamily implements Serializable {
 
     private Integer userId;
     private Integer familyId;
+    @Transient
+    private String userIds;
 
 }
