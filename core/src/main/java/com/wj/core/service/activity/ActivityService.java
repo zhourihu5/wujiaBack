@@ -141,7 +141,7 @@ public class ActivityService {
     }
 
     @Transactional
-    public void saveActivity(@NotNull(message = "实体未空") Activity activity) {
+    public void saveActivity(Activity activity) {
 
         if (activity.getId() == null) {
             activity.setIsShow("0"); // 未上架
@@ -232,6 +232,9 @@ public class ActivityService {
     public ActivityUserDTO findByActivityId(Integer userId, Integer activityId) {
         ActivityUserDTO activityUserDTO = new ActivityUserDTO();
         Activity activity = activityRepository.findByActivityId(activityId);
+        if (activity.getIsShow().equals("0")) {
+            throw new ServiceException("活动已经下架", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 //        String largeMoney = activity.getSaleRules().substring(activity.getSaleRules().lastIndexOf("|") + 1);
 //        activity.setLargeMoney(largeMoney);
         Commodity commodity = commodityRepository.findByCommodityId(activity.getCommodityId());
@@ -265,7 +268,7 @@ public class ActivityService {
         });
         activityUserDTO.setActivity(activity);
         activityUserDTO.setUserInfoList(userInfoList);
-        Coupon coupon = couponRepository.getByActivityId(activityId);
+        Coupon coupon = couponRepository.getByActivityIdAndStatus(activityId);
         if (coupon != null) {
             coupon.setUserCouponCount(0);
 //            Integer count = couponCodeRepository.getCountByTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
@@ -310,6 +313,9 @@ public class ActivityService {
 
     public Activity isOrder(Integer activityId, Integer userId) {
         Activity activity = activityRepository.findByActivityId(activityId);
+//        if (activity.getIsShow().equals("0")) {
+//            throw new ServiceException("活动已经下架", ErrorCode.INTERNAL_SERVER_ERROR);
+//        }
         activity.setCommodity(commodityRepository.findByCommodityId(activity.getCommodityId()));
         Integer count = orderInfoRepository.findCountByActivityId(activityId);
         Integer amount = 0;

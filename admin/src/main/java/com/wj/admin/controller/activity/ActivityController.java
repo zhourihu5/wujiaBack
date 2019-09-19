@@ -2,7 +2,10 @@ package com.wj.admin.controller.activity;
 
 import com.wj.admin.filter.ResponseMessage;
 import com.wj.core.entity.activity.Activity;
+import com.wj.core.entity.activity.dto.ActivityDTO;
+import com.wj.core.entity.experience.Experience;
 import com.wj.core.service.activity.ActivityService;
+import com.wj.core.util.mapper.BeanMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -26,7 +29,8 @@ public class ActivityController {
             @ApiImplicitParam(name = "activity", dataType = "Activity", value = "活动对象")
     })
     @PostMapping("save")
-    public ResponseMessage save(@RequestBody Activity activity) {
+    public ResponseMessage save(@RequestBody ActivityDTO activityDTO) {
+        Activity activity = BeanMapper.map(activityDTO, Activity.class);
         activityService.saveActivity(activity);
         return ResponseMessage.ok();
     }

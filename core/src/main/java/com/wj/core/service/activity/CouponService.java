@@ -153,7 +153,6 @@ public class CouponService {
                     couponCode.setFinishDate(coupon1.getEndDate());
                     couponCodeRepository.save(couponCode);
                 }
-
             }
         }
         couponRepository.updateCouponStatus(coupon.getStatus(), new Date(), coupon.getId());

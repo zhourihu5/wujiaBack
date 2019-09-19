@@ -67,6 +67,9 @@ public class OrderService {
     public OrderInfo saveOrder(OrderInfo orderInfo) {
         // 判断活动是否结束 结束不能下单
         Activity activity = activityRepository.findByActivityId(orderInfo.getActivityId());
+        if (activity.getIsShow().equals("0")) {
+            throw new ServiceException("活动已经下架", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         SysUserInfo userInfo = userInfoRepository.findByUserId(orderInfo.getUserId());
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
