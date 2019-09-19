@@ -140,6 +140,7 @@ public class ActivityService {
         }
     }
 
+    @Transactional
     public void saveActivity(@NotNull(message = "实体未空") Activity activity) {
 
         if (activity.getId() == null) {

@@ -28,6 +28,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Integer>, JpaSpe
     @Query(value = "select * from ebiz_coupon where id = ?1", nativeQuery = true)
     public Coupon getById(Integer id);
 
-    @Query(value = "select * from ebiz_coupon where activity_id = ?1", nativeQuery = true)
+    @Query(value = "select * from ebiz_coupon where activity_id = ?1 and status = 1", nativeQuery = true)
     public Coupon getByActivityId(Integer activityId);
 }
