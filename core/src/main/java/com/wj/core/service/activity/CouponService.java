@@ -74,7 +74,7 @@ public class CouponService {
         if (coupon.getGrantCount() == null) {
             coupon.setGrantCount(0);
         }
-        if (StringUtils.isNotBlank(coupon.getCover()) && StringUtils.contains(coupon.getCover(),"https://")) {
+        if (StringUtils.isNotBlank(coupon.getCover()) && StringUtils.contains(coupon.getCover(), "https://")) {
             coupon.setCover(coupon.getCover());
         } else {
             coupon.setCover(url + coupon.getCover());
@@ -139,18 +139,21 @@ public class CouponService {
         if (coupon.getType().equals("1")) {
             List<SysUserInfo> userInfoList = userInfoRepository.findListByFlag();
             for (SysUserInfo userInfo : userInfoList) {
-                CouponCode couponCode = new CouponCode();
-                couponCode.setCouponId(coupon.getId());
-                couponCode.setCouponType(coupon.getType());
-                couponCode.setActivityId(coupon.getActivityId());
-                couponCode.setUserId(userInfo.getId());
-                couponCode.setUserName(userInfo.getUserName());
-                couponCode.setMoney(coupon1.getMoney());
-                couponCode.setStatus("0");
-                couponCode.setCreateDate(new Date());
-                couponCode.setUpdateDate(new Date());
-                couponCode.setFinishDate(coupon1.getEndDate());
-                couponCodeRepository.save(couponCode);
+                for (int i = 0; i < coupon.getEveryoneNum(); i++) {
+                    CouponCode couponCode = new CouponCode();
+                    couponCode.setCouponId(coupon.getId());
+                    couponCode.setCouponType(coupon.getType());
+                    couponCode.setActivityId(coupon.getActivityId());
+                    couponCode.setUserId(userInfo.getId());
+                    couponCode.setUserName(userInfo.getUserName());
+                    couponCode.setMoney(coupon1.getMoney());
+                    couponCode.setStatus("0");
+                    couponCode.setCreateDate(new Date());
+                    couponCode.setUpdateDate(new Date());
+                    couponCode.setFinishDate(coupon1.getEndDate());
+                    couponCodeRepository.save(couponCode);
+                }
+
             }
         }
         couponRepository.updateCouponStatus(coupon.getStatus(), new Date(), coupon.getId());
@@ -160,8 +163,6 @@ public class CouponService {
     public void deleteCoupon(Integer id) {
         couponRepository.deleteById(id);
     }
-
-
 
 
 }
