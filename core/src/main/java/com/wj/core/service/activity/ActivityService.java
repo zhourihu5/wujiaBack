@@ -268,7 +268,7 @@ public class ActivityService {
         });
         activityUserDTO.setActivity(activity);
         activityUserDTO.setUserInfoList(userInfoList);
-        Coupon coupon = couponRepository.getByActivityId(activityId);
+        Coupon coupon = couponRepository.getByActivityIdAndStatus(activityId);
         if (coupon != null) {
             coupon.setUserCouponCount(0);
 //            Integer count = couponCodeRepository.getCountByTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
