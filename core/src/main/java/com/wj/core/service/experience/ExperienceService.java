@@ -11,6 +11,7 @@ import com.wj.core.entity.task.TaskEntity;
 import com.wj.core.helper.impl.RedisHelperImpl;
 import com.wj.core.repository.experience.ExperienceCodeRepository;
 import com.wj.core.repository.experience.ExperienceRepository;
+import com.wj.core.repository.user.UserInfoRepository;
 import com.wj.core.service.activity.CouponTask;
 import com.wj.core.service.exception.ErrorCode;
 import com.wj.core.service.exception.ServiceException;
@@ -51,6 +52,9 @@ public class ExperienceService {
 
     @Autowired
     private RedisHelperImpl redisHelper;
+
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     @Transactional
     public void saveExperience(Experience experience) {
@@ -271,6 +275,9 @@ public class ExperienceService {
     // 领取体验券用户列表
     public Page<ExperienceCode> findByExperienceIdAndUserId(Integer experienceId, Pageable pageable) {
         Page<ExperienceCode> page = experienceCodeRepository.findByExperienceIdAndUserId(experienceId, pageable);
+        page.forEach(Experience -> {
+            Experience.setNickName(userInfoRepository.findByUserId(Experience.getUserId()).getNickName());
+        });
         return page;
     }
 
