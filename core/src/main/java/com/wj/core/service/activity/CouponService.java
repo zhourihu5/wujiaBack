@@ -161,6 +161,7 @@ public class CouponService {
     @Transactional
     public void deleteCoupon(Integer id) {
         couponRepository.deleteById(id);
+        couponCodeRepository.deleteByCouponId(id);
     }
 
 
