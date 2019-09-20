@@ -53,4 +53,8 @@ public interface CouponCodeRepository extends JpaRepository<CouponCode, Integer>
     @Query("update CouponCode c set c.status = ?1, c.updateDate = ?2 where c.couponId = ?3 and c.status = 0")
     public void updateStatusByCouponIdAndStatus(String status, Date date, Integer couponId);
 
+
+    @Modifying
+    @Query("delete from CouponCode e where e.couponId = ?1")
+    void deleteByCouponId(Integer id);
 }
