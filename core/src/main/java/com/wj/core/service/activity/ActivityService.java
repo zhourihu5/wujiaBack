@@ -292,7 +292,7 @@ public class ActivityService {
 
             List<CouponCode> statusList = couponCodeRepository.getByActivityIdAndTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
             Integer count = statusList.size();
-            if (count >= coupon.getLimitNum()) {
+            if (count >= coupon.getEveryoneNum()) {
                 coupon.setUserCouponCount(count);
                 coupon.setValid(false);
                 for (CouponCode couponCode : statusList) {
