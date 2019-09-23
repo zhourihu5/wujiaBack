@@ -72,5 +72,7 @@ public class Experience {
     private List<ExperienceCode> experienceCodeList;
     @Transient
     private Integer userExperienceCount;
+    @Transient
+    private Boolean isReceive;
 
 }
