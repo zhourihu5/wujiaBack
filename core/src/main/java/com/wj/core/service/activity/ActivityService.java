@@ -172,6 +172,18 @@ public class ActivityService {
         } else {
             jobService.updateTask(taskEntity);
         }
+        boolean ex1 = jobService.checkExists("activity_update_start_" + activity.getId(), "activity");
+        TaskEntity taskEntity1 = new TaskEntity();
+        taskEntity1.setJobName("activity_update_start_" + activity.getId());
+        taskEntity1.setJobGroup("activity");
+        taskEntity1.setJobClass(new ActivityStartingTask().getClass().getName());
+        taskEntity1.setObjectId(activity.getId());
+        taskEntity1.setCronExpression(DateFormatUtil.formatDate(DateFormatUtil.CRON_DATE_FORMAT, activity.getStartDate()));
+        if (!ex1) {
+            jobService.addTask(taskEntity1);
+        } else {
+            jobService.updateTask(taskEntity1);
+        }
     }
 
     // 活动更新为已经结束
@@ -179,7 +191,12 @@ public class ActivityService {
     public void modityStatusEnd(Integer id) {
         activityRepository.modityStatus("3", id);
         activityRepository.modityIsShow("0", id);
+    }
 
+    // 活动更新为已经结束
+    @Transactional
+    public void modityStatusBegin(Integer id) {
+        activityRepository.modityStatus("1", id);
     }
 
     // 活动上架下架
@@ -275,7 +292,7 @@ public class ActivityService {
 
             List<CouponCode> statusList = couponCodeRepository.getByActivityIdAndTypeAndUserId(coupon.getActivityId(), coupon.getType(), userId);
             Integer count = statusList.size();
-            if (count >= coupon.getLimitNum()) {
+            if (count >= coupon.getEveryoneNum()) {
                 coupon.setUserCouponCount(count);
                 coupon.setValid(false);
                 for (CouponCode couponCode : statusList) {

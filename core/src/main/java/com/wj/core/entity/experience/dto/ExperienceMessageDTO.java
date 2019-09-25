@@ -11,4 +11,5 @@ import java.util.Date;
 public class ExperienceMessageDTO {
     private ExperienceCode experienceCode;
     private Boolean flag;
+    private Boolean isReceive;
 }

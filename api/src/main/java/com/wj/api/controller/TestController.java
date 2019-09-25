@@ -7,10 +7,14 @@ import com.google.gson.Gson;
 import com.wj.api.filter.ResponseMessage;
 import com.wj.api.utils.JwtUtil;
 import com.wj.core.entity.activity.Activity;
+import com.wj.core.entity.activity.Coupon;
+import com.wj.core.entity.activity.CouponCode;
 import com.wj.core.entity.activity.dto.ActivityUserDTO;
 import com.wj.core.entity.order.OrderInfo;
 import com.wj.core.entity.user.dto.XcxLoginDTO;
 import com.wj.core.repository.activity.ActivityRepository;
+import com.wj.core.repository.activity.CouponCodeRepository;
+import com.wj.core.repository.activity.CouponRepository;
 import com.wj.core.repository.order.OrderInfoRepository;
 import com.wj.core.service.activity.ActivityService;
 import com.wj.core.service.upload.OssUploadService;
@@ -47,6 +51,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -55,6 +60,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Api(value = "/v1/activity", tags = "活动接口模块")
 @RestController
@@ -74,6 +80,11 @@ public class TestController {
     private ActivityRepository activityRepository;
     @Autowired
     private OrderInfoRepository orderInfoRepository;
+
+    @Autowired
+    private CouponCodeRepository couponCodeRepository;
+    @Autowired
+    private CouponRepository couponRepository;
 
     @ApiOperation(value = "生成小程序二维码", notes = "生成小程序二维码")
     @GetMapping("/activity/generateQrCode")
@@ -109,6 +120,30 @@ public class TestController {
     public void deleteQrCodeMini() throws Exception {
         deleteActivityQrCode();
         deleteOrderQrCode();
+
+    }
+    @GetMapping("/deleteGarbageData")
+    @Transactional
+    public void deleteGarbageData() throws Exception {
+        int pageNum=0;
+        int pageSize=20;
+        Pageable page = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "id");
+        Page<CouponCode> couponList =  couponCodeRepository.findAll( page);
+        do{
+            for(CouponCode it:couponList){
+                Optional<Coupon> coupon = couponRepository.findById(it.getCouponId());
+              if(!coupon.isPresent()){
+//                  logger.info("CouponCode:{}",JSON.toJSONString(it));
+//                  if(pageNum>0){
+//                      break;
+//                  }
+                  couponCodeRepository.deleteById(it.getId());
+              }
+            }
+            pageNum++;
+            page = PageRequest.of(pageNum , pageSize, Sort.Direction.DESC, "id");
+            couponList =  couponCodeRepository.findAll( page);
+        }while (couponList.hasNext());
 
     }
     @GetMapping("/sendMsg")
@@ -166,4 +201,5 @@ public class TestController {
             acList = orderInfoRepository.findAll(specification, page);
         }while (acList.hasNext());
     }
+
 }

@@ -98,7 +98,7 @@ public class ExperienceService {
             experienceCode.setUpdateDate(new Date());
             experienceCode.setFinishDate(experience.getEndDate());
             ExperienceCode newExperienceCode = experienceCodeRepository.save(experienceCode);
-            redisHelper.listPush("experience_" + experience.getId(), newExperienceCode.getExperienceCode().replaceAll("\"","&quot;"));
+            redisHelper.listPush("experience_" + experience.getId(), newExperienceCode.getExperienceCode().replaceAll("\"", "&quot;"));
         }
         boolean ex = jobService.checkExists("experience_close_" + newEexperience.getId(), "experience");
         // 添加定时任务
@@ -226,7 +226,13 @@ public class ExperienceService {
         Integer allCount = experienceCodeRepository.findCountByExperienceIdAndUserId(id);
         experience.setSendNum(allCount);
         experience.setSurplusNum(experience.getCount() - allCount);
-        experience.setUserExperienceCount(experienceCodeRepository.findCountByExperienceIdAndUserId(id, userId));
+        Integer count = experienceCodeRepository.findCountByExperienceIdAndUserId(id, userId);
+        experience.setUserExperienceCount(count);
+        if (experience.getLimitNum() > count) {
+            experience.setIsReceive(true);
+        } else {
+            experience.setIsReceive(false);
+        }
         return experience;
     }
 
@@ -246,7 +252,7 @@ public class ExperienceService {
         }
         Integer count = experienceCodeRepository.findCountByExperienceIdAndUserId(experienceId, userId);
         if (count >= experience.getLimitNum()) {
-            throw new ServiceException("已领取", ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new ServiceException("亲，您已经领取过了", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         Integer allCount = experienceCodeRepository.findCountByExperienceIdAndUserId(experienceId);
         if (allCount >= experience.getCount()) {
@@ -254,7 +260,7 @@ public class ExperienceService {
         } else {
             String code = (String) redisHelper.listLPop("experience_" + experienceId);
             if (code != null) {
-                String newCode = code.replaceAll("\"","");
+                String newCode = code.replaceAll("\"", "");
                 ExperienceCode newExperienceCode = experienceCodeRepository.findExperienceByCode(newCode);
                 experienceCodeRepository.updateExperienceCodeByCode(userId, userName, new Date(), newCode);
                 experienceMessageDTO.setExperienceCode(newExperienceCode);
@@ -268,6 +274,11 @@ public class ExperienceService {
 ////            throw new ServiceException("很遗憾，已经被抢购一空", ErrorCode.INTERNAL_SERVER_ERROR);
 //            }
 //            experienceMessageDTO.setExperienceCode(experienceCodes.get(0));
+        }
+        if (count + 1 >= experience.getLimitNum()) {
+            experienceMessageDTO.setIsReceive(false);
+        } else {
+            experienceMessageDTO.setIsReceive(true);
         }
         return experienceMessageDTO;
     }
