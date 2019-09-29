@@ -203,6 +203,7 @@ public class LoginController {
 
         deviceLocalDirectory="D"+deviceLocalDirectory;
 
+        //2019年09月29日17:46:58 增加全视通 sdk 通信数据
         SipDTO sipDTO=new SipDTO();
         sipDTO.setSipAddr(deviceLocalDirectory);
 //        sipDTO.setSipDisplayname(null);
