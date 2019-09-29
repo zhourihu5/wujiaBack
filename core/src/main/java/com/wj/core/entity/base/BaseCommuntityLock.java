@@ -30,8 +30,8 @@ public class BaseCommuntityLock {
     private BigDecimal longitude;
     @ApiModelProperty(value = "纬度")
     private BigDecimal latitude;
-    @ApiModelProperty(value = "开锁距离")
-    private Integer distance;
+//    @ApiModelProperty(value = "开锁距离")
+//    private Integer distance;
 
 
 }

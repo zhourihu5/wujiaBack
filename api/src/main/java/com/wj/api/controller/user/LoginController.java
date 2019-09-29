@@ -6,12 +6,16 @@ import com.wj.api.utils.JwtUtil;
 import com.wj.api.utils.ResultUtil;
 import com.wj.core.entity.base.BaseCommuntity;
 import com.wj.core.entity.base.BaseDevice;
+import com.wj.core.entity.base.BaseFamily;
+import com.wj.core.entity.base.BaseUnit;
 import com.wj.core.entity.base.dto.DeviceDTO;
+import com.wj.core.entity.base.dto.SipDTO;
 import com.wj.core.entity.user.SysUserFamily;
 import com.wj.core.entity.user.SysUserInfo;
 import com.wj.core.entity.user.dto.LoginDTO;
 import com.wj.core.entity.user.dto.UserInfoDTO;
 import com.wj.core.helper.impl.RedisHelperImpl;
+import com.wj.core.repository.base.BaseUnitRepository;
 import com.wj.core.service.SendSms;
 import com.wj.core.service.base.BaseDeviceService;
 import com.wj.core.service.base.BaseFamilyService;
@@ -68,6 +72,12 @@ public class LoginController {
 
     @Autowired
     private YunpianSendSms yunpianSendSms;
+
+    @Autowired
+    private BaseUnitRepository baseUnitRepository;
+    @Autowired
+    private BaseFamilyService familyService;
+
     /**
      * 获取验证码
      *
@@ -182,6 +192,24 @@ public class LoginController {
         loginDTO.setToken(jwtToken);
         loginDTO.setUserInfo(userInfo);
         loginDTO.setDevice(deviceDTO);
+
+        BaseFamily family = familyService.findByFamilyId(baseDevice.getFamilyId());
+        BaseUnit unit = baseUnitRepository.findByUnitId(family.getUnitId());
+        String deviceLocalDirectory = unit.getDirectory();
+        if (deviceLocalDirectory == "") {
+            throw new ServiceException("系统异常", ErrorCode.QST_ERROR);
+        }
+        deviceLocalDirectory = deviceLocalDirectory+"-1";
+
+        deviceLocalDirectory="D"+deviceLocalDirectory;
+
+        SipDTO sipDTO=new SipDTO();
+        sipDTO.setSipAddr(deviceLocalDirectory);
+//        sipDTO.setSipDisplayname(null);
+        loginDTO.setSip(sipDTO);
+
+
+
         return ResponseMessage.ok(loginDTO);
     }
 
