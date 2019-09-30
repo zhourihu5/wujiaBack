@@ -91,7 +91,7 @@ public class ApplyLockController {
 
 
         BaseCommuntityLock baseCommuntityLock=null;
-        double velve=3;
+        double velve=7;
        if(!CollectionUtils.isEmpty(list)) {
            for (BaseCommuntityLock it: list) {//找出阀值距离内距离最近的门
                double distance=NumberUtil.LantitudeLongitudeDist(longitude,latitude,it.getLongitude().doubleValue(),it.getLatitude().doubleValue());
@@ -103,7 +103,7 @@ public class ApplyLockController {
        }
         String deviceLocalDirectory=null;
         if(baseCommuntityLock!=null){
-            deviceLocalDirectory=baseCommuntity.getDirectory();
+            deviceLocalDirectory=baseCommuntityLock.getDirectory();
             //todo 围墙机的设备编号
        }else {
             BaseUnit unit = baseUnitRepository.findByUnitId(family.getUnitId());
